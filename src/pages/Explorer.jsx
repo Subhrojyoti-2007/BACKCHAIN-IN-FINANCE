@@ -10,7 +10,24 @@ import {
   ArrowUpRight,
   Database,
 } from "lucide-react";
+import { AnimatedCounter } from "../components/ui/animated-counter";
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: "spring", stiffness: 80, damping: 20 }
+  }
+};
 
 function BlockchainExplorer() {
   const [chainData, setChainData] = useState([]);
@@ -65,6 +82,7 @@ function BlockchainExplorer() {
       <motion.div
         initial={{opacity:0,y:-20}}
         animate={{opacity:1,y:0}}
+        transition={{ duration: 0.5 }}
         className="mb-8"
       >
         <h1 className="text-3xl font-bold">Blockchain Explorer</h1>
@@ -73,6 +91,9 @@ function BlockchainExplorer() {
 
       {/* Search */}
       <motion.div
+        initial={{opacity:0, scale: 0.95}}
+        animate={{opacity:1, scale: 1}}
+        transition={{ duration: 0.5, delay: 0.1 }}
         whileHover={{scale:1.01}}
         className="bg-white/10 backdrop-blur-xl rounded-2xl p-4 flex items-center gap-3 mb-8"
       >
@@ -84,15 +105,36 @@ function BlockchainExplorer() {
       </motion.div>
 
       {/* Network Cards */}
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
-        <InfoCard icon={<Blocks/>} title="Block Height" value={chainData.length > 0 ? chainData[0].index : 0} />
-        <InfoCard icon={<Fuel/>} title="Gas Price" value="25 Gwei" />
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid md:grid-cols-4 gap-6 mb-8"
+      >
+        <InfoCard 
+          icon={<Blocks/>} 
+          title="Block Height" 
+          value={chainData.length > 0 ? chainData[0].index : 0} 
+          isNumeric={true} 
+        />
+        <InfoCard 
+          icon={<Fuel/>} 
+          title="Gas Price" 
+          value={25} 
+          suffix=" Gwei" 
+          isNumeric={true} 
+        />
         <InfoCard icon={<Activity/>} title="Network" value="Local Testnet" />
         <InfoCard icon={<CheckCircle/>} title="Status" value="Active" />
-      </div>
+      </motion.div>
 
       {/* Transactions */}
-      <motion.div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-8"
+      >
         <div className="flex items-center gap-3 mb-5">
           <Database className="text-cyan-400"/>
           <h2 className="text-xl font-semibold">Latest Transactions</h2>
@@ -115,14 +157,22 @@ function BlockchainExplorer() {
                   <th className="p-3">Time</th>
                 </tr>
               </thead>
-              <tbody>
+              <motion.tbody
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.05, delayChildren: 0.4 } }
+                }}
+              >
               {transactions.map((tx, index) => (
                 <motion.tr
                   key={index}
-                  initial={{opacity:0}}
-                  animate={{opacity:1}}
-                  transition={{delay:index*0.1}}
-                  className="border-b border-white/10 hover:bg-white/5"
+                  variants={{
+                    hidden: { opacity: 0, x: -15 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.08)", scale: 1.01 }}
+                  className="border-b border-white/10 cursor-pointer transition-colors"
                 >
                   <td className="p-3 text-cyan-400">{tx.hash}</td>
                   <td className="p-3 font-mono text-sm">{tx.from}</td>
@@ -134,25 +184,40 @@ function BlockchainExplorer() {
                   <td className="p-3 text-gray-400">{tx.time}</td>
                 </motion.tr>
               ))}
-              </tbody>
+              </motion.tbody>
             </table>
           </div>
         )}
       </motion.div>
 
       {/* Latest Blocks */}
-      <motion.div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+      >
         <h2 className="text-xl font-semibold mb-5">Latest Blocks</h2>
         
         {loading ? (
           <p className="text-gray-400">Loading blocks...</p>
         ) : (
-          <div className="grid md:grid-cols-3 gap-5">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid md:grid-cols-3 gap-5"
+          >
           {chainData.map((block, index) => (
             <motion.div
               key={index}
-              whileHover={{scale:1.03}}
-              className="bg-black/20 rounded-xl p-5"
+              variants={itemVariants}
+              whileHover={{
+                scale: 1.03, 
+                boxShadow: "0px 10px 30px rgba(34,211,238,0.15)",
+                y: -5
+              }}
+              className="bg-black/20 rounded-xl p-5 border border-white/5 cursor-pointer transition-colors"
             >
               <div className="flex justify-between">
                 <Blocks className="text-cyan-400"/>
@@ -168,23 +233,30 @@ function BlockchainExplorer() {
               </div>
             </motion.div>
           ))}
-          </div>
+          </motion.div>
         )}
       </motion.div>
     </div>
   );
 }
 
-function InfoCard({icon, title, value}) {
+function InfoCard({icon, title, value, isNumeric = false, suffix = ""}) {
   return (
     <motion.div
-      whileHover={{scale:1.05}}
-      className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 flex items-center gap-4"
+      variants={itemVariants}
+      whileHover={{ scale:1.05, y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.5)" }}
+      className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 flex items-center gap-4 cursor-pointer"
     >
       <div className="text-cyan-400">{icon}</div>
       <div>
         <p className="text-gray-400">{title}</p>
-        <h3 className="text-xl font-bold">{value}</h3>
+        <h3 className="text-xl font-bold">
+            {isNumeric ? (
+                <AnimatedCounter value={value} suffix={suffix} />
+            ) : (
+                value
+            )}
+        </h3>
       </div>
     </motion.div>
   );

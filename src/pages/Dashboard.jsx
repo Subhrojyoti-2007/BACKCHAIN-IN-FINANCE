@@ -20,17 +20,18 @@ import {
   Wallet,
   TrendingUp,
 } from 'lucide-react'
+import { AnimatedCounter } from '../components/ui/animated-counter'
 
 const portfolioStats = [
   {
     title: 'Wallet Balance',
-    value: '$128,420',
+    value: 128420,
     description: 'Available balance in secure wallets',
     icon: Wallet,
   },
   {
     title: 'Portfolio Value',
-    value: '$742,900',
+    value: 742900,
     description: 'Total market value of holdings',
     icon: TrendingUp,
   },
@@ -69,64 +70,36 @@ const statusClasses = {
   Failed: 'bg-rose-500/10 text-rose-300',
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 80, damping: 20 }
+  }
+}
+
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#050610] text-slate-100">
       <div className="mx-auto flex min-h-screen max-w-[1700px] flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-        <div className="grid gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
-          <aside className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_30px_80px_-50px_rgba(15,23,42,0.8)] backdrop-blur-2xl">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">BlockFinance</p>
-                <h2 className="mt-3 text-2xl font-semibold text-white">Dashboard</h2>
-              </div>
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-300">
-                <Grid size={20} />
-              </span>
-            </div>
-
-            <nav className="mt-10 space-y-3 text-sm text-slate-300">
-              {['Overview', 'Allocation', 'Transactions', 'Analytics', 'Settings'].map((item, index) => (
-                <a
-                  key={item}
-                  href="#"
-                  className={`flex items-center justify-between rounded-3xl border border-white/10 px-4 py-4 transition hover:border-cyan-400 hover:text-cyan-300 ${index === 0 ? 'bg-cyan-500/10 text-white border-cyan-400/30' : 'bg-slate-900/80'}`}
-                >
-                  <span>{item}</span>
-                  <ChevronRight size={16} />
-                </a>
-              ))}
-            </nav>
-
-            <div className="mt-10 rounded-[1.75rem] border border-white/10 bg-slate-900/80 p-5">
-              <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">Wallet Profile</p>
-              <div className="mt-5 flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-300">
-                  <Wallet size={24} />
-                </div>
-                <div>
-                  <p className="font-semibold text-white">Ava Turner</p>
-                  <p className="text-sm text-slate-400">Verified wallet</p>
-                </div>
-              </div>
-              <div className="mt-6 grid gap-3">
-                <div className="rounded-3xl bg-slate-950/80 p-4 text-sm text-slate-400">
-                  <p>Chain</p>
-                  <p className="mt-2 text-white">Ethereum</p>
-                </div>
-                <div className="rounded-3xl bg-slate-950/80 p-4 text-sm text-slate-400">
-                  <p>Network</p>
-                  <p className="mt-2 text-white">Mainnet</p>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          <main className="space-y-6">
+        <div className="w-full">
+          <motion.main 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-6"
+          >
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              variants={itemVariants}
               className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_30px_80px_-50px_rgba(15,23,42,0.8)] backdrop-blur-2xl"
             >
               <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -147,15 +120,15 @@ export default function Dashboard() {
                 return (
                   <motion.div
                     key={stat.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.55, delay: index * 0.05 }}
+                    variants={itemVariants}
                     className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div>
                         <p className="text-sm uppercase tracking-[0.35em] text-slate-400">{stat.title}</p>
-                        <p className="mt-4 text-3xl font-semibold text-white">{stat.value}</p>
+                        <p className="mt-4 text-4xl font-bold text-white">
+                            <AnimatedCounter value={stat.value} prefix="$" />
+                        </p>
                       </div>
                       <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-300">
                         <Icon size={24} />
@@ -169,9 +142,7 @@ export default function Dashboard() {
 
             <div className="grid gap-6 xl:grid-cols-[0.9fr_1fr]">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.05 }}
+                variants={itemVariants}
                 className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl"
               >
                 <div className="flex items-center justify-between gap-4">
@@ -188,16 +159,24 @@ export default function Dashboard() {
                       <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fill: '#94a3b8' }} />
                       <YAxis tickLine={false} axisLine={false} tick={{ fill: '#94a3b8' }} />
                       <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#fff' }} />
-                      <Line type="monotone" dataKey="value" stroke="#22D3EE" strokeWidth={3} dot={{ r: 4, fill: '#22D3EE' }} activeDot={{ r: 6 }} />
+                      <Line 
+                        type="monotone" 
+                        dataKey="value" 
+                        stroke="#22D3EE" 
+                        strokeWidth={4} 
+                        dot={{ r: 4, fill: '#22D3EE', strokeWidth: 2 }} 
+                        activeDot={{ r: 6 }} 
+                        isAnimationActive={true}
+                        animationDuration={2500}
+                        animationEasing="ease-in-out"
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.07 }}
+                variants={itemVariants}
                 className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl"
               >
                 <div className="flex items-center justify-between gap-4">
@@ -210,7 +189,17 @@ export default function Dashboard() {
                 <div className="mt-8 h-[340px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={allocationData} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
+                      <Pie 
+                        data={allocationData} 
+                        dataKey="value" 
+                        nameKey="name" 
+                        innerRadius={70} 
+                        outerRadius={110} 
+                        paddingAngle={4}
+                        isAnimationActive={true}
+                        animationDuration={2000}
+                        animationEasing="ease-out"
+                      >
                         {allocationData.map((entry, index) => (
                           <Cell key={entry.name} fill={allocationColors[index % allocationColors.length]} />
                         ))}
@@ -221,12 +210,14 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {allocationData.map((slice, index) => (
-                    <div key={slice.name} className="rounded-3xl bg-slate-900/80 p-4">
+                    <div key={slice.name} className="rounded-3xl bg-slate-900/80 p-4 hover:bg-slate-800/80 transition-colors">
                       <div className="flex items-center gap-3">
-                        <span className="inline-flex h-3 w-3 rounded-full" style={{ backgroundColor: allocationColors[index % allocationColors.length] }} />
+                        <span className="inline-flex h-3 w-3 rounded-full shadow-[0_0_10px_currentColor]" style={{ backgroundColor: allocationColors[index % allocationColors.length], color: allocationColors[index % allocationColors.length] }} />
                         <p className="font-semibold text-white">{slice.name}</p>
                       </div>
-                      <p className="mt-3 text-sm text-slate-400">{slice.value}% of portfolio</p>
+                      <p className="mt-3 text-sm text-slate-400">
+                         <AnimatedCounter value={slice.value} suffix="% of portfolio" />
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -234,10 +225,8 @@ export default function Dashboard() {
             </div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.08 }}
-              className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl"
+              variants={itemVariants}
+              className="rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl perspective-1000"
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -249,36 +238,94 @@ export default function Dashboard() {
                   View all
                 </button>
               </div>
-              <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-white/10 bg-slate-900/80">
+              <motion.div 
+                animate={{
+                  y: [0, -10, 0],
+                  rotateX: [0, 2, -2, 0],
+                  rotateY: [0, -1, 1, 0],
+                  boxShadow: [
+                    "0 10px 30px -10px rgba(0,0,0,0.5)",
+                    "0 25px 50px -12px rgba(34,211,238,0.25)",
+                    "0 10px 30px -10px rgba(0,0,0,0.5)"
+                  ],
+                }}
+                transition={{
+                  duration: 6,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "loop"
+                }}
+                className="mt-6 overflow-visible rounded-[1.75rem] border border-white/10 bg-slate-900/80 transform-gpu"
+              >
                 <table className="min-w-full text-left text-sm text-slate-200">
                   <thead className="border-b border-slate-800 bg-slate-950/80 text-slate-400">
                     <tr>
-                      <th className="px-5 py-4">Transaction</th>
+                      <th className="px-5 py-4 first:rounded-tl-[1.75rem] last:rounded-tr-[1.75rem]">Transaction</th>
                       <th className="px-5 py-4">Asset</th>
                       <th className="px-5 py-4">Amount</th>
                       <th className="px-5 py-4">Status</th>
                       <th className="px-5 py-4">Time</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800">
+                  <motion.tbody 
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      visible: {
+                        transition: {
+                          staggerChildren: 0.1,
+                          delayChildren: 0.6 // Wait for main cards to load
+                        }
+                      }
+                    }}
+                    className="divide-y divide-slate-800"
+                  >
                     {transactions.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-slate-900/70 transition">
+                      <motion.tr 
+                        key={tx.id} 
+                        variants={{
+                          hidden: { opacity: 0, y: 20 },
+                          visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+                        }}
+                        whileHover={{ 
+                          scale: 1.015, 
+                          backgroundColor: "rgba(30,41,59,0.9)",
+                          y: -2,
+                          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
+                          transition: { type: "spring", stiffness: 300, damping: 20 }
+                        }}
+                        className="transition-colors cursor-pointer relative z-10"
+                      >
                         <td className="px-5 py-4 font-medium text-white">{tx.id}</td>
                         <td className="px-5 py-4">{tx.asset}</td>
                         <td className="px-5 py-4">{tx.amount}</td>
                         <td className="px-5 py-4">
-                          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusClasses[tx.status]}`}>
+                          <motion.span 
+                            animate={
+                              tx.status === 'Pending' 
+                                ? { boxShadow: ["0 0 0px rgba(251,191,36,0)", "0 0 15px rgba(251,191,36,0.6)", "0 0 0px rgba(251,191,36,0)"] } 
+                                : tx.status === 'Completed'
+                                ? { boxShadow: ["0 0 0px rgba(16,185,129,0)", "0 0 8px rgba(16,185,129,0.3)", "0 0 0px rgba(16,185,129,0)"] }
+                                : {}
+                            }
+                            transition={{
+                              duration: tx.status === 'Pending' ? 1.5 : 3,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusClasses[tx.status]}`}
+                          >
                             {tx.status}
-                          </span>
+                          </motion.span>
                         </td>
                         <td className="px-5 py-4">{tx.time}</td>
-                      </tr>
+                      </motion.tr>
                     ))}
-                  </tbody>
+                  </motion.tbody>
                 </table>
-              </div>
+              </motion.div>
             </motion.div>
-          </main>
+          </motion.main>
         </div>
       </div>
     </div>
