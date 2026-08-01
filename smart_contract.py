@@ -7,14 +7,15 @@ class KYCVerificationError(Exception):
 
 
 class UserAccount:
-    """Represents a user in the system with KYC status."""
-    def __init__(self, username, is_kyc_verified=False, password_hash=None):
+    """Represents a user in the system with KYC status and balance."""
+    def __init__(self, username, is_kyc_verified=False, password_hash=None, balance=0.0):
         self.username = username
         self.is_kyc_verified = is_kyc_verified
         self.password_hash = password_hash
+        self.balance = balance
 
     def __repr__(self):
-        return f"UserAccount(username='{self.username}', kyc={self.is_kyc_verified})"
+        return f"UserAccount(username='{self.username}', kyc={self.is_kyc_verified}, balance={self.balance})"
 
 
 class TransactionManager:

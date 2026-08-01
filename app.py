@@ -1,5 +1,6 @@
+import os
 import secrets
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from time import time
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -8,32 +9,34 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from blockchain import Blockchain
 from smart_contract import TransactionManager, UserAccount, KYCVerificationError
 
-app = Flask(__name__, static_folder="BACKCHAIN-IN-FINANCE/dist", static_url_path="/")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, 'BACKCHAIN-IN-FINANCE', 'dist')
+app = Flask(__name__, static_folder=STATIC_DIR)
 CORS(app)
 
 # Configure JWT
 app.config["JWT_SECRET_KEY"] = secrets.token_hex(32)
 jwt = JWTManager(app)
 
-@app.route('/')
-def home():
-    return app.send_static_file('index.html')
-
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def serve_react_app(path):
-    # This acts as a catch-all for React Router.
-    # It ensures that when someone visits /login directly, Flask serves index.html
-    # and lets React handle the client-side routing.
-    return app.send_static_file('index.html')
+def serve(path):
+    if path.startswith("api/"):
+        return jsonify({"error": "Not Found"}), 404
+        
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 # Initialize the blockchain
 blockchain = Blockchain()
 
 # Initialize users (in-memory for demo)
 users = {
-    "0x82AF91EF": UserAccount("Alice_Corp", is_kyc_verified=True, password_hash=generate_password_hash("password123")),
-    "0x91AF72BC": UserAccount("Bob_LLC", is_kyc_verified=True, password_hash=generate_password_hash("password123")),
-    "0x72BC88EF": UserAccount("Charlie_Anon", is_kyc_verified=False, password_hash=generate_password_hash("password123"))
+    "0x82AF91EF": UserAccount("Alice_Corp", is_kyc_verified=True, password_hash=generate_password_hash("password123"), balance=150000.0),
+    "0x91AF72BC": UserAccount("Bob_LLC", is_kyc_verified=True, password_hash=generate_password_hash("password123"), balance=200000.0),
+    "0x72BC88EF": UserAccount("Charlie_Anon", is_kyc_verified=False, password_hash=generate_password_hash("password123"), balance=50000.0)
 }
 
 # Add a way to map usernames to addresses for login
@@ -181,6 +184,19 @@ def new_transaction():
         return jsonify(response), 403
     except Exception as e:
         return jsonify({'error': str(e), 'status': 'Failed'}), 500
+
+TREASURY_BALANCE = 500000.0
+
+@app.route('/api/proof-of-reserves', methods=['GET'])
+@jwt_required()
+def proof_of_reserves():
+    """Verify bank solvency using Zero-Knowledge conceptually.
+    Sums up balances using a list comprehension and compares to Treasury."""
+    total_liabilities = sum([user.balance for user in users.values()])
+    is_solvent = TREASURY_BALANCE >= total_liabilities
+    return jsonify({
+        "solvent": is_solvent
+    }), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
