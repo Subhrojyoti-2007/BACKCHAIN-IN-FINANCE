@@ -1,25 +1,103 @@
+import secrets
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from time import time
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from blockchain import Blockchain
 from smart_contract import TransactionManager, UserAccount, KYCVerificationError
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="BACKCHAIN-IN-FINANCE/dist", static_url_path="/")
 CORS(app)
+
+# Configure JWT
+app.config["JWT_SECRET_KEY"] = secrets.token_hex(32)
+jwt = JWTManager(app)
 
 @app.route('/')
 def home():
-    return "Backend API is running successfully! Please visit the frontend application at http://localhost:5173"
+    return app.send_static_file('index.html')
+
+@app.route('/<path:path>')
+def serve_react_app(path):
+    # This acts as a catch-all for React Router.
+    # It ensures that when someone visits /login directly, Flask serves index.html
+    # and lets React handle the client-side routing.
+    return app.send_static_file('index.html')
 
 # Initialize the blockchain
 blockchain = Blockchain()
 
-# Initialize dummy users
+# Initialize users (in-memory for demo)
 users = {
-    "0x82AF91EF": UserAccount("Alice_Corp", is_kyc_verified=True),
-    "0x91AF72BC": UserAccount("Bob_LLC", is_kyc_verified=True),
-    "0x72BC88EF": UserAccount("Charlie_Anon", is_kyc_verified=False)
+    "0x82AF91EF": UserAccount("Alice_Corp", is_kyc_verified=True, password_hash=generate_password_hash("password123")),
+    "0x91AF72BC": UserAccount("Bob_LLC", is_kyc_verified=True, password_hash=generate_password_hash("password123")),
+    "0x72BC88EF": UserAccount("Charlie_Anon", is_kyc_verified=False, password_hash=generate_password_hash("password123"))
 }
+
+# Add a way to map usernames to addresses for login
+def get_address_by_username(username):
+    for addr, user in users.items():
+        if user.username.lower() == username.lower():
+            return addr
+    return None
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    """Register a new user."""
+    values = request.get_json()
+    if not values or not all(k in values for k in ('username', 'password')):
+        return jsonify({'error': 'Missing username or password'}), 400
+
+    username = values['username']
+    password = values['password']
+
+    if get_address_by_username(username):
+        return jsonify({'error': 'Username already exists'}), 409
+
+    # Generate a random mock wallet address
+    new_address = "0x" + secrets.token_hex(4).upper()
+    
+    # Store new user (default no KYC for new signups)
+    users[new_address] = UserAccount(
+        username=username, 
+        is_kyc_verified=False, 
+        password_hash=generate_password_hash(password)
+    )
+
+    return jsonify({
+        'message': 'User registered successfully',
+        'address': new_address,
+        'username': username
+    }), 201
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    """Authenticate a user and return a JWT."""
+    values = request.get_json()
+    if not values or not all(k in values for k in ('username', 'password')):
+        return jsonify({'error': 'Missing username or password'}), 400
+
+    username = values['username']
+    password = values['password']
+    address = get_address_by_username(username)
+
+    if not address or not check_password_hash(users[address].password_hash, password):
+        return jsonify({'error': 'Invalid username or password'}), 401
+
+    access_token = create_access_token(identity=address)
+    
+    return jsonify({
+        'access_token': access_token,
+        'user': {
+            'address': address,
+            'username': users[address].username,
+            'is_kyc_verified': users[address].is_kyc_verified
+        }
+    }), 200
+
 
 @app.route('/api/blocks', methods=['GET'])
 def get_blocks():
@@ -51,19 +129,22 @@ def get_users():
     return jsonify(users_data), 200
 
 @app.route('/api/transaction', methods=['POST'])
+@jwt_required()
 def new_transaction():
-    """Process a new transaction."""
+    """Process a new transaction. Requires valid JWT."""
+    current_user_addr = get_jwt_identity()
     values = request.get_json()
 
-    # Check that the required fields are in the POST data
-    required = ['sender', 'receiver', 'amount', 'asset']
+    required = ['receiver', 'amount', 'asset']
     if not all(k in values for k in required):
         return jsonify({'error': 'Missing values'}), 400
 
-    sender_addr = values['sender']
     receiver_addr = values['receiver']
     amount = float(values['amount'])
     asset = values.get('asset', 'ETH')
+
+    # Security Check: Force sender to be the authenticated user
+    sender_addr = current_user_addr
 
     if sender_addr not in users or receiver_addr not in users:
         return jsonify({'error': 'Invalid sender or receiver address. User not found.'}), 404
