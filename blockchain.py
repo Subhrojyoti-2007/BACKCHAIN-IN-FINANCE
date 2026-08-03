@@ -25,10 +25,45 @@ class Block:
     def __repr__(self):
         return f"Block(index={self.index}, hash={self.hash[:10]}...)"
 
+    def to_dict(self):
+        return {
+            "index": self.index,
+            "timestamp": self.timestamp,
+            "transactions": self.transactions,
+            "previous_hash": self.previous_hash,
+            "hash": self.hash
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        # We instantiate with original properties so we don't recalculate a different hash
+        block = cls(
+            index=data.get("index"),
+            timestamp=data.get("timestamp"),
+            transactions=data.get("transactions", []),
+            previous_hash=data.get("previous_hash")
+        )
+        block.hash = data.get("hash", block.hash)
+        return block
+
 
 class Blockchain:
-    def __init__(self):
-        self.chain = [self.create_genesis_block()]
+    def __init__(self, chain=None):
+        if chain is None:
+            self.chain = [self.create_genesis_block()]
+        else:
+            self.chain = chain
+
+    def to_dict(self):
+        return {
+            "chain": [block.to_dict() for block in self.chain]
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        chain_data = data.get("chain", [])
+        chain = [Block.from_dict(b_data) for b_data in chain_data]
+        return cls(chain=chain)
 
     def create_genesis_block(self):
         """

@@ -23,6 +23,7 @@ const allNavItems = [
   { name: "Analytics", href: "/analytics", dashboardOnly: true },
   { name: "Payments", href: "/payments", dashboardOnly: true },
   { name: "Security", href: "/security", dashboardOnly: true },
+  { name: "Terminal", href: "/terminal", dashboardOnly: true },
   { name: "Profile", href: "/profile", dashboardOnly: true },
   { name: "Settings", href: "/settings", dashboardOnly: true },
   { name: "Login", href: "/login", unAuthOnly: true },
