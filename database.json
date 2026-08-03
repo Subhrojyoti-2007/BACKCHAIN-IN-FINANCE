@@ -1,0 +1,50 @@
+{
+    "users": {
+        "0x82AF91EF": {
+            "username": "Alice_Corp",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$RjzIN0RhWaYLLGyj$67b657aa3bcef0afa74f27f431e295131acc72d58d0c1a7581ab44521f158373cf817bc2075495ceb5ba80e0dc043fe7d0f154a6c2afaa3fb80018a06d662ee1",
+            "balance": 150000.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON"
+        },
+        "0x91AF72BC": {
+            "username": "Bob_LLC",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$34FhqTtLQ058qYks$f5ea0fd9403ed88c3da7963f9755bb2650f58b79fa552891dc4b61e574861ebe8c56a8a91706510f1e60e2664437907a8e3814a923ce0e0f34a53a53d9f17b0e",
+            "balance": 200000.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON"
+        },
+        "0x72BC88EF": {
+            "username": "Charlie_Anon",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$FxERsa2OgsRf0V2e$6d5340e3ff1c5299a5a3881e625bbc091ec36f42e5f3d1794195a51eccca235e00ae2c113ce13fcdb65915126162afbe48fd82cc677026afb5751637f34f0651",
+            "balance": 50000.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON"
+        }
+    },
+    "blockchain": {
+        "chain": [
+            {
+                "index": 0,
+                "timestamp": 1785678682.9069486,
+                "transactions": [
+                    "Genesis Block"
+                ],
+                "previous_hash": "0",
+                "hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140"
+            }
+        ]
+    }
+}

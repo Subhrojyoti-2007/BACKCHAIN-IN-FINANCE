@@ -7,13 +7,47 @@ class KYCVerificationError(Exception):
 
 
 class UserAccount:
-    """Represents a user in the system with KYC status."""
-    def __init__(self, username, is_kyc_verified=False):
+    """Represents a user in the system with KYC status and balance."""
+    def __init__(self, username, is_kyc_verified=False, password_hash=None, balance=0.0, language="English", currency="USD", profile_visibility="Public", network="Ethereum Mainnet", wallet_connection="Auto Connect ON"):
         self.username = username
         self.is_kyc_verified = is_kyc_verified
+        self.password_hash = password_hash
+        self.balance = balance
+        self.language = language
+        self.currency = currency
+        self.profile_visibility = profile_visibility
+        self.network = network
+        self.wallet_connection = wallet_connection
 
     def __repr__(self):
-        return f"UserAccount(username='{self.username}', kyc={self.is_kyc_verified})"
+        return f"UserAccount(username='{self.username}', kyc={self.is_kyc_verified}, balance={self.balance}, lang={self.language}, curr={self.currency}, vis={self.profile_visibility}, net={self.network}, conn={self.wallet_connection})"
+
+    def to_dict(self):
+        return {
+            "username": self.username,
+            "is_kyc_verified": self.is_kyc_verified,
+            "password_hash": self.password_hash,
+            "balance": self.balance,
+            "language": self.language,
+            "currency": self.currency,
+            "profile_visibility": self.profile_visibility,
+            "network": self.network,
+            "wallet_connection": self.wallet_connection
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            username=data.get("username"),
+            is_kyc_verified=data.get("is_kyc_verified", False),
+            password_hash=data.get("password_hash"),
+            balance=data.get("balance", 0.0),
+            language=data.get("language", "English"),
+            currency=data.get("currency", "USD"),
+            profile_visibility=data.get("profile_visibility", "Public"),
+            network=data.get("network", "Ethereum Mainnet"),
+            wallet_connection=data.get("wallet_connection", "Auto Connect ON")
+        )
 
 
 class TransactionManager:
