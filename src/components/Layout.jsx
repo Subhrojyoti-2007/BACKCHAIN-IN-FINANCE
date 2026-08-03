@@ -7,6 +7,7 @@ import {
   Shield,
   User,
   Settings,
+  TerminalSquare,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -47,6 +48,11 @@ const menu = [
     name:"Settings",
     path:"/settings",
     icon:<Settings/>
+  },
+  {
+    name:"Terminal",
+    path:"/terminal",
+    icon:<TerminalSquare/>
   }
 ];
 
