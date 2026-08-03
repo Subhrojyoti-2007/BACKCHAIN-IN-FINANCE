@@ -12,6 +12,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ProtectedRoute from './components/ProtectedRoute'
 import BrandLogo from './components/BrandLogo'
+import AdminTerminal from './pages/AdminTerminal'
 import { AuthProvider } from './context/AuthContext'
 
 export default function App() {
@@ -34,6 +35,8 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
+          {/* Terminal is full-screen, so outside Layout but still Protected */}
+          <Route path="/terminal" element={<AdminTerminal />} />
         </Route>
       </Routes>
     </AuthProvider>
