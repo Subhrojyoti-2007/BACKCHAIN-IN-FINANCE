@@ -22,9 +22,9 @@ class TransactionManager:
     """Acts as the smart contract protocol enforcing rules like ERC-3643."""
     
     @staticmethod
-    def process_transaction(sender: UserAccount, receiver: UserAccount, amount: float):
+    def process_transaction(sender, receiver, amount: float):
         """
-        Processes a transaction, automatically enforcing KYC compliance.
+        Processes a transaction, automatically enforcing KYC compliance and balance checks.
         """
         print(f"Attempting to process transaction: {sender.username} -> {receiver.username} (Amount: {amount})")
         
@@ -38,7 +38,15 @@ class TransactionManager:
             
         print("KYC verification passed for both parties.")
         
-        # Proceed with the trade (simulated)
+        # Enforce Balance check
+        if sender.balance < amount:
+            raise KYCVerificationError(sender.username, "Insufficient balance.") # Reusing exception for simplicity, though normally InsufficientFundsError
+            
+        # Update balances
+        sender.balance -= amount
+        receiver.balance += amount
+        
+        # Proceed with the trade
         print(f"Transaction successful: {amount} transferred from {sender.username} to {receiver.username}")
         return True
 
