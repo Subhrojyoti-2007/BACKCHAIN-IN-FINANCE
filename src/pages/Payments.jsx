@@ -102,7 +102,7 @@ function Payments() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 overflow-hidden">
+    <div className="min-h-screen bg-transparent text-white p-6 overflow-hidden">
       {/* Header */}
       <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} transition={{ duration: 0.5 }} className="mb-8">
         <h1 className="text-3xl font-bold">Crypto Payments</h1>
@@ -227,7 +227,7 @@ function SecurityItem({text}) {
     <motion.div 
       variants={securityItem}
       whileHover={{ scale: 1.02, x: 5 }}
-      className="flex items-center gap-3 bg-black/20 rounded-xl p-4 mb-3 border border-white/5 cursor-default transition-colors hover:bg-black/40"
+      className="flex items-center gap-3 bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 border border-white/5 cursor-default transition-colors hover:bg-black/40"
     >
       <CheckCircle className="text-green-400"/>
       <p>{text}</p>
@@ -240,7 +240,7 @@ function AssetCard({name, symbol, balance}) {
     <motion.div 
       variants={assetItem}
       whileHover={{scale:1.05, boxShadow: "0px 10px 30px rgba(34,211,238,0.15)", y: -5}} 
-      className="bg-black/20 rounded-xl p-5 border border-white/5 cursor-pointer transition-colors hover:bg-black/40"
+      className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 cursor-pointer transition-colors hover:bg-black/40"
     >
       <Wallet className="text-cyan-400"/>
       <h3 className="font-bold mt-3">{name}</h3>

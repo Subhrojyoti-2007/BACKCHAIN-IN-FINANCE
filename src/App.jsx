@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
 import Explorer from './pages/Explorer'
@@ -15,30 +15,51 @@ import BrandLogo from './components/BrandLogo'
 import AdminTerminal from './pages/AdminTerminal'
 import { AuthProvider } from './context/AuthContext'
 
-export default function App() {
+import dashboardBg from './assets/dashboard-bg-clean.png'
+
+function AppContent() {
+  const location = useLocation()
+  const isLandingPage = location.pathname === '/'
+
   return (
-    <AuthProvider>
-      <BrandLogo />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
-        {/* Protected Dashboard Layout wrapper for all internal pages */}
-        <Route element={<ProtectedRoute />}>
-          <Route element={<Layout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/explorer" element={<Explorer />} />
-            <Route path="/payments" element={<Payments />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/security" element={<Security />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-          {/* Terminal is full-screen, so outside Layout but still Protected */}
-          <Route path="/terminal" element={<AdminTerminal />} />
-        </Route>
-      </Routes>
-    </AuthProvider>
+    <div 
+      className="min-h-screen text-slate-100"
+      style={!isLandingPage ? {
+        backgroundImage: `url(${dashboardBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      } : {}}
+    >
+      <div className={!isLandingPage ? "min-h-screen w-full bg-black/40 backdrop-blur-[2px]" : "min-h-screen w-full"}>
+        <AuthProvider>
+          <BrandLogo />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            {/* Protected Dashboard Layout wrapper for all internal pages */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/explorer" element={<Explorer />} />
+                <Route path="/payments" element={<Payments />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/security" element={<Security />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+              {/* Terminal is full-screen, so outside Layout but still Protected */}
+              <Route path="/terminal" element={<AdminTerminal />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </div>
+    </div>
   )
+}
+
+export default function App() {
+  return <AppContent />
 }

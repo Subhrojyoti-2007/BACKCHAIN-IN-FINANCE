@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
+
 import { AnimatedNavFramer } from '../components/ui/navigation-menu';
 
 export default function Login() {
@@ -28,34 +28,17 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden font-body-md selection:bg-primary selection:text-on-primary">
+    <div className="min-h-screen bg-transparent flex flex-col items-center justify-center p-4 relative overflow-hidden font-body-md selection:bg-primary selection:text-on-primary">
       {/* Background Gradient to match the theme */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-bright via-background to-background opacity-50"></div>
+      <div className="absolute inset-0 bg-transparent"></div>
 
       <AnimatedNavFramer />
 
       {/* Floating Card Container */}
       <div className="relative z-10 perspective-1000 mt-16 w-full max-w-md">
         
-        {/* Antigravity Animated Card */}
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-            rotateX: [0, 2, 0, -1, 0],
-            rotateY: [0, -2, 0, 1, 0],
-            boxShadow: [
-              "0px 10px 20px rgba(76, 215, 246, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.3)",
-              "0px 40px 60px rgba(76, 215, 246, 0.2), 0px 15px 30px rgba(0, 0, 0, 0.5)",
-              "0px 10px 20px rgba(76, 215, 246, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.3)"
-            ]
-          }}
-          transition={{
-            duration: 6,
-            ease: "easeInOut",
-            repeat: Infinity,
-          }}
-          className="w-full glass-panel rounded-2xl p-8 shadow-2xl relative"
-        >
+        {/* Static Card */}
+        <div className="w-full glass-panel rounded-2xl p-8 shadow-2xl relative">
           <div className="text-center mb-8">
             <h2 className="font-display-lg-mobile text-display-lg-mobile text-on-surface mb-2">Welcome Back</h2>
             <p className="font-body-md text-body-md text-on-surface-variant">Sign in to access your institutional ledger</p>
@@ -111,7 +94,7 @@ export default function Login() {
               Request access
             </Link>
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
