@@ -5,8 +5,8 @@
             "is_kyc_verified": true,
             "password_hash": "scrypt:32768:8:1$RjzIN0RhWaYLLGyj$67b657aa3bcef0afa74f27f431e295131acc72d58d0c1a7581ab44521f158373cf817bc2075495ceb5ba80e0dc043fe7d0f154a6c2afaa3fb80018a06d662ee1",
             "balance": 150000.0,
-            "language": "English",
-            "currency": "USD",
+            "language": "Spanish",
+            "currency": "EUR",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON"
@@ -43,6 +43,17 @@
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON"
+        },
+        "0xE855ADC1": {
+            "username": "TestUser_5147",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$OJsiffAINjec7Xe0$5697e02a7da20aba3244372050c51db8e81240ff776408804a622928349b090db78eb2b93f22783a1f29af8333c8f6ed0edadc6ca78b6493b4a54a1a2201e0e7",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON"
         }
     },
     "blockchain": {
@@ -55,6 +66,21 @@
                 ],
                 "previous_hash": "0",
                 "hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140"
+            },
+            {
+                "index": 1,
+                "timestamp": 1785922940.6063478,
+                "transactions": [
+                    {
+                        "sender": "0x82AF91EF",
+                        "receiver": "0x91AF72BC",
+                        "amount": 100.0,
+                        "asset": "ETH",
+                        "time": 1785922940.6063426
+                    }
+                ],
+                "previous_hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140",
+                "hash": "2dfe0ddcfddad399d0d163b1b6abc9f928d96c44cb61093c4870101b9b5c6108"
             }
         ]
     }
