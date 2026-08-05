@@ -108,7 +108,7 @@ function SecurityCenter() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 overflow-hidden">
+    <div className="min-h-screen bg-transparent text-white p-6 overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{opacity:0,y:-20}}
@@ -273,7 +273,7 @@ function SecurityCenter() {
               key={index}
               variants={slideRightItem}
               whileHover={{scale:1.01, backgroundColor: "rgba(255,255,255,0.1)"}}
-              className="bg-black/20 rounded-xl p-4 flex justify-between items-center transition-colors cursor-pointer"
+              className="bg-white/10 backdrop-blur-xl rounded-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <CheckCircle className="text-green-400" />

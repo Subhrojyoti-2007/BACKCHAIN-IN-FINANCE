@@ -258,7 +258,7 @@ const AdminTerminal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] p-6 lg:p-12 font-mono text-gray-300 flex flex-col items-start w-full relative">
+    <div className="min-h-screen bg-transparent p-6 lg:p-12 font-mono text-gray-300 flex flex-col items-start w-full relative">
       
       {/* Background Grid Pattern (Subtle) */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>

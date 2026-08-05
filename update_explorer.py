@@ -1,4 +1,8 @@
-import { motion } from "framer-motion";
+import os
+
+file_path = "src/pages/Explorer.jsx"
+
+new_content = """import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
   Search,
@@ -278,3 +282,9 @@ function InfoCard({icon, title, value, isNumeric = false, suffix = ""}) {
 }
 
 export default BlockchainExplorer;
+"""
+
+with open(file_path, "w", encoding="utf-8") as f:
+    f.write(new_content)
+    
+print("Explorer.jsx updated successfully!")

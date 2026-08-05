@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react';
+import os
+
+file_path = "src/pages/Analytics.jsx"
+
+new_content = """import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -228,3 +232,9 @@ function Analytics() {
 }
 
 export default Analytics;
+"""
+
+with open(file_path, "w", encoding="utf-8") as f:
+    f.write(new_content)
+    
+print("Analytics.jsx updated successfully!")

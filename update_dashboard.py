@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react'
+import os
+
+file_path = "src/pages/Dashboard.jsx"
+
+new_content = """import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   ResponsiveContainer,
@@ -334,3 +338,9 @@ export default function Dashboard() {
     </div>
   )
 }
+"""
+
+with open(file_path, "w", encoding="utf-8") as f:
+    f.write(new_content)
+    
+print("Dashboard.jsx updated successfully!")
