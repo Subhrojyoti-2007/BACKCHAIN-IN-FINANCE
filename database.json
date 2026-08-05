@@ -32,6 +32,17 @@
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON"
+        },
+        "0x5AFD9C46": {
+            "username": "subhrojyoti",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$ZLwUM579913fyABB$36d5ce6e0e1e5c4e72a4018b333e90ec03c3a6002c36aa84b9ef4d12aafc3e14ffd9fbc403d7b10221b96ceb23c825f2de26d22b95152796ec90cb8ed564a877",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON"
         }
     },
     "blockchain": {
