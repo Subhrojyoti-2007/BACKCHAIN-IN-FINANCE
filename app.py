@@ -11,7 +11,7 @@ from smart_contract import TransactionManager, UserAccount, KYCVerificationError
 import db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_DIR = os.path.join(BASE_DIR, 'BACKCHAIN-IN-FINANCE', 'dist')
+STATIC_DIR = os.path.join(BASE_DIR, 'dist')
 app = Flask(__name__, static_folder=STATIC_DIR)
 CORS(app)
 
