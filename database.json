@@ -32,6 +32,17 @@
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON"
+        },
+        "0x439B9F71": {
+            "username": "Sohini ",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$9aNM1EuEAxRKkYYb$846856bd81c6d697b02545bd3800e098514493a333afaf2e026cadec3ce8809ba0ae5b703b42e42009368dddc09549859e7eb591aed6ba71dbd25b82389008fb",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON"
         }
     },
     "blockchain": {
