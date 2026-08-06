@@ -25,6 +25,7 @@ import {
   ArrowDownRight
 } from 'lucide-react'
 import { AnimatedCounter } from '../components/ui/animated-counter'
+import DotField from '../components/ui/DotField'
 import { fetchCryptoPrices, fetchHistoricalData } from '../services/api'
 
 const allocationData = [
@@ -112,8 +113,18 @@ export default function Dashboard() {
     742900; // fallback
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[1700px] flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-        <div className="w-full">
+    <div className="relative mx-auto flex min-h-screen max-w-[1700px] flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <DotField
+          dotRadius={1.5}
+          dotSpacing={14}
+          bulgeStrength={67}
+          glowRadius={160}
+          sparkle={false}
+          waveAmplitude={0}
+        />
+      </div>
+      <div className="w-full z-10 relative">
           <motion.main 
             variants={containerVariants}
             initial="hidden"
