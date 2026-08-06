@@ -9,7 +9,9 @@
             "currency": "EUR",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
         },
         "0x91AF72BC": {
             "username": "Bob_LLC",
@@ -20,7 +22,9 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
         },
         "0x72BC88EF": {
             "username": "Charlie_Anon",
@@ -31,7 +35,9 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
         },
         "0x5AFD9C46": {
             "username": "subhrojyoti",
@@ -42,7 +48,9 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
         },
         "0xE855ADC1": {
             "username": "TestUser_5147",
@@ -53,7 +61,22 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
+        },
+        "0x42C9F8F7": {
+            "username": "CAT_1234",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$UkKUxFj0z2ZZggTK$fc61965e8e8545d25163700d457a7ef3d7f4bd9691a1a2793bbabe70bb49000ae4030082808b4f7ff955c403307edb250c4b05a6cecba34256c1a0fa98ca67f8",
+            "balance": 0.0,
+            "language": "en",
+            "currency": "USD",
+            "profile_visibility": "public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": "kyc_ref_459fb42b3fecbe0c1f1ede55",
+            "kyc_timestamp": 1786026786
         }
     },
     "blockchain": {

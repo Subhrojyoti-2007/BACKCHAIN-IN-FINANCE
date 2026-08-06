@@ -13,6 +13,7 @@ import Register from './pages/Register'
 import ProtectedRoute from './components/ProtectedRoute'
 import BrandLogo from './components/BrandLogo'
 import AdminTerminal from './pages/AdminTerminal'
+import KYCVerification from './pages/KYCVerification'
 import { AuthProvider } from './context/AuthContext'
 import { GlobalBackground } from './components/ui/background-snippets'
 
@@ -44,6 +45,7 @@ function AppContent() {
               </Route>
               {/* Terminal is full-screen, so outside Layout but still Protected */}
               <Route path="/terminal" element={<AdminTerminal />} />
+              <Route path="/kyc-verification" element={<KYCVerification />} />
             </Route>
           </Routes>
         </AuthProvider>
