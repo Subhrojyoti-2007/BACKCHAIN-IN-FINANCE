@@ -14,24 +14,16 @@ import ProtectedRoute from './components/ProtectedRoute'
 import BrandLogo from './components/BrandLogo'
 import AdminTerminal from './pages/AdminTerminal'
 import { AuthProvider } from './context/AuthContext'
-
-import dashboardBg from './assets/dashboard-bg-clean.png'
+import { GlobalBackground } from './components/ui/background-snippets'
 
 function AppContent() {
   const location = useLocation()
   const isLandingPage = location.pathname === '/'
 
   return (
-    <div 
-      className="min-h-screen text-slate-100"
-      style={!isLandingPage ? {
-        backgroundImage: `url(${dashboardBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      } : {}}
-    >
-      <div className={!isLandingPage ? "min-h-screen w-full bg-black/40 backdrop-blur-[2px]" : "min-h-screen w-full"}>
+    <div className="min-h-screen text-slate-100 relative">
+      <GlobalBackground />
+      <div className={!isLandingPage ? "min-h-screen w-full relative z-10" : "min-h-screen w-full relative z-10"}>
         <AuthProvider>
           <BrandLogo />
           <Routes>
