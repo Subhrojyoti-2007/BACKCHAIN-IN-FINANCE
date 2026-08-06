@@ -9,7 +9,10 @@
             "currency": "EUR",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null
         },
         "0x91AF72BC": {
             "username": "Bob_LLC",
@@ -20,7 +23,10 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null
         },
         "0x72BC88EF": {
             "username": "Charlie_Anon",
@@ -31,7 +37,10 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null
         },
         "0x5AFD9C46": {
             "username": "subhrojyoti",
@@ -42,7 +51,10 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null
         },
         "0xE855ADC1": {
             "username": "TestUser_5147",
@@ -53,7 +65,24 @@
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON"
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null
+        },
+        "0x8A146823": {
+            "username": "test_kyc_user_1786031667",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$3g5Q1NJsEM0dWDNM$42215c34c3e77dd1130c089227967da9d30848d02a7b77910e1580592ec8a616b36a62ce404dd9108a10b7845eff0650e3055980ff22bd9c432ca286637de73b",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": "ref_7f42623fd65fd941",
+            "kyc_timestamp": 1786031668.3697867,
+            "kyc_aadhaar_hash": "2a33349e7e606a8ad2e30e3c84521f9377450cf09083e162e0a9b1480ce0f972"
         }
     },
     "blockchain": {

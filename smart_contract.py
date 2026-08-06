@@ -8,7 +8,10 @@ class KYCVerificationError(Exception):
 
 class UserAccount:
     """Represents a user in the system with KYC status and balance."""
-    def __init__(self, username, is_kyc_verified=False, password_hash=None, balance=0.0, language="English", currency="USD", profile_visibility="Public", network="Ethereum Mainnet", wallet_connection="Auto Connect ON"):
+    def __init__(self, username, is_kyc_verified=False, password_hash=None, balance=0.0, 
+                 language="English", currency="USD", profile_visibility="Public", 
+                 network="Ethereum Mainnet", wallet_connection="Auto Connect ON",
+                 kyc_reference_id=None, kyc_timestamp=None, kyc_aadhaar_hash=None):
         self.username = username
         self.is_kyc_verified = is_kyc_verified
         self.password_hash = password_hash
@@ -18,9 +21,12 @@ class UserAccount:
         self.profile_visibility = profile_visibility
         self.network = network
         self.wallet_connection = wallet_connection
+        self.kyc_reference_id = kyc_reference_id
+        self.kyc_timestamp = kyc_timestamp
+        self.kyc_aadhaar_hash = kyc_aadhaar_hash
 
     def __repr__(self):
-        return f"UserAccount(username='{self.username}', kyc={self.is_kyc_verified}, balance={self.balance}, lang={self.language}, curr={self.currency}, vis={self.profile_visibility}, net={self.network}, conn={self.wallet_connection})"
+        return f"UserAccount(username='{self.username}', kyc={self.is_kyc_verified}, balance={self.balance}, lang={self.language}, curr={self.currency}, vis={self.profile_visibility}, net={self.network}, conn={self.wallet_connection}, ref={self.kyc_reference_id})"
 
     def to_dict(self):
         return {
@@ -32,7 +38,10 @@ class UserAccount:
             "currency": self.currency,
             "profile_visibility": self.profile_visibility,
             "network": self.network,
-            "wallet_connection": self.wallet_connection
+            "wallet_connection": self.wallet_connection,
+            "kyc_reference_id": self.kyc_reference_id,
+            "kyc_timestamp": self.kyc_timestamp,
+            "kyc_aadhaar_hash": self.kyc_aadhaar_hash
         }
 
     @classmethod
@@ -46,8 +55,24 @@ class UserAccount:
             currency=data.get("currency", "USD"),
             profile_visibility=data.get("profile_visibility", "Public"),
             network=data.get("network", "Ethereum Mainnet"),
-            wallet_connection=data.get("wallet_connection", "Auto Connect ON")
+            wallet_connection=data.get("wallet_connection", "Auto Connect ON"),
+            kyc_reference_id=data.get("kyc_reference_id"),
+            kyc_timestamp=data.get("kyc_timestamp"),
+            kyc_aadhaar_hash=data.get("kyc_aadhaar_hash")
         )
+
+
+class IdentityRegistry:
+    """Simulates the ERC-3643 Identity Registry smart contract."""
+    
+    @staticmethod
+    def whitelist_address(wallet_address: str):
+        """
+        Triggers a simulated blockchain transaction to whitelist the wallet address.
+        """
+        print(f"\n[Smart Contract] whitelisting address in IdentityRegistry: {wallet_address}")
+        # In a real environment: identityRegistry.registerIdentity(wallet_address, identityURI, kycStatus)
+        return True
 
 
 class TransactionManager:

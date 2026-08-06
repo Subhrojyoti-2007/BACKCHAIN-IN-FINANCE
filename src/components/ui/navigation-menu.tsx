@@ -99,6 +99,8 @@ export function AnimatedNavFramer() {
   
   const isLandingPage = location.pathname === '/';
 
+  const isKycVerified = user?.is_kyc_verified || user?.kyc_verified;
+
   const navItems = allNavItems.filter(item => {
     // Hide Login/Register if logged in
     if (user && item.unAuthOnly) return false;
@@ -106,6 +108,8 @@ export function AnimatedNavFramer() {
     if (!user && item.authOnly) return false;
     // Hide dashboard-specific links on the landing page to avoid clutter
     if (isLandingPage && item.dashboardOnly) return false;
+    // Hide dashboard links if user is not KYC verified
+    if (user && !isKycVerified && item.dashboardOnly) return false;
     return true;
   });
   
@@ -114,6 +118,7 @@ export function AnimatedNavFramer() {
     if (user && item.unAuthOnly) return false;
     if (!user && item.authOnly) return false;
     if (!user && item.dashboardOnly) return false;
+    if (user && !isKycVerified && item.dashboardOnly) return false;
     return true;
   });
 
