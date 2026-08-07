@@ -3,10 +3,10 @@
         "0x82AF91EF": {
             "username": "Alice_Corp",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$RjzIN0RhWaYLLGyj$67b657aa3bcef0afa74f27f431e295131acc72d58d0c1a7581ab44521f158373cf817bc2075495ceb5ba80e0dc043fe7d0f154a6c2afaa3fb80018a06d662ee1",
+            "password_hash": "scrypt:32768:8:1$vI55lco9vAGys2b3$e18fe1c2a82591feb0af6f5399cec4ca25da3edd94c98da2c4af079f8ddd883f9d1abf494805dc3af2062c1c0077003d95f229d52e0fe64e6e0f74ae0857dcb6",
             "balance": 150000.0,
-            "language": "Spanish",
-            "currency": "EUR",
+            "language": "English",
+            "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON",
@@ -16,7 +16,7 @@
         "0x91AF72BC": {
             "username": "Bob_LLC",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$34FhqTtLQ058qYks$f5ea0fd9403ed88c3da7963f9755bb2650f58b79fa552891dc4b61e574861ebe8c56a8a91706510f1e60e2664437907a8e3814a923ce0e0f34a53a53d9f17b0e",
+            "password_hash": "scrypt:32768:8:1$FraDOwPtWKtPnkyi$00d36581a1bfb8e252c137cc0a9f2ddcc15db91ace864d4966635e139dc867edf680cbdd5c7d57ff0399567e68b233dec810b7d2e3e1becbc1e31591b3ef73ba",
             "balance": 200000.0,
             "language": "English",
             "currency": "USD",
@@ -29,7 +29,7 @@
         "0x72BC88EF": {
             "username": "Charlie_Anon",
             "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$FxERsa2OgsRf0V2e$6d5340e3ff1c5299a5a3881e625bbc091ec36f42e5f3d1794195a51eccca235e00ae2c113ce13fcdb65915126162afbe48fd82cc677026afb5751637f34f0651",
+            "password_hash": "scrypt:32768:8:1$QZ4L0YJk0KAi7YlO$887617c6225773d264a5721b0b3d02b2466dc4a798a850287ffeb391073cdc98d75cf2119cf70049dff7ff5f303f5ca0d50af290e822ea5c67767004ddc67581",
             "balance": 50000.0,
             "language": "English",
             "currency": "USD",
@@ -38,72 +38,18 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null
-        },
-        "0x5AFD9C46": {
-            "username": "subhrojyoti",
-            "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$ZLwUM579913fyABB$36d5ce6e0e1e5c4e72a4018b333e90ec03c3a6002c36aa84b9ef4d12aafc3e14ffd9fbc403d7b10221b96ceb23c825f2de26d22b95152796ec90cb8ed564a877",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null
-        },
-        "0xE855ADC1": {
-            "username": "TestUser_5147",
-            "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$OJsiffAINjec7Xe0$5697e02a7da20aba3244372050c51db8e81240ff776408804a622928349b090db78eb2b93f22783a1f29af8333c8f6ed0edadc6ca78b6493b4a54a1a2201e0e7",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null
-        },
-        "0x42C9F8F7": {
-            "username": "CAT_1234",
-            "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$UkKUxFj0z2ZZggTK$fc61965e8e8545d25163700d457a7ef3d7f4bd9691a1a2793bbabe70bb49000ae4030082808b4f7ff955c403307edb250c4b05a6cecba34256c1a0fa98ca67f8",
-            "balance": 0.0,
-            "language": "en",
-            "currency": "USD",
-            "profile_visibility": "public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": "kyc_ref_459fb42b3fecbe0c1f1ede55",
-            "kyc_timestamp": 1786026786
         }
     },
     "blockchain": {
         "chain": [
             {
                 "index": 0,
-                "timestamp": 1785678682.9069486,
+                "timestamp": 1786088291.145362,
                 "transactions": [
                     "Genesis Block"
                 ],
                 "previous_hash": "0",
-                "hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140"
-            },
-            {
-                "index": 1,
-                "timestamp": 1785922940.6063478,
-                "transactions": [
-                    {
-                        "sender": "0x82AF91EF",
-                        "receiver": "0x91AF72BC",
-                        "amount": 100.0,
-                        "asset": "ETH",
-                        "time": 1785922940.6063426
-                    }
-                ],
-                "previous_hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140",
-                "hash": "2dfe0ddcfddad399d0d163b1b6abc9f928d96c44cb61093c4870101b9b5c6108"
+                "hash": "950feb267cb573c433ced87f1614cd9cda1132074555e7c54068952b76a5106b"
             }
         ]
     }
