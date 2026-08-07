@@ -17,6 +17,7 @@ CORS(app)
 
 # Configure JWT
 app.config["JWT_SECRET_KEY"] = "super-secret-dev-key"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
 jwt = JWTManager(app)
 
 @app.route('/', defaults={'path': ''})
@@ -113,9 +114,100 @@ def login():
             'currency': users[address].currency,
             'profile_visibility': users[address].profile_visibility,
             'network': users[address].network,
-            'wallet_connection': users[address].wallet_connection
+            'wallet_connection': users[address].wallet_connection,
+            'kyc_reference_id': users[address].kyc_reference_id
         }
     }), 200
+
+# Mock stores for KYC
+mock_otp_store = {}
+otp_rate_limit = {}
+
+@app.route('/api/kyc/send-otp', methods=['POST'])
+@jwt_required()
+def send_otp():
+    """Mock API to send Aadhaar OTP."""
+    current_user_addr = get_jwt_identity()
+    values = request.get_json()
+    
+    if not values or 'aadhaar_number' not in values:
+        return jsonify({'error': 'Missing aadhaar_number'}), 400
+        
+    aadhaar = str(values['aadhaar_number']).strip()
+    if len(aadhaar) != 12 or not aadhaar.isdigit():
+        return jsonify({'error': 'Invalid Aadhaar number format. Must be 12 digits.'}), 400
+
+    # Rate limiting (1 request per 30 seconds)
+    current_time = time()
+    if current_user_addr in otp_rate_limit:
+        if current_time - otp_rate_limit[current_user_addr] < 30:
+            return jsonify({'error': 'Too many requests. Please wait 30 seconds.'}), 429
+            
+    otp_rate_limit[current_user_addr] = current_time
+
+    # Generate random OTP (User asked for random OTP)
+    import random
+    otp = str(random.randint(100000, 999999))
+    
+    transaction_id = "txn_" + secrets.token_hex(8)
+    
+    # Store in mock memory
+    mock_otp_store[transaction_id] = {
+        'otp': otp,
+        'user_addr': current_user_addr,
+        'expires': current_time + 300 # 5 minutes expiry
+    }
+    
+    print(f"[MOCK KYC API] Sent OTP {otp} to Aadhaar {aadhaar} for user {current_user_addr}. Txn ID: {transaction_id}")
+    
+    return jsonify({
+        'message': 'OTP sent successfully',
+        'transaction_id': transaction_id
+    }), 200
+
+@app.route('/api/kyc/verify-otp', methods=['POST'])
+@jwt_required()
+def verify_otp():
+    """Mock API to verify Aadhaar OTP."""
+    current_user_addr = get_jwt_identity()
+    values = request.get_json()
+    
+    if not values or 'otp' not in values or 'transaction_id' not in values:
+        return jsonify({'error': 'Missing otp or transaction_id'}), 400
+        
+    otp = str(values['otp']).strip()
+    transaction_id = values['transaction_id']
+    
+    if transaction_id not in mock_otp_store:
+        return jsonify({'error': 'Invalid or expired transaction.'}), 400
+        
+    store_data = mock_otp_store[transaction_id]
+    
+    if store_data['user_addr'] != current_user_addr:
+        return jsonify({'error': 'Unauthorized transaction.'}), 403
+        
+    if time() > store_data['expires']:
+        del mock_otp_store[transaction_id]
+        return jsonify({'error': 'OTP expired.'}), 400
+        
+    if store_data['otp'] != otp:
+        return jsonify({'error': 'Invalid OTP.'}), 400
+        
+    # Success! Update user Profile
+    del mock_otp_store[transaction_id]
+    
+    if current_user_addr in users:
+        users[current_user_addr].is_kyc_verified = True
+        users[current_user_addr].kyc_reference_id = "kyc_ref_" + secrets.token_hex(12)
+        users[current_user_addr].kyc_timestamp = int(time())
+        db.save_db(users, blockchain)
+        
+        return jsonify({
+            'message': 'KYC Verification Successful',
+            'user': users[current_user_addr].to_dict()
+        }), 200
+        
+    return jsonify({'error': 'User not found.'}), 404
 
 
 @app.route('/api/blocks', methods=['GET'])

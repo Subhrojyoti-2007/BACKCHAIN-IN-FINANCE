@@ -10,48 +10,14 @@ import {
   Link,
   Award,
   Activity,
+  Coins,
 } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 
-const wallets = [
-  {
-    name: "MetaMask",
-    address: "0x82AF...91EF",
-    status: "Connected",
-  },
-  {
-    name: "WalletConnect",
-    address: "0x71BC...44DA",
-    status: "Connected",
-  },
-  {
-    name: "Coinbase Wallet",
-    address: "0x92CD...18FA",
-    status: "Connected",
-  },
-];
 
 
-const stats = [
-  {
-    title: "Total Transactions",
-    value: "248",
-    icon: <Activity />,
-    initial: { opacity: 0, x: -50 },
-  },
-  {
-    title: "Wallet Age",
-    value: "14 Months",
-    icon: <Wallet />,
-    initial: { opacity: 0, y: 50 },
-  },
-  {
-    title: "Portfolio Rank",
-    value: "Top 5%",
-    icon: <Award />,
-    initial: { opacity: 0, x: 50 },
-  },
-];
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -80,8 +46,126 @@ const slideUpItem = {
 };
 
 function Profile() {
+  const { user } = useAuth();
+  
+  const [txCount, setTxCount] = useState(0);
+  const [rank, setRank] = useState('-');
+  const [balance, setBalance] = useState('$0.00');
+
+  // Local state for UI preferences
+  const [preferences, setPreferences] = useState({
+    email: localStorage.getItem('pref_email') !== 'false',
+    security: localStorage.getItem('pref_security') !== 'false',
+    theme: localStorage.getItem('pref_theme') !== 'false'
+  });
+
+  const togglePreference = (key) => {
+    setPreferences(prev => {
+      const newValue = !prev[key];
+      localStorage.setItem(`pref_${key}`, newValue);
+      return { ...prev, [key]: newValue };
+    });
+  };
+  
+  useEffect(() => {
+    const fetchRealData = async () => {
+      try {
+        // Fetch blocks to count transactions
+        const blocksRes = await fetch('/api/blocks');
+        if (blocksRes.ok) {
+          const blocksData = await blocksRes.json();
+          let count = 0;
+          blocksData.chain.forEach(block => {
+            block.transactions.forEach(tx => {
+              if (tx.sender === user?.address || tx.receiver === user?.address) {
+                count++;
+              }
+            });
+          });
+          setTxCount(count);
+        }
+        
+        const accountsRes = await fetch('/api/accounts');
+        if (accountsRes.ok) {
+          const accountsData = await accountsRes.json();
+          const userAccount = accountsData.find(a => a.address === user?.address);
+          if (userAccount) {
+            setBalance(
+              new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: user?.currency || 'USD',
+                maximumFractionDigits: 2
+              }).format(userAccount.balance)
+            );
+          }
+          
+          accountsData.sort((a, b) => b.balance - a.balance);
+          const index = accountsData.findIndex(a => a.address === user?.address);
+          if (index !== -1) {
+            setRank(`#${index + 1} of ${accountsData.length}`);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch real data", err);
+      }
+    };
+    
+    if (user?.address) {
+      fetchRealData();
+    }
+  }, [user?.address]);
+
+  const displayAddress = user?.address 
+    ? `${user.address.slice(0, 6)}...${user.address.slice(-4)}`
+    : "0x0000...0000";
+
+  const stats = [
+    {
+      title: "Wallet Balance",
+      value: balance,
+      icon: <Coins />,
+      initial: { opacity: 0, y: -50 },
+    },
+    {
+      title: "Total Transactions",
+      value: txCount.toString(),
+      icon: <Activity />,
+      initial: { opacity: 0, x: -50 },
+    },
+    {
+      title: "Wallet Status",
+      value: user?.is_kyc_verified ? "Verified" : "Unverified",
+      icon: <Wallet />,
+      initial: { opacity: 0, y: 50 },
+    },
+    {
+      title: "Portfolio Rank",
+      value: rank,
+      icon: <Award />,
+      initial: { opacity: 0, x: 50 },
+    },
+  ];
+
+  const wallets = [
+    {
+      name: "Primary Wallet",
+      address: displayAddress,
+      status: "Connected",
+    },
+    {
+      name: "WalletConnect",
+      address: "0x71BC...44DA",
+      status: "Connected",
+    },
+    {
+      name: "Coinbase Wallet",
+      address: "0x92CD...18FA",
+      status: "Connected",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 overflow-hidden">
+    <div className="min-h-screen bg-transparent text-white p-6 overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{opacity:0, y:-30}}
@@ -111,7 +195,7 @@ function Profile() {
           </div>
           <div>
             <h2 className="text-3xl font-bold">
-              Ava Turner
+              {user?.username || 'Guest'}
             </h2>
             <div className="flex items-center gap-2 mt-2 text-green-400">
               <ShieldCheck size={20}/>
@@ -119,20 +203,20 @@ function Profile() {
             </div>
             <div className="flex items-center gap-2 mt-3 text-gray-300">
               <Wallet size={18}/>
-              0x82AF....91EF
+              {displayAddress}
               <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
                 <Copy size={16} className="cursor-pointer hover:text-cyan-400 transition-colors" />
               </motion.div>
             </div>
             <p className="text-gray-400 mt-2">
-              Ethereum Mainnet
+              {user?.network || 'Ethereum Mainnet'}
             </p>
           </div>
         </div>
       </motion.div>
 
       {/* Statistics */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       {stats.map((item,index)=>(
           <motion.div
             key={index}
@@ -180,7 +264,7 @@ function Profile() {
               key={index}
               variants={fadeDownItem}
               whileHover={{scale:1.01, backgroundColor: "rgba(255,255,255,0.1)"}}
-              className="bg-black/20 rounded-xl p-4 flex justify-between items-center transition-colors cursor-pointer"
+              className="bg-white/10 backdrop-blur-xl rounded-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
             >
               <div>
                 <h3 className="font-semibold">
@@ -214,21 +298,36 @@ function Profile() {
           initial="hidden"
           animate="visible"
         >
-          <Preference icon={<Mail/>} title="Email Notifications" value="ON" />
-          <Preference icon={<Bell/>} title="Security Alerts" value="ON" />
-          <Preference icon={<Moon/>} title="Dark Mode" value="ON" />
+          <Preference 
+            icon={<Mail/>} 
+            title="Email Notifications" 
+            value={preferences.email ? "ON" : "OFF"} 
+            onClick={() => togglePreference('email')}
+          />
+          <Preference 
+            icon={<Bell/>} 
+            title="Security Alerts" 
+            value={preferences.security ? "ON" : "OFF"} 
+            onClick={() => togglePreference('security')}
+          />
+          <Preference 
+            icon={<Moon/>} 
+            title="Dark Mode" 
+            value={preferences.theme ? "ON" : "OFF"} 
+            onClick={() => togglePreference('theme')}
+          />
         </motion.div>
       </motion.div>
     </div>
   );
 }
 
-function Preference({icon,title,value}){
+function Preference({icon, title, value, onClick}){
   return (
     <motion.div
       variants={slideUpItem}
-      whileHover={{ scale: 1.01, backgroundColor: "rgba(255,255,255,0.1)" }}
-      className="flex justify-between items-center bg-black/20 rounded-xl p-4 mb-3 cursor-pointer transition-colors"
+      onClick={onClick}
+      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors hover:bg-white/15 cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <div className="text-cyan-400">
@@ -238,9 +337,18 @@ function Preference({icon,title,value}){
           {title}
         </p>
       </div>
-      <span className="text-green-400 font-medium">
-        {value}
-      </span>
+      <div className="flex items-center gap-3">
+        <span className={`font-medium ${value === "ON" ? "text-green-400" : "text-gray-400"}`}>
+          {value}
+        </span>
+        <div className={`w-11 h-6 rounded-full p-1 flex items-center transition-colors ${value === "ON" ? "bg-green-500/30" : "bg-gray-600/50"}`}>
+          <motion.div 
+            className={`w-4 h-4 rounded-full ${value === "ON" ? "bg-green-400" : "bg-gray-400"}`}
+            animate={{ x: value === "ON" ? 20 : 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          />
+        </div>
+      </div>
     </motion.div>
   );
 }

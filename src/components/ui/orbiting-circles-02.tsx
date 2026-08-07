@@ -88,7 +88,7 @@ export default function OrbitingCirclesGlobe({ children }: { children?: React.Re
                   style={
                     {
                       "--start-angle": `${iconData.angle}deg`,
-                      animation: `${orbitAnim} ${orbit.duration}s linear infinite`,
+                      transform: `rotate(${iconData.angle}deg)`,
                     } as React.CSSProperties
                   }
                 >
@@ -97,7 +97,7 @@ export default function OrbitingCirclesGlobe({ children }: { children?: React.Re
                     style={
                       {
                         "--counter-offset": `${-iconData.angle}deg`,
-                        animation: `${counterAnim} ${orbit.duration}s linear infinite`,
+                        transform: `rotate(${-iconData.angle}deg)`,
                       } as React.CSSProperties
                     }
                   >

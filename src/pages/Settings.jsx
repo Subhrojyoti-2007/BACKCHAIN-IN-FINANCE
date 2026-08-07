@@ -74,7 +74,7 @@ function Settings() {
   // Cycle functions are removed as we will use proper select dropdowns.
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 overflow-hidden">
+    <div className="min-h-screen bg-transparent text-white p-6 overflow-hidden">
       {/* Header */}
       <motion.div
         initial={{opacity:0, y:-30}}
@@ -239,7 +239,7 @@ function SettingCard({title, children, initial, animate, transition}){
 function SettingItem({icon, title, value, options, onChange}){
   return (
     <div
-      className="flex justify-between items-center bg-black/20 rounded-xl p-4 mb-3 transition-colors"
+      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors"
     >
       <div className="flex items-center gap-3">
         <div className="text-cyan-400">
@@ -270,7 +270,7 @@ function ToggleItem({icon, title, status}){
   return (
     <motion.div
       whileHover={{ scale: 1.01, backgroundColor: "rgba(255,255,255,0.1)" }}
-      className="flex justify-between items-center bg-black/20 rounded-xl p-4 mb-3 transition-colors cursor-pointer"
+      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <div className="text-cyan-400">
