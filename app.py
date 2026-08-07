@@ -260,22 +260,49 @@ def update_settings():
         user.network = values['network']
     if 'wallet_connection' in values:
         user.wallet_connection = values['wallet_connection']
+    if 'hardware_mfa' in values:
+        user.hardware_mfa = values['hardware_mfa']
+    if 'passkey_biometrics' in values:
+        user.passkey_biometrics = values['passkey_biometrics']
+    if 'settlement_alerts' in values:
+        user.settlement_alerts = values['settlement_alerts']
+    if 'threat_advisories' in values:
+        user.threat_advisories = values['threat_advisories']
+    if 'yield_updates' in values:
+        user.yield_updates = values['yield_updates']
+    if 'session_timeout' in values:
+        user.session_timeout = values['session_timeout']
+    if 'tx_threshold' in values:
+        user.tx_threshold = values['tx_threshold']
         
     db.save_db(users, blockchain)
         
     return jsonify({
         'message': 'Settings updated successfully',
-        'user': {
-            'address': current_user_addr,
-            'username': user.username,
-            'is_kyc_verified': user.is_kyc_verified,
-            'language': user.language,
-            'currency': user.currency,
-            'profile_visibility': user.profile_visibility,
-            'network': user.network,
-            'wallet_connection': user.wallet_connection
-        }
+        'user': user.to_dict()
     }), 200
+
+@app.route('/api/add-balance', methods=['POST'])
+@jwt_required()
+def add_balance():
+    """Add balance to user wallet (mock functionality)"""
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+        
+    values = request.get_json()
+    amount = float(values.get('amount', 0))
+    if amount <= 0:
+        return jsonify({'error': 'Invalid amount'}), 400
+        
+    users[current_user_addr].balance += amount
+    db.save_db(users, blockchain)
+    
+    return jsonify({
+        'message': f'Successfully added {amount}',
+        'balance': users[current_user_addr].balance
+    }), 200
+
 
 
 @app.route('/api/transaction', methods=['POST'])

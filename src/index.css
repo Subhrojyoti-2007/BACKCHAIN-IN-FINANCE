@@ -123,31 +123,74 @@
 }
 
 .glass-panel {
-    background-color: rgba(17, 24, 39, 0.6);
+    background-color: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-top-color: rgba(255, 255, 255, 0.15);
-    border-left-color: rgba(255, 255, 255, 0.15);
+    border-top-color: rgba(255, 255, 255, 0.18);
+    border-left-color: rgba(255, 255, 255, 0.18);
 }
+
+.glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 10px 40px -10px rgba(56, 189, 248, 0.25);
+    transform: translateY(-2px);
+}
+
+.bento-card {
+    background: radial-gradient(circle at top left, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.bento-card:hover {
+    border-color: rgba(34, 211, 238, 0.4);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+}
+
+.text-gradient-cyan {
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .btn-primary {
-    background-color: #3B82F6;
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
     color: white;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.35);
 }
+
 .btn-primary:hover {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 20px 0 rgba(37, 99, 235, 0.55);
     transform: translateY(-1px);
 }
+
 .btn-secondary {
-    background-color: transparent;
-    border: 1px solid #8B5CF6;
-    color: #8B5CF6;
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
     transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
+
 .btn-secondary:hover {
-    background-color: rgba(139, 92, 246, 0.1);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(38, 198, 218, 0.5);
+    color: #38bdf8;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
     transform: translateY(-1px);
 }
 
