@@ -16,7 +16,7 @@ app = Flask(__name__, static_folder=STATIC_DIR)
 CORS(app)
 
 # Configure JWT
-app.config["JWT_SECRET_KEY"] = "super-secret-dev-key"
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "super-secret-dev-key")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
 jwt = JWTManager(app)
 
