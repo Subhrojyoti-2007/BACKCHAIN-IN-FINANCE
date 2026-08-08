@@ -9,18 +9,36 @@ import {
   DollarSign,
   Lock,
   Smartphone,
-  CheckCircle,
+  CheckCircle2,
+  Save,
+  Check,
+  Clock,
+  SlidersHorizontal,
+  Key
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 function Settings() {
   const { user, token, setUser, logout } = useAuth();
   
+  // State for Account & Network Settings
   const [language, setLanguage] = useState(user?.language || "English");
   const [currency, setCurrency] = useState(user?.currency || "USD");
   const [visibility, setVisibility] = useState(user?.profile_visibility || "Public");
   const [network, setNetwork] = useState(user?.network || "Ethereum Mainnet");
   const [walletConnection, setWalletConnection] = useState(user?.wallet_connection || "Auto Connect ON");
+
+  // State for Security Credentials
+  const [hardwareMfa, setHardwareMfa] = useState(user?.hardware_mfa || "Enabled");
+  const [passkeyBiometrics, setPasskeyBiometrics] = useState(user?.passkey_biometrics || "Enabled");
+  const [sessionTimeout, setSessionTimeout] = useState(user?.session_timeout || "30 Minutes");
+  const [txThreshold, setTxThreshold] = useState(user?.tx_threshold || "$1,000 Threshold");
+
+  // State for Alert Channels Toggles
+  const [settlementAlerts, setSettlementAlerts] = useState(user?.settlement_alerts || "ON");
+  const [threatAdvisories, setThreatAdvisories] = useState(user?.threat_advisories || "ON");
+  const [yieldUpdates, setYieldUpdates] = useState(user?.yield_updates || "OFF");
+
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
 
@@ -31,6 +49,13 @@ function Settings() {
       setVisibility(user.profile_visibility || "Public");
       setNetwork(user.network || "Ethereum Mainnet");
       setWalletConnection(user.wallet_connection || "Auto Connect ON");
+      setHardwareMfa(user.hardware_mfa || "Enabled");
+      setPasskeyBiometrics(user.passkey_biometrics || "Enabled");
+      setSettlementAlerts(user.settlement_alerts || "ON");
+      setThreatAdvisories(user.threat_advisories || "ON");
+      setYieldUpdates(user.yield_updates || "OFF");
+      setSessionTimeout(user.session_timeout || "30 Minutes");
+      setTxThreshold(user.tx_threshold || "$1,000 Threshold");
     }
   }, [user]);
 
@@ -49,12 +74,19 @@ function Settings() {
           currency,
           profile_visibility: visibility,
           network,
-          wallet_connection: walletConnection
+          wallet_connection: walletConnection,
+          hardware_mfa: hardwareMfa,
+          passkey_biometrics: passkeyBiometrics,
+          settlement_alerts: settlementAlerts,
+          threat_advisories: threatAdvisories,
+          yield_updates: yieldUpdates,
+          session_timeout: sessionTimeout,
+          tx_threshold: txThreshold
         })
       });
       if (res.ok) {
         const data = await res.json();
-        setUser(data.user); // Update context and localStorage
+        setUser(data.user);
         setSaveStatus("Success");
       } else if (res.status === 401 || res.status === 422) {
         if (typeof logout === 'function') logout();
@@ -68,184 +100,186 @@ function Settings() {
       setSaveStatus("Error");
     }
     setIsSaving(false);
-    setTimeout(() => setSaveStatus(null), 3000);
+    setTimeout(() => setSaveStatus(null), 3500);
   };
-  
-  // Cycle functions are removed as we will use proper select dropdowns.
 
   return (
-    <div className="min-h-screen bg-transparent text-white p-6 overflow-hidden">
+    <div className="min-h-screen text-slate-100 space-y-6 pb-12">
       {/* Header */}
       <motion.div
-        initial={{opacity:0, y:-30}}
-        animate={{opacity:1, y:0}}
-        transition={{ duration: 0.5, type: "spring" }}
-        className="mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
       >
-        <h1 className="text-3xl font-bold flex items-center gap-3">
-          <SettingsIcon className="text-cyan-400"/>
-          Settings
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-2">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">System Preferences</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <SettingsIcon className="h-8 w-8 text-cyan-400" />
+          <span>Platform & Security Settings</span>
         </h1>
-        <p className="text-gray-400 mt-2">
-          Manage your account, wallet and security preferences
-        </p>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">Configure interactive options, alert notifications, settlement networks, and security thresholds.</p>
       </motion.div>
 
-      {/* Settings Sections */}
+      {/* Settings Grid */}
       <div className="grid lg:grid-cols-2 gap-6">
 
-        {/* Account Settings */}
-        <SettingCard 
-          title="Account Settings"
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 70 }}
-        >
+        {/* Account Defaults */}
+        <SettingCard title="Account Defaults">
           <SettingItem
-            icon={<Globe/>}
-            title="Language"
+            icon={<Globe className="h-4 w-4 text-cyan-400" />}
+            title="Interface Language"
             value={language}
             options={["English", "Spanish", "French", "German", "Mandarin", "Japanese", "Korean", "Hindi", "Arabic", "Portuguese", "Russian", "Italian"]}
             onChange={setLanguage}
           />
           <SettingItem
-            icon={<DollarSign/>}
-            title="Currency"
+            icon={<DollarSign className="h-4 w-4 text-cyan-400" />}
+            title="Base Reporting Currency"
             value={currency}
             options={["USD", "EUR", "GBP", "JPY", "ETH", "BTC", "USDC", "USDT", "AUD", "CAD", "CHF", "CNY", "INR"]}
             onChange={setCurrency}
           />
           <SettingItem
-            icon={<Shield/>}
-            title="Profile Visibility"
+            icon={<Shield className="h-4 w-4 text-cyan-400" />}
+            title="Identity Visibility"
             value={visibility}
-            options={["Public", "Private", "Friends Only"]}
+            options={["Public", "Private", "Institutional Verified Only"]}
             onChange={setVisibility}
           />
         </SettingCard>
 
-        {/* Wallet Settings */}
-        <SettingCard 
-          title="Wallet Settings"
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, type: "spring", stiffness: 70 }}
-        >
+        {/* Network & Wallet Settings */}
+        <SettingCard title="Subnet & Multi-Sig Rails">
           <SettingItem
-            icon={<Wallet/>}
-            title="Network"
+            icon={<Wallet className="h-4 w-4 text-cyan-400" />}
+            title="Primary Subnet Network"
             value={network}
             options={["Ethereum Mainnet", "Polygon", "Arbitrum", "Optimism", "Solana", "Binance Smart Chain"]}
             onChange={setNetwork}
           />
           <SettingItem
-            icon={<CheckCircle/>}
-            title="Wallet Connection"
+            icon={<CheckCircle2 className="h-4 w-4 text-cyan-400" />}
+            title="Signer Handshake Mode"
             value={walletConnection}
             options={["Auto Connect ON", "Auto Connect OFF", "Manual Proxy"]}
             onChange={setWalletConnection}
           />
         </SettingCard>
 
-        {/* Notification Settings */}
-        <SettingCard 
-          title="Notification Settings"
-          initial={{ opacity: 0, x: -50, y: 50 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, type: "spring", stiffness: 70 }}
-        >
-          <ToggleItem
-            icon={<Bell/>}
-            title="Transaction Alerts"
-            status="ON"
+        {/* Alert Channels (Interactive Toggles) */}
+        <SettingCard title="Alert Channels">
+          <InteractiveToggleItem
+            icon={<Bell className="h-4 w-4 text-cyan-400" />}
+            title="On-Chain Settlement Broadcasts"
+            status={settlementAlerts}
+            onToggle={() => setSettlementAlerts(prev => prev === "ON" ? "OFF" : "ON")}
           />
-          <ToggleItem
-            icon={<Shield/>}
-            title="Security Alerts"
-            status="ON"
+          <InteractiveToggleItem
+            icon={<Shield className="h-4 w-4 text-cyan-400" />}
+            title="Vault Threat & Risk Advisories"
+            status={threatAdvisories}
+            onToggle={() => setThreatAdvisories(prev => prev === "ON" ? "OFF" : "ON")}
           />
-          <ToggleItem
-            icon={<Bell/>}
-            title="Market Updates"
-            status="OFF"
+          <InteractiveToggleItem
+            icon={<Bell className="h-4 w-4 text-cyan-400" />}
+            title="Liquidity Yield Updates"
+            status={yieldUpdates}
+            onToggle={() => setYieldUpdates(prev => prev === "ON" ? "OFF" : "ON")}
           />
         </SettingCard>
 
-        {/* Security Preferences */}
-        <SettingCard 
-          title="Security Preferences"
-          initial={{ opacity: 0, x: 50, y: 50 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6, type: "spring", stiffness: 70 }}
-        >
+        {/* Security Credentials & Options */}
+        <SettingCard title="Security Credentials & Policy Options">
           <SettingItem
-            icon={<Lock/>}
-            title="Two Factor Authentication"
-            value="Enabled"
+            icon={<Lock className="h-4 w-4 text-cyan-400" />}
+            title="Hardware Multi-Factor Auth"
+            value={hardwareMfa}
+            options={["Enabled", "Disabled", "Hardware Key Required", "Require PIN"]}
+            onChange={setHardwareMfa}
           />
           <SettingItem
-            icon={<Smartphone/>}
-            title="Biometric Login"
-            value="Enabled"
+            icon={<Smartphone className="h-4 w-4 text-cyan-400" />}
+            title="Passkey Biometric Login"
+            value={passkeyBiometrics}
+            options={["Enabled", "Disabled", "Touch ID / Face ID", "Strict Prompt"]}
+            onChange={setPasskeyBiometrics}
+          />
+          <SettingItem
+            icon={<Clock className="h-4 w-4 text-cyan-400" />}
+            title="Session Timeout"
+            value={sessionTimeout}
+            options={["15 Minutes", "30 Minutes", "1 Hour", "4 Hours", "Never"]}
+            onChange={setSessionTimeout}
+          />
+          <SettingItem
+            icon={<SlidersHorizontal className="h-4 w-4 text-cyan-400" />}
+            title="2FA Transaction Threshold"
+            value={txThreshold}
+            options={["Always Require", "$1,000 Threshold", "$10,000 Threshold", "Disabled"]}
+            onChange={setTxThreshold}
           />
         </SettingCard>
-
       </div>
 
-      {/* Save Button */}
-      <div className="flex items-center gap-4 mt-8">
-        <motion.button
+      {/* Save Action Bar */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="glass-card rounded-3xl p-6 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <button
           onClick={handleSave}
           disabled={isSaving}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          whileHover={{scale:1.05}}
-          whileTap={{scale:0.95}}
-          className="bg-cyan-500 text-black font-bold px-8 py-3 rounded-xl hover:bg-cyan-400 transition-colors disabled:opacity-50 flex items-center gap-2"
+          className="btn-primary font-bold text-sm px-8 py-3.5 rounded-xl disabled:opacity-50 flex items-center justify-center gap-2 w-full sm:w-auto shadow-[0_0_20px_rgba(37,99,235,0.4)]"
         >
           {isSaving ? (
-            <span className="animate-spin border-2 border-t-transparent border-black rounded-full w-5 h-5"></span>
-          ) : "Save Changes"}
-        </motion.button>
+            <span className="animate-spin border-2 border-t-transparent border-white rounded-full w-4 h-4" />
+          ) : <Save className="h-4 w-4" />}
+          <span>{isSaving ? "Saving Configuration..." : "Save Preferences"}</span>
+        </button>
+
         {saveStatus === "Success" && (
-          <span className="text-green-400 font-medium animate-pulse">Changes saved!</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-semibold animate-fadeIn">
+            <Check className="h-4 w-4" />
+            <span>Preferences updated and saved to server!</span>
+          </div>
         )}
         {saveStatus === "Error" && (
-          <span className="text-red-400 font-medium">Failed to save changes.</span>
+          <span className="text-xs font-mono text-rose-400 font-semibold">Failed to save settings. Please retry.</span>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-function SettingCard({title, children, initial, animate, transition}){
+function SettingCard({ title, children }) {
   return (
     <motion.div
-      initial={initial}
-      animate={animate}
-      transition={transition}
-      whileHover={{scale:1.02}}
-      className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+      whileHover={{ borderColor: 'rgba(56,189,248,0.25)' }}
+      className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 transition-all"
     >
-      <h2 className="text-xl font-semibold mb-5">
+      <h2 className="text-xl font-bold text-white mb-6">
         {title}
       </h2>
-      {children}
+      <div className="space-y-3.5">
+        {children}
+      </div>
     </motion.div>
   );
 }
 
-function SettingItem({icon, title, value, options, onChange}){
+function SettingItem({ icon, title, value, options, onChange }) {
   return (
-    <div
-      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors"
-    >
+    <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 transition-all text-xs sm:text-sm">
       <div className="flex items-center gap-3">
-        <div className="text-cyan-400">
+        <div className="p-2 rounded-xl bg-white/5 border border-white/10">
           {icon}
         </div>
-        <span>
+        <span className="font-semibold text-slate-200">
           {title}
         </span>
       </div>
@@ -253,12 +287,12 @@ function SettingItem({icon, title, value, options, onChange}){
         <select 
           value={value} 
           onChange={(e) => onChange(e.target.value)}
-          className="bg-slate-900 text-green-400 font-medium px-3 py-1.5 rounded-lg border border-white/10 outline-none focus:border-cyan-400 cursor-pointer"
+          className="bg-slate-900 text-cyan-300 font-mono font-semibold text-xs px-3.5 py-2 rounded-xl border border-white/15 outline-none focus:border-cyan-500 cursor-pointer hover:bg-slate-800 transition-colors"
         >
-          {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+          {options.map(opt => <option key={opt} value={opt} className="bg-slate-950 text-white">{opt}</option>)}
         </select>
       ) : (
-        <span className="text-green-400 font-medium">
+        <span className="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
           {value}
         </span>
       )}
@@ -266,30 +300,35 @@ function SettingItem({icon, title, value, options, onChange}){
   );
 }
 
-function ToggleItem({icon, title, status}){
+function InteractiveToggleItem({ icon, title, status, onToggle }) {
+  const isOn = status === "ON";
   return (
-    <motion.div
-      whileHover={{ scale: 1.01, backgroundColor: "rgba(255,255,255,0.1)" }}
-      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors cursor-pointer"
+    <div 
+      onClick={onToggle}
+      className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 transition-all text-xs sm:text-sm cursor-pointer hover:bg-white/10"
     >
       <div className="flex items-center gap-3">
-        <div className="text-cyan-400">
+        <div className="p-2 rounded-xl bg-white/5 border border-white/10">
           {icon}
         </div>
-        <span>
+        <span className="font-semibold text-slate-200">
           {title}
         </span>
       </div>
-      <div
-        className={`px-3 py-1 rounded-full text-sm font-medium ${
-          status === "ON"
-            ? "bg-green-400/20 text-green-400"
-            : "bg-gray-400/20 text-gray-400"
-        }`}
-      >
-        {status}
+
+      <div className="flex items-center gap-3 font-mono">
+        <span className={isOn ? "text-emerald-400 font-bold text-xs" : "text-slate-500 text-xs font-semibold"}>
+          {status}
+        </span>
+        <div className={`w-11 h-6 rounded-full p-1 flex items-center transition-colors ${isOn ? "bg-cyan-500/30 border border-cyan-500/50" : "bg-slate-800 border border-white/10"}`}>
+          <motion.div 
+            className={`w-4 h-4 rounded-full ${isOn ? "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" : "bg-slate-500"}`}
+            animate={{ x: isOn ? 20 : 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          />
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

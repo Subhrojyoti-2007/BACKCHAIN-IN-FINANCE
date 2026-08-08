@@ -3,21 +3,27 @@
         "0x82AF91EF": {
             "username": "Alice_Corp",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$RjzIN0RhWaYLLGyj$67b657aa3bcef0afa74f27f431e295131acc72d58d0c1a7581ab44521f158373cf817bc2075495ceb5ba80e0dc043fe7d0f154a6c2afaa3fb80018a06d662ee1",
+            "password_hash": "scrypt:32768:8:1$rmlOZh7Lf6KZXnwF$571ac8bc28961bd1d8e582e73fc3a6261fc44b02c749c957501a53370da7cf8f3101b42c8d8c750be42cafafc7fa7eed50a2ca163e9627419b3e2b97c889934a",
             "balance": 150000.0,
-            "language": "Spanish",
-            "currency": "EUR",
+            "language": "English",
+            "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
-            "kyc_aadhaar_hash": null
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
         },
         "0x91AF72BC": {
             "username": "Bob_LLC",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$34FhqTtLQ058qYks$f5ea0fd9403ed88c3da7963f9755bb2650f58b79fa552891dc4b61e574861ebe8c56a8a91706510f1e60e2664437907a8e3814a923ce0e0f34a53a53d9f17b0e",
+            "password_hash": "scrypt:32768:8:1$lB7C3FqSPlgPe7FJ$0ef73a54d981f74be0f7a9012902535a4c4eb14918e729c24e0e2a54acb6e51260c09dbacb02bace48abb7d4345312ccce2f9ea4c5f61311fb05983054dab120",
             "balance": 200000.0,
             "language": "English",
             "currency": "USD",
@@ -26,12 +32,18 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
-            "kyc_aadhaar_hash": null
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
         },
         "0x72BC88EF": {
             "username": "Charlie_Anon",
             "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$FxERsa2OgsRf0V2e$6d5340e3ff1c5299a5a3881e625bbc091ec36f42e5f3d1794195a51eccca235e00ae2c113ce13fcdb65915126162afbe48fd82cc677026afb5751637f34f0651",
+            "password_hash": "scrypt:32768:8:1$NOtoamWGzj7yCz1B$396903c60dc7ab9930facd22c7e94183944324af5a64a4d3dfb86c3de5fe44fb524b269b006c68b83d2ca4e0f2e01d6c6801c37b7fc09b22c039bc2468002827",
             "balance": 50000.0,
             "language": "English",
             "currency": "USD",
@@ -40,76 +52,25 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
-            "kyc_aadhaar_hash": null
-        },
-        "0x5AFD9C46": {
-            "username": "subhrojyoti",
-            "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$ZLwUM579913fyABB$36d5ce6e0e1e5c4e72a4018b333e90ec03c3a6002c36aa84b9ef4d12aafc3e14ffd9fbc403d7b10221b96ceb23c825f2de26d22b95152796ec90cb8ed564a877",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null,
-            "kyc_aadhaar_hash": null
-        },
-        "0xE855ADC1": {
-            "username": "TestUser_5147",
-            "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$OJsiffAINjec7Xe0$5697e02a7da20aba3244372050c51db8e81240ff776408804a622928349b090db78eb2b93f22783a1f29af8333c8f6ed0edadc6ca78b6493b4a54a1a2201e0e7",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null,
-            "kyc_aadhaar_hash": null
-        },
-        "0x8A146823": {
-            "username": "test_kyc_user_1786031667",
-            "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$3g5Q1NJsEM0dWDNM$42215c34c3e77dd1130c089227967da9d30848d02a7b77910e1580592ec8a616b36a62ce404dd9108a10b7845eff0650e3055980ff22bd9c432ca286637de73b",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": "ref_7f42623fd65fd941",
-            "kyc_timestamp": 1786031668.3697867,
-            "kyc_aadhaar_hash": "2a33349e7e606a8ad2e30e3c84521f9377450cf09083e162e0a9b1480ce0f972"
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
         }
     },
     "blockchain": {
         "chain": [
             {
                 "index": 0,
-                "timestamp": 1785678682.9069486,
+                "timestamp": 1786183991.3821642,
                 "transactions": [
                     "Genesis Block"
                 ],
                 "previous_hash": "0",
-                "hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140"
-            },
-            {
-                "index": 1,
-                "timestamp": 1785922940.6063478,
-                "transactions": [
-                    {
-                        "sender": "0x82AF91EF",
-                        "receiver": "0x91AF72BC",
-                        "amount": 100.0,
-                        "asset": "ETH",
-                        "time": 1785922940.6063426
-                    }
-                ],
-                "previous_hash": "11d410e34902ec55ec9da047f9c8f945aa50a359755bfa2fd87548af7be09140",
-                "hash": "2dfe0ddcfddad399d0d163b1b6abc9f928d96c44cb61093c4870101b9b5c6108"
+                "hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908"
             }
         ]
     }
