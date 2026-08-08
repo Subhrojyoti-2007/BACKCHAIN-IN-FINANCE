@@ -1,5 +1,4 @@
 import { useEffect, useRef, memo } from 'react';
-
 import './DotField.css';
 
 const TWO_PI = Math.PI * 2;
@@ -11,12 +10,12 @@ const DotField = memo(({
   cursorForce = 0.1,
   bulgeOnly = true,
   bulgeStrength = 67,
-  glowRadius = 160,
+  glowRadius = 180,
   sparkle = false,
   waveAmplitude = 0,
-  gradientFrom = 'rgba(168, 85, 247, 0.35)',
-  gradientTo = 'rgba(180, 151, 207, 0.25)',
-  glowColor = '#120F17',
+  gradientFrom = 'rgba(34, 211, 238, 0.45)',
+  gradientTo = 'rgba(99, 102, 241, 0.3)',
+  glowColor = '#0284c7',
   ...rest
 }) => {
   const canvasRef = useRef(null);
@@ -25,7 +24,7 @@ const DotField = memo(({
   const dotsRef = useRef([]);
   const mouseRef = useRef({ x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 });
   const rafRef = useRef(null);
-  const sizeRef = useRef({ w: 0, h: 0, offsetX: 0, offsetY: 0 });
+  const sizeRef = useRef({ w: 0, h: 0 });
   const glowOpacity = useRef(0);
   const engagement = useRef(0);
   const propsRef = useRef({});
@@ -47,9 +46,9 @@ const DotField = memo(({
     }
 
     function doResize() {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
+      // Ensure 100% full viewport coverage across entire page width & height
+      const w = Math.max(window.innerWidth, document.documentElement.clientWidth || 0);
+      const h = Math.max(window.innerHeight, document.documentElement.clientHeight || 0);
 
       canvas.width = w * dpr;
       canvas.height = h * dpr;
@@ -57,30 +56,22 @@ const DotField = memo(({
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      sizeRef.current = {
-        w,
-        h,
-        offsetX: rect.left + window.scrollX,
-        offsetY: rect.top + window.scrollY,
-      };
-
+      sizeRef.current = { w, h };
       buildDots(w, h);
     }
 
     function buildDots(w, h) {
       const p = propsRef.current;
       const step = p.dotRadius + p.dotSpacing;
-      const cols = Math.floor(w / step);
-      const rows = Math.floor(h / step);
-      const padX = (w % step) / 2;
-      const padY = (h % step) / 2;
+      const cols = Math.ceil(w / step) + 2;
+      const rows = Math.ceil(h / step) + 2;
       const dots = new Array(rows * cols);
       let idx = 0;
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const ax = padX + col * step + step / 2;
-          const ay = padY + row * step + step / 2;
+          const ax = col * step;
+          const ay = row * step;
           dots[idx++] = { ax, ay, sx: ax, sy: ay, vx: 0, vy: 0, x: ax, y: ay };
         }
       }
@@ -88,9 +79,8 @@ const DotField = memo(({
     }
 
     function onMouseMove(e) {
-      const s = sizeRef.current;
-      mouseRef.current.x = e.pageX - s.offsetX;
-      mouseRef.current.y = e.pageY - s.offsetY;
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
     }
 
     function updateMouseSpeed() {
@@ -105,7 +95,6 @@ const DotField = memo(({
     }
 
     const speedInterval = setInterval(updateMouseSpeed, 20);
-
     let frameCount = 0;
 
     function tick() {
@@ -146,6 +135,7 @@ const DotField = memo(({
 
       for (let i = 0; i < len; i++) {
         const d = dots[i];
+        if (!d) continue;
         const dx = m.x - d.ax;
         const dy = m.y - d.ay;
         const distSq = dx * dx + dy * dy;
@@ -153,8 +143,8 @@ const DotField = memo(({
         if (distSq < crSq && eng > 0.01) {
           const dist = Math.sqrt(distSq);
           if (isBulge) {
-            const t = 1 - dist / cr;
-            const push = t * t * p.bulgeStrength * eng;
+            const tVal = 1 - dist / cr;
+            const push = tVal * tVal * p.bulgeStrength * eng;
             const angle = Math.atan2(dy, dx);
             d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
             d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;
@@ -201,7 +191,6 @@ const DotField = memo(({
       }
 
       ctx.fill();
-
       rafRef.current = requestAnimationFrame(tick);
     }
 
@@ -222,7 +211,6 @@ const DotField = memo(({
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -230,25 +218,14 @@ const DotField = memo(({
   }, [dotRadius, dotSpacing]);
 
   return (
-    <div className="dot-field-container" {...rest}>
+    <div className="fixed inset-0 w-screen h-screen pointer-events-none z-0 overflow-hidden" {...rest}>
       <canvas
         ref={canvasRef}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-        }}
+        className="absolute inset-0 w-full h-full"
       />
       <svg
         ref={svgRef}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-        }}
+        className="absolute inset-0 w-full h-full pointer-events-none"
       >
         <defs>
           <radialGradient id={glowIdRef.current}>
