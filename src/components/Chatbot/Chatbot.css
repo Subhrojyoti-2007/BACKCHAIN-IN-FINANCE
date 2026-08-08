@@ -1,0 +1,461 @@
+/* =========================================================
+   BLOCKCHAIN-IN-FINANCE CHATBOT
+   ========================================================= */
+
+.bf-chat-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    border: none;
+    border-radius: 999px;
+
+    padding: 12px 17px;
+
+    background: var(--primary, #2563eb);
+    color: var(--primary-foreground, white);
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.bf-chat-fab:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, 0.28);
+}
+
+.bf-chat-icon {
+    font-size: 20px;
+}
+
+.bf-chat-label {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CHAT WINDOW
+   ========================================================= */
+
+.bf-chatbot {
+    position: fixed;
+
+    right: 24px;
+    bottom: 24px;
+
+    z-index: 9999;
+
+    width: min(390px,
+            calc(100vw - 32px));
+
+    height: min(620px,
+            calc(100vh - 48px));
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: var(--background,
+            #ffffff);
+
+    color: var(--foreground,
+            #111827);
+
+    border:
+        1px solid var(--border,
+            rgba(0, 0, 0, 0.12));
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.bf-chat-header {
+    min-height: 68px;
+
+    padding: 13px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: var(--card,
+            var(--background, #ffffff));
+
+    border-bottom:
+        1px solid var(--border,
+            rgba(0, 0, 0, 0.1));
+}
+
+.bf-chat-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.bf-chat-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--primary, #2563eb);
+
+    color:
+        var(--primary-foreground, #fff);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.bf-chat-brand strong,
+.bf-chat-brand span {
+    display: block;
+}
+
+.bf-chat-brand strong {
+    font-size: 14px;
+}
+
+.bf-chat-brand span {
+    margin-top: 2px;
+
+    font-size: 11px;
+
+    opacity: 0.65;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.bf-close-button {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: inherit;
+
+    font-size: 27px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.bf-close-button:hover {
+    background:
+        var(--muted,
+            rgba(0, 0, 0, 0.07));
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.bf-chat-messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 16px;
+
+    background:
+        var(--background,
+            #ffffff);
+
+    scrollbar-width: thin;
+}
+
+
+/* Welcome */
+
+.bf-welcome {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin-bottom: 12px;
+}
+
+.bf-welcome strong {
+    font-size: 15px;
+}
+
+.bf-welcome span {
+    font-size: 12px;
+
+    opacity: 0.65;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.bf-quick-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-bottom: 15px;
+}
+
+.bf-quick-actions button {
+    padding: 7px 10px;
+
+    border:
+        1px solid var(--border,
+            rgba(0, 0, 0, 0.12));
+
+    border-radius: 999px;
+
+    background:
+        var(--card,
+            #ffffff);
+
+    color: inherit;
+
+    font: inherit;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.bf-quick-actions button:hover {
+    background:
+        var(--muted,
+            rgba(0, 0, 0, 0.06));
+}
+
+
+/* =========================================================
+   MESSAGE BUBBLES
+   ========================================================= */
+
+.bf-message-row {
+    display: flex;
+
+    margin: 7px 0;
+}
+
+.bf-user-row {
+    justify-content: flex-end;
+}
+
+.bf-bot-row {
+    justify-content: flex-start;
+}
+
+.bf-message {
+    max-width: 82%;
+
+    padding: 10px 12px;
+
+    border-radius: 14px;
+
+    font-size: 13px;
+
+    line-height: 1.45;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* BOT */
+
+.bf-bot-message {
+    background:
+        var(--muted,
+            #f1f5f9);
+
+    color: inherit;
+
+    border-bottom-left-radius: 4px;
+}
+
+
+/* USER */
+
+.bf-user-message {
+    background:
+        var(--primary,
+            #2563eb);
+
+    color:
+        var(--primary-foreground,
+            #ffffff);
+
+    border-bottom-right-radius: 4px;
+}
+
+
+/* =========================================================
+   INPUT AREA
+   ========================================================= */
+
+.bf-input-area {
+    padding: 11px 12px 10px;
+
+    background:
+        var(--card,
+            var(--background, #ffffff));
+
+    border-top:
+        1px solid var(--border,
+            rgba(0, 0, 0, 0.1));
+}
+
+.bf-input-row {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 8px;
+}
+
+
+/* TEXT BOX */
+
+.bf-input-row textarea {
+    flex: 1;
+
+    resize: none;
+
+    min-height: 40px;
+    max-height: 90px;
+
+    padding: 10px 12px;
+
+    border:
+        1px solid var(--border,
+            rgba(0, 0, 0, 0.15));
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background:
+        var(--background,
+            #ffffff);
+
+    color: inherit;
+
+    font: inherit;
+
+    font-size: 13px;
+}
+
+.bf-input-row textarea:focus {
+    border-color:
+        var(--primary,
+            #2563eb);
+}
+
+
+/* SEND */
+
+.bf-send-button {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        var(--primary,
+            #2563eb);
+
+    color:
+        var(--primary-foreground,
+            #ffffff);
+
+    cursor: pointer;
+
+    font-size: 17px;
+}
+
+.bf-send-button:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+}
+
+
+/* DISCLAIMER */
+
+.bf-input-area small {
+    display: block;
+
+    margin-top: 7px;
+
+    text-align: center;
+
+    font-size: 9px;
+
+    opacity: 0.55;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .bf-chat-fab {
+        right: 16px;
+        bottom: 16px;
+    }
+
+    .bf-chatbot {
+        right: 8px;
+        bottom: 8px;
+
+        width: calc(100vw - 16px);
+        height: calc(100vh - 16px);
+
+        border-radius: 16px;
+    }
+}

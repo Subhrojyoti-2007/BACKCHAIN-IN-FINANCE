@@ -16,7 +16,7 @@ import AdminTerminal from './pages/AdminTerminal'
 import KYCVerification from './pages/KYCVerification'
 import { AuthProvider } from './context/AuthContext'
 import { GlobalBackground } from './components/ui/background-snippets'
-
+import Chatbot from './components/Chatbot/Chatbot';
 function AppContent() {
   const location = useLocation()
   const isLandingPage = location.pathname === '/'
@@ -31,7 +31,7 @@ function AppContent() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             {/* Protected Dashboard Layout wrapper for all internal pages */}
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
@@ -48,6 +48,7 @@ function AppContent() {
               <Route path="/kyc-verification" element={<KYCVerification />} />
             </Route>
           </Routes>
+          <Chatbot />
         </AuthProvider>
       </div>
     </div>
