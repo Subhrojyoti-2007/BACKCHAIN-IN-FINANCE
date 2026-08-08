@@ -187,7 +187,7 @@ function Profile() {
         animate={{opacity:1, y:0}}
         transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
         whileHover={{scale:1.01}}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 mb-8"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-8 mb-8"
       >
         <div className="flex flex-col md:flex-row gap-6 items-center">
           <div className="w-24 h-24 rounded-full bg-cyan-500/20 flex items-center justify-center">
@@ -224,7 +224,7 @@ function Profile() {
             animate={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 + (index * 0.1), type: "spring", stiffness: 80 }}
             whileHover={{scale:1.05}}
-            className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 cursor-pointer transition-colors hover:bg-white/15"
+            className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 cursor-pointer transition-colors hover:bg-white/15"
           >
             <div className="text-cyan-400">
               {item.icon}
@@ -244,7 +244,7 @@ function Profile() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.8 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-8"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 mb-8"
       >
         <div className="flex items-center gap-3 mb-5">
           <Link className="text-cyan-400"/>
@@ -264,7 +264,7 @@ function Profile() {
               key={index}
               variants={fadeDownItem}
               whileHover={{scale:1.01, backgroundColor: "rgba(255,255,255,0.1)"}}
-              className="bg-white/10 backdrop-blur-xl rounded-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
+              className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
             >
               <div>
                 <h3 className="font-semibold">
@@ -287,7 +287,7 @@ function Profile() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 1.2 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
       >
         <h2 className="text-xl font-semibold mb-5">
           Account Preferences
@@ -327,7 +327,7 @@ function Preference({icon, title, value, onClick}){
     <motion.div
       variants={slideUpItem}
       onClick={onClick}
-      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors hover:bg-white/15 cursor-pointer"
+      className="flex justify-between items-center rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 transition-colors hover:bg-white/15 cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <div className="text-cyan-400">

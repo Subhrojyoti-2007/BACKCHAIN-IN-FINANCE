@@ -116,7 +116,7 @@ function Payments() {
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6, type: "spring", stiffness: 80, damping: 20 }}
-          className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+          className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
         >
           <div className="flex items-center gap-3 mb-6">
             <Send className="text-cyan-400"/>
@@ -185,7 +185,7 @@ function Payments() {
           variants={securityContainer}
           initial="hidden"
           animate="visible"
-          className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+          className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
         >
           <motion.div variants={securityItem} className="flex items-center gap-3 mb-6">
             <ShieldCheck className="text-green-400"/>
@@ -203,7 +203,7 @@ function Payments() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-8"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 mb-8"
       >
         <h2 className="text-xl font-semibold mb-5">Supported Assets</h2>
         <motion.div 
@@ -227,7 +227,7 @@ function SecurityItem({text}) {
     <motion.div 
       variants={securityItem}
       whileHover={{ scale: 1.02, x: 5 }}
-      className="flex items-center gap-3 bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 border border-white/5 cursor-default transition-colors hover:bg-black/40"
+      className="flex items-center gap-3 rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 border border-white/5 cursor-default transition-colors hover:bg-black/40"
     >
       <CheckCircle className="text-green-400"/>
       <p>{text}</p>
@@ -240,7 +240,7 @@ function AssetCard({name, symbol, balance}) {
     <motion.div 
       variants={assetItem}
       whileHover={{scale:1.05, boxShadow: "0px 10px 30px rgba(34,211,238,0.15)", y: -5}} 
-      className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 border border-white/5 cursor-pointer transition-colors hover:bg-black/40"
+      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 border border-white/5 cursor-pointer transition-colors hover:bg-black/40"
     >
       <Wallet className="text-cyan-400"/>
       <h3 className="font-bold mt-3">{name}</h3>

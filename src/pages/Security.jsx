@@ -130,7 +130,7 @@ function SecurityCenter() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         whileHover={{scale:1.01}}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 mb-8"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-8 mb-8"
       >
         <div className="flex items-center gap-4">
           <ShieldCheck
@@ -165,7 +165,7 @@ function SecurityCenter() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 mb-8 flex flex-col md:flex-row justify-between items-center gap-6"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-8 mb-8 flex flex-col md:flex-row justify-between items-center gap-6"
       >
         <div className="flex items-center gap-4">
           <Database size={40} className="text-blue-400" />
@@ -221,7 +221,7 @@ function SecurityCenter() {
             key={index}
             variants={slideUpItem}
             whileHover={{scale:1.05}}
-            className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 cursor-pointer transition-colors hover:bg-white/15"
+            className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 cursor-pointer transition-colors hover:bg-white/15"
           >
             <div className="text-cyan-400">
               {item.icon}
@@ -257,7 +257,7 @@ function SecurityCenter() {
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 1 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
       >
         <h2 className="text-xl font-semibold mb-5">
           Recent Security Events
@@ -273,7 +273,7 @@ function SecurityCenter() {
               key={index}
               variants={slideRightItem}
               whileHover={{scale:1.01, backgroundColor: "rgba(255,255,255,0.1)"}}
-              className="bg-white/10 backdrop-blur-xl rounded-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
+              className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <CheckCircle className="text-green-400" />
@@ -302,7 +302,7 @@ function RiskCard({title,value,icon}){
     <motion.div
       variants={slideUpItem}
       whileHover={{scale:1.05}}
-      className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 cursor-pointer transition-colors hover:bg-white/15"
+      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 cursor-pointer transition-colors hover:bg-white/15"
     >
       <div className="text-cyan-400">
         {icon}

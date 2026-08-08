@@ -12,24 +12,13 @@ import db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'dist')
-app = Flask(__name__, static_folder=STATIC_DIR)
+app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='')
 CORS(app)
 
 # Configure JWT
 app.config["JWT_SECRET_KEY"] = "super-secret-dev-key"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
 jwt = JWTManager(app)
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path.startswith("api/"):
-        return jsonify({"error": "Not Found"}), 404
-        
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
 
 # Load state from database
 loaded_users, loaded_chain = db.load_db()
@@ -378,6 +367,14 @@ def get_amm_ticker():
         "active_pools": 14,
         "volume_24h": "1.2B"
     }), 200
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

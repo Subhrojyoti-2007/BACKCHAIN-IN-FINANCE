@@ -38,6 +38,45 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null
+        },
+        "0x3B00AEEF": {
+            "username": "Sohini",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$oV3mOi140rimJZuz$f33a49a0d7fa41ce1f5103bbf2ccb5d5e5702e2ec4243119d9b37164c2b0dbd1861c85a0fffea9a2c1eaa6366991be1cd4cff965c58ba1d005e093dc74e63277",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
+        },
+        "0x83573093": {
+            "username": "sohini ball",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$V79sAO64xan4SJ3C$c235bf38aab48de84a0ff39a8f1e12d678f8ad4cfc530ea0376b840ffdaf31f3d532f2e1206189fd15033f41e0588c8e8d9258442ce07675d104a15e04433b1a",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
+        },
+        "0x4935EC18": {
+            "username": "mili",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$XLXsZwD0aoSrHPr1$c26081262875830be04a9be354791748a11fdbabd8e1cfccbe1b119bc5e2db3af2452f8618b3a19fb902a57a46d84f85f33a2796cb07aa473aa6ffd5bedfa5fd",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null
         }
     },
     "blockchain": {

@@ -226,7 +226,7 @@ function SettingCard({title, children, initial, animate, transition}){
       animate={animate}
       transition={transition}
       whileHover={{scale:1.02}}
-      className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
     >
       <h2 className="text-xl font-semibold mb-5">
         {title}
@@ -239,7 +239,7 @@ function SettingCard({title, children, initial, animate, transition}){
 function SettingItem({icon, title, value, options, onChange}){
   return (
     <div
-      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors"
+      className="flex justify-between items-center rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 transition-colors"
     >
       <div className="flex items-center gap-3">
         <div className="text-cyan-400">
@@ -270,7 +270,7 @@ function ToggleItem({icon, title, status}){
   return (
     <motion.div
       whileHover={{ scale: 1.01, backgroundColor: "rgba(255,255,255,0.1)" }}
-      className="flex justify-between items-center bg-white/10 backdrop-blur-xl rounded-2xl p-4 mb-3 transition-colors cursor-pointer"
+      className="flex justify-between items-center rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 transition-colors cursor-pointer"
     >
       <div className="flex items-center gap-3">
         <div className="text-cyan-400">

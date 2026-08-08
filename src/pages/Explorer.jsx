@@ -114,7 +114,7 @@ function BlockchainExplorer() {
         animate={{opacity:1, scale: 1}}
         transition={{ duration: 0.5, delay: 0.1 }}
         whileHover={{scale:1.01}}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-4 flex items-center gap-3 mb-8"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 flex items-center gap-3 mb-8"
       >
         <Search className="text-cyan-400"/>
         <input
@@ -158,7 +158,7 @@ function BlockchainExplorer() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 mb-8"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 mb-8"
       >
         <div className="flex items-center gap-3 mb-5">
           <Database className="text-cyan-400"/>
@@ -214,7 +214,7 @@ function BlockchainExplorer() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="bg-white/10 backdrop-blur-xl rounded-2xl p-6"
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
       >
         <h2 className="text-xl font-semibold mb-5">Latest Local Blocks</h2>
         
@@ -236,7 +236,7 @@ function BlockchainExplorer() {
                 boxShadow: "0px 10px 30px rgba(34,211,238,0.15)",
                 y: -5
               }}
-              className="bg-black/20 rounded-xl p-5 border border-white/5 cursor-pointer transition-colors"
+              className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 border border-white/5 cursor-pointer transition-colors"
             >
               <div className="flex justify-between">
                 <Blocks className="text-cyan-400"/>
@@ -264,7 +264,7 @@ function InfoCard({icon, title, value, isNumeric = false, suffix = ""}) {
     <motion.div
       variants={itemVariants}
       whileHover={{ scale:1.05, y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.5)" }}
-      className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 flex items-center gap-4 cursor-pointer"
+      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 flex items-center gap-4 cursor-pointer"
     >
       <div className="text-cyan-400">{icon}</div>
       <div>

@@ -96,7 +96,7 @@ function Analytics() {
         className="grid lg:grid-cols-2 gap-8 mb-8"
       >
         {/* Market Cap Trend (Area Chart) */}
-        <motion.div variants={itemVariants} className="bg-white/10 backdrop-blur-xl rounded-2xl p-6">
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6">
           <h2 className="text-xl font-semibold mb-6">Bitcoin 30-Day Trend (Live)</h2>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -125,7 +125,7 @@ function Analytics() {
         </motion.div>
 
         {/* Network Volume (Bar Chart) */}
-        <motion.div variants={itemVariants} className="bg-white/10 backdrop-blur-xl rounded-2xl p-6">
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6">
           <h2 className="text-xl font-semibold mb-6">Ethereum 30-Day Trend (Live)</h2>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -156,7 +156,7 @@ function Analytics() {
         className="grid lg:grid-cols-3 gap-8"
       >
         {/* Asset Distribution (Pie Chart) */}
-        <motion.div variants={itemVariants} className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 lg:col-span-1">
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 lg:col-span-1">
           <h2 className="text-xl font-semibold mb-6">Global Allocation</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -183,7 +183,7 @@ function Analytics() {
         </motion.div>
 
         {/* Detailed Metrics Table */}
-        <motion.div variants={itemVariants} className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 lg:col-span-2 overflow-x-auto">
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 lg:col-span-2 overflow-x-auto">
           <h2 className="text-xl font-semibold mb-6">Performance Metrics</h2>
           <table className="w-full text-left border-collapse min-w-[500px]">
             <thead>
