@@ -1,5 +1,8 @@
 import os
 import secrets
+import uuid
+import hashlib
+from collections import defaultdict
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from time import time
@@ -7,7 +10,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from blockchain import Blockchain
-from smart_contract import TransactionManager, UserAccount, KYCVerificationError
+from smart_contract import TransactionManager, UserAccount, KYCVerificationError, IdentityRegistry
 import db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -303,6 +306,162 @@ def add_balance():
         'balance': users[current_user_addr].balance
     }), 200
 
+
+
+# Rate limiting storage: { user_address: [timestamp1, timestamp2, ...] }
+otp_rate_limits = defaultdict(list)
+
+# Mock third-party KYC provider session storage
+# transaction_id -> { "otp": str, "aadhaar_hash": str, "timestamp": float }
+pending_kyc_transactions = {}
+
+class MockKYCApiProvider:
+    """
+    Simulates a licensed third-party KYC API provider (Setu/Sandbox/Karza) that handles UIDAI communication.
+    """
+    @staticmethod
+    def send_otp(aadhaar_number: str):
+        # Generate standard UUID for transaction
+        transaction_id = "tx_" + str(uuid.uuid4())[:18]
+        
+        # Generate random 6-digit OTP
+        import random
+        otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
+        
+        # Log to the terminal/console for testing
+        print(f"\n==================================================")
+        print(f"[KYC API Provider] Sending OTP for Aadhaar: XXXX-XXXX-{aadhaar_number[-4:]}")
+        print(f"[KYC API Provider] Generated OTP: {otp}")
+        print(f"[KYC API Provider] Transaction ID: {transaction_id}")
+        print(f"==================================================\n")
+        
+        # Secure Hash of Aadhaar (privacy requirement)
+        aadhaar_hash = hashlib.sha256(aadhaar_number.encode()).hexdigest()
+        
+        pending_kyc_transactions[transaction_id] = {
+            "otp": otp,
+            "aadhaar_hash": aadhaar_hash,
+            "timestamp": time()
+        }
+        
+        return transaction_id
+
+    @staticmethod
+    def verify_otp(transaction_id: str, otp: str):
+        if transaction_id not in pending_kyc_transactions:
+            return False, "Invalid or expired transaction ID."
+            
+        tx_data = pending_kyc_transactions[transaction_id]
+        
+        # Allow either the generated OTP or standard debug OTP '123456'
+        if otp == tx_data["otp"] or otp == "123456":
+            # Generate a mock verification reference ID
+            reference_id = "ref_" + secrets.token_hex(8)
+            aadhaar_hash = tx_data["aadhaar_hash"]
+            # Clear pending transaction
+            pending_kyc_transactions.pop(transaction_id)
+            return True, {
+                "reference_id": reference_id,
+                "aadhaar_hash": aadhaar_hash
+            }
+        else:
+            return False, "Incorrect OTP. Please check and try again."
+
+
+@app.route('/api/kyc/send-otp', methods=['POST'])
+@jwt_required()
+def kyc_send_otp():
+    """Accepts Aadhaar number and sends simulated OTP."""
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+        
+    # Rate Limiting: 3 OTP requests per 60 seconds
+    now = time()
+    user_requests = otp_rate_limits[current_user_addr]
+    # Filter requests older than 60 seconds
+    user_requests = [t for t in user_requests if now - t < 60]
+    if len(user_requests) >= 3:
+        return jsonify({'error': 'Too many OTP requests. Please wait 1 minute.'}), 429
+    user_requests.append(now)
+    otp_rate_limits[current_user_addr] = user_requests
+
+    values = request.get_json()
+    if not values or 'aadhaar' not in values:
+        return jsonify({'error': 'Missing Aadhaar number'}), 400
+
+    aadhaar = str(values['aadhaar']).strip()
+    # Validate Aadhaar: 12-digit numeric
+    if not aadhaar.isdigit() or len(aadhaar) != 12:
+        return jsonify({'error': 'Aadhaar must be a 12-digit numeric value'}), 400
+
+    try:
+        transaction_id = MockKYCApiProvider.send_otp(aadhaar)
+        return jsonify({
+            'message': 'OTP sent successfully to Aadhaar-linked mobile number.',
+            'transaction_id': transaction_id
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/kyc/verify-otp', methods=['POST'])
+@jwt_required()
+def kyc_verify_otp():
+    """Accepts OTP and transaction_id, validates them, whitelists, and updates state."""
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+
+    values = request.get_json()
+    if not values or not all(k in values for k in ('otp', 'transaction_id')):
+        return jsonify({'error': 'Missing OTP or Transaction ID'}), 400
+
+    otp = str(values['otp']).strip()
+    transaction_id = str(values['transaction_id']).strip()
+
+    # Validate OTP format: 6-digit numeric
+    if not otp.isdigit() or len(otp) != 6:
+        return jsonify({'error': 'OTP must be a 6-digit numeric value'}), 400
+
+    try:
+        success, result = MockKYCApiProvider.verify_otp(transaction_id, otp)
+        if not success:
+            return jsonify({'error': result}), 400
+
+        # Successful validation
+        user = users[current_user_addr]
+        
+        # 1. Update database record with reference metadata
+        user.is_kyc_verified = True
+        user.kyc_reference_id = result['reference_id']
+        user.kyc_timestamp = time()
+        user.kyc_aadhaar_hash = result['aadhaar_hash']
+        
+        # 2. Trigger simulated blockchain transaction to whitelist wallet address in IdentityRegistry
+        IdentityRegistry.whitelist_address(current_user_addr)
+        
+        db.save_db(users, blockchain)
+
+        # 3. Generate updated JWT Token reflecting the new KYC status
+        new_access_token = create_access_token(identity=current_user_addr)
+
+        return jsonify({
+            'message': 'Identity verification completed successfully.',
+            'access_token': new_access_token,
+            'user': {
+                'address': current_user_addr,
+                'username': user.username,
+                'is_kyc_verified': user.is_kyc_verified,
+                'language': user.language,
+                'currency': user.currency,
+                'profile_visibility': user.profile_visibility,
+                'network': user.network,
+                'wallet_connection': user.wallet_connection
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/transaction', methods=['POST'])

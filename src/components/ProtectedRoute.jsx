@@ -9,14 +9,18 @@ export default function ProtectedRoute() {
     return <Navigate to="/" replace />;
   }
 
-  // Enforce KYC Verification Gate
-  if (user && !user.is_kyc_verified && location.pathname !== '/kyc-verification') {
-    return <Navigate to="/kyc-verification" replace />;
-  }
+  const isKycVerified = user?.is_kyc_verified || user?.kyc_verified;
 
-  // If user is verified and tries to access KYC page, send them to dashboard
-  if (user && user.is_kyc_verified && location.pathname === '/kyc-verification') {
-    return <Navigate to="/dashboard" replace />;
+  // If user is logged in but KYC is not verified, block all other routes and force them to /kyc-verification
+  if (user && !isKycVerified) {
+    if (location.pathname !== '/kyc-verification') {
+      return <Navigate to="/kyc-verification" replace />;
+    }
+  } else {
+    // If user is already KYC verified, prevent them from accessing /kyc-verification page
+    if (location.pathname === '/kyc-verification') {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   return <Outlet />;
