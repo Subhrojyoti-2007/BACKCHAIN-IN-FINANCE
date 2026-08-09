@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import BrandLogo from './components/BrandLogo'
 import AdminTerminal from './pages/AdminTerminal'
 import KYCVerification from './pages/KYCVerification'
+import AuditLogs from './pages/AuditLogs'
 import { AuthProvider } from './context/AuthContext'
 import { GlobalBackground } from './components/ui/background-snippets'
 import Chatbot from './components/Chatbot/Chatbot';
@@ -42,6 +43,7 @@ function AppContent() {
                 <Route path="/security" element={<Security />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/audit-logs" element={<AuditLogs />} />
               </Route>
               {/* Terminal is full-screen, so outside Layout but still Protected */}
               <Route path="/terminal" element={<AdminTerminal />} />
