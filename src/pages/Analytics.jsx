@@ -100,6 +100,11 @@ function Analytics() {
         animate="visible"
         className="grid lg:grid-cols-2 gap-6"
       >
+<<<<<<< HEAD
+        {/* Market Cap Trend (Area Chart) */}
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6">
+          <h2 className="text-xl font-semibold mb-6">Bitcoin 30-Day Trend (Live)</h2>
+=======
         {/* Bitcoin 30-Day Area Chart */}
         <motion.div variants={itemVariants} className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10">
           <div className="flex items-center justify-between mb-6">
@@ -112,6 +117,7 @@ function Analytics() {
             </span>
           </div>
 
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               {loading ? (
@@ -138,6 +144,11 @@ function Analytics() {
           </div>
         </motion.div>
 
+<<<<<<< HEAD
+        {/* Network Volume (Bar Chart) */}
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6">
+          <h2 className="text-xl font-semibold mb-6">Ethereum 30-Day Trend (Live)</h2>
+=======
         {/* Ethereum 30-Day Bar Chart */}
         <motion.div variants={itemVariants} className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10">
           <div className="flex items-center justify-between mb-6">
@@ -150,6 +161,7 @@ function Analytics() {
             </span>
           </div>
 
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               {loading ? (
@@ -179,10 +191,17 @@ function Analytics() {
         animate="visible"
         className="grid lg:grid-cols-3 gap-6"
       >
+<<<<<<< HEAD
+        {/* Asset Distribution (Pie Chart) */}
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 lg:col-span-1">
+          <h2 className="text-xl font-semibold mb-6">Global Allocation</h2>
+          <div className="h-64">
+=======
         {/* Pie Chart */}
         <motion.div variants={itemVariants} className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 lg:col-span-1">
           <h2 className="text-xl font-bold text-white mb-4">Market Share Allocation</h2>
           <div className="h-60">
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -207,9 +226,15 @@ function Analytics() {
         </motion.div>
 
         {/* Detailed Metrics Table */}
+<<<<<<< HEAD
+        <motion.div variants={itemVariants} className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 lg:col-span-2 overflow-x-auto">
+          <h2 className="text-xl font-semibold mb-6">Performance Metrics</h2>
+          <table className="w-full text-left border-collapse min-w-[500px]">
+=======
         <motion.div variants={itemVariants} className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 lg:col-span-2 overflow-x-auto">
           <h2 className="text-xl font-bold text-white mb-6">Protocol Performance Benchmarks</h2>
           <table className="w-full text-left text-xs sm:text-sm font-mono">
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
             <thead>
               <tr className="border-b border-white/10 text-slate-400 uppercase tracking-wider text-[11px]">
                 <th className="pb-3 font-semibold">Metric Parameter</th>

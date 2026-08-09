@@ -18,6 +18,10 @@ import {
   TrendingUp,
   Activity,
   ArrowUpRight,
+  ArrowDownRight
+} from 'lucide-react'
+import { AnimatedCounter } from '../components/ui/animated-counter'
+import { fetchCryptoPrices, fetchHistoricalData } from '../services/api'
   ArrowDownRight,
   ShieldCheck,
   RefreshCw
@@ -26,6 +30,7 @@ import { AnimatedCounter } from '../components/ui/animated-counter';
 import DotField from '../components/ui/DotField';
 import { fetchCryptoPrices, fetchHistoricalData } from '../services/api';
 import { useSettings } from '../context/SettingsContext';
+main
 
 const allocationData = [
   { name: 'Bitcoin', value: 42 },
@@ -111,6 +116,13 @@ export default function Dashboard() {
     742900;
 
   return (
+    <div className="mx-auto flex min-h-screen max-w-[1700px] flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="w-full">
+          <motion.main 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-6"
     <div className="relative mx-auto flex min-h-screen max-w-[1700px] flex-col gap-6">
       <div className="w-full z-10 relative">
         <motion.main 

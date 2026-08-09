@@ -120,8 +120,14 @@ function SecurityCenter() {
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
+<<<<<<< HEAD
+        transition={{ duration: 0.5, delay: 0.2 }}
+        whileHover={{scale:1.01}}
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-8 mb-8"
+=======
         transition={{ duration: 0.5 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-cyan-500/30 shadow-2xl relative overflow-hidden"
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
@@ -161,8 +167,13 @@ function SecurityCenter() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+<<<<<<< HEAD
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-8 mb-8 flex flex-col md:flex-row justify-between items-center gap-6"
+=======
         transition={{ duration: 0.5 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col md:flex-row justify-between items-center gap-6"
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-2xl bg-blue-500/20 border border-blue-500/30 text-blue-400">
@@ -215,6 +226,66 @@ function SecurityCenter() {
         animate="visible"
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
       >
+<<<<<<< HEAD
+      {securityChecks.map((item,index)=>(
+          <motion.div
+            key={index}
+            variants={slideUpItem}
+            whileHover={{scale:1.05}}
+            className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 cursor-pointer transition-colors hover:bg-white/15"
+          >
+            <div className="text-cyan-400">
+              {item.icon}
+            </div>
+            <h3 className="font-semibold mt-4">
+              {item.title}
+            </h3>
+            <div className="flex items-center gap-2 mt-3 text-green-400">
+              <CheckCircle size={18}/>
+              {item.status}
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Risk Monitoring */}
+      <motion.div 
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.8 } }
+        }}
+        initial="hidden"
+        animate="visible"
+        className="grid lg:grid-cols-3 gap-6 mb-8"
+      >
+        <RiskCard title="Transaction Risk" value="Low" icon={<Activity/>} />
+        <RiskCard title="Network Threats" value="None Detected" icon={<Lock/>} />
+        <RiskCard title="Contract Safety" value="Verified" icon={<ShieldCheck/>} />
+      </motion.div>
+
+      {/* Security Events */}
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 1 }}
+        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
+      >
+        <h2 className="text-xl font-semibold mb-5">
+          Recent Security Events
+        </h2>
+        <motion.div 
+          variants={eventsContainer}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+        {securityEvents.map((event,index)=>(
+            <motion.div
+              key={index}
+              variants={slideRightItem}
+              whileHover={{scale:1.01, backgroundColor: "rgba(255,255,255,0.1)"}}
+              className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
+=======
         {securityChecks.map((item, index) => {
           const Icon = item.icon;
           return (
@@ -255,6 +326,7 @@ function SecurityCenter() {
               key={index}
               whileHover={{ x: 4, backgroundColor: "rgba(255,255,255,0.03)" }}
               className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between transition-all"
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
             >
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0" />
@@ -278,4 +350,27 @@ function SecurityCenter() {
   );
 }
 
+<<<<<<< HEAD
+function RiskCard({title,value,icon}){
+  return (
+    <motion.div
+      variants={slideUpItem}
+      whileHover={{scale:1.05}}
+      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 cursor-pointer transition-colors hover:bg-white/15"
+    >
+      <div className="text-cyan-400">
+        {icon}
+      </div>
+      <h3 className="text-gray-400 mt-4">
+        {title}
+      </h3>
+      <p className="text-2xl font-bold mt-2">
+        {value}
+      </p>
+    </motion.div>
+  );
+}
+
+=======
+>>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
 export default SecurityCenter;

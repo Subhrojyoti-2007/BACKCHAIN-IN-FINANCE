@@ -1,4 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const AdminTerminal = () => {
+  const [screen, setScreen] = useState('MAIN_MENU');
+  const [input, setInput] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [blocks, setBlocks] = useState([]);
+  const [users, setUsers] = useState([]);
+  const inputRef = useRef(null);
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -687,6 +698,29 @@ const AdminTerminal = () => {
           </AnimatePresence>
         )}
       </div>
+      
+      {/* Terminal Window */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-5xl bg-[#0a0a0a] rounded-lg border border-[#333] shadow-2xl overflow-hidden relative z-10 flex flex-col h-[70vh]"
+        onClick={handleTerminalClick}
+      >
+        {/* Terminal Header */}
+        <div className="h-8 bg-[#1a1a1a] border-b border-[#333] flex items-center px-4 gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          <div className="flex-1 text-center text-xs text-gray-500 font-sans tracking-wider">admin@backchain:~</div>
+        </div>
+        
+        {/* Terminal Body */}
+        <div className="p-6 overflow-y-auto flex-1">
+          {screen === 'MAIN_MENU' && renderMainMenu()}
+          {screen === 'AUDIT_BLOCKCHAIN' && renderAuditBlockchain()}
+          {screen === 'VIEW_ACCOUNTS' && renderViewAccounts()}
+        </div>
+      </motion.div>
     </div>
   );
 };
