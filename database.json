@@ -12,6 +12,7 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -32,6 +33,7 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -52,6 +54,7 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -64,7 +67,7 @@
             "username": "CAT_1234",
             "is_kyc_verified": true,
             "password_hash": "scrypt:32768:8:1$haqYp3fD3SW2ewLx$a329a9e2381fc886b40c2cd853d365d64ba0fb10dac425e7c82366a59bb7f312f3ea29ae2c3cb04ee97be6e3b7b177e9bdee567214d6415b11a6edbce6f95a6e",
-            "balance": 0.0,
+            "balance": 125.0,
             "language": "English",
             "currency": "USD",
             "profile_visibility": "Public",
@@ -72,6 +75,7 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": "kyc_ref_76dd41269c93888f3e6ce175",
             "kyc_timestamp": 1786246666,
+            "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -91,6 +95,21 @@
                 ],
                 "previous_hash": "0",
                 "hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908"
+            },
+            {
+                "index": 1,
+                "timestamp": 1786251679.8545659,
+                "transactions": [
+                    {
+                        "sender": "0x0C2D0DD9",
+                        "receiver": "0x82AF91EF",
+                        "amount": 1.0,
+                        "asset": "ETH",
+                        "time": 1786251679.8525753
+                    }
+                ],
+                "previous_hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908",
+                "hash": "3ac0bd9db0af04fa9ab6710528060504023492b1d1335f980d0a24f032413596"
             }
         ]
     },
