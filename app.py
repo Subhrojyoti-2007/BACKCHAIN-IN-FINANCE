@@ -182,9 +182,6 @@ def login():
             'kyc_reference_id': users[address].kyc_reference_id
         }
     }), 200
-
-<<<<<<< HEAD
-=======
 @app.route('/api/logout', methods=['POST'])
 @jwt_required(optional=True)
 def logout_api():
