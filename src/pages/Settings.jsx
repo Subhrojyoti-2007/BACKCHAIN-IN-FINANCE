@@ -17,9 +17,11 @@ import {
   Key
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useSettings } from '../context/SettingsContext';
 
 function Settings() {
   const { user, token, setUser, logout } = useAuth();
+  const { t } = useSettings();
   
   // State for Account & Network Settings
   const [language, setLanguage] = useState(user?.language || "English");
@@ -106,45 +108,50 @@ function Settings() {
   return (
     <div className="min-h-screen text-slate-100 space-y-6 pb-12">
       {/* Header */}
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
+        className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden"
       >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">System Preferences</span>
+          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">{t("System Configuration")}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
-          <SettingsIcon className="h-8 w-8 text-cyan-400" />
-          <span>Platform & Security Settings</span>
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">Configure interactive options, alert notifications, settlement networks, and security thresholds.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
+              <SettingsIcon className="h-8 w-8 text-cyan-400" />
+              <span>{t("Settings")}</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">{t("Manage global preferences and institutional security policies.")}</p>
+          </div>
+        </div>
       </motion.div>
 
       {/* Settings Grid */}
       <div className="grid lg:grid-cols-2 gap-6">
 
         {/* Account Defaults */}
-        <SettingCard title="Account Defaults">
+        <SettingCard title={t("Account Defaults")}>
           <SettingItem
             icon={<Globe className="h-4 w-4 text-cyan-400" />}
-            title="Interface Language"
+            title={t("Interface Language")}
             value={language}
             options={["English", "Spanish", "French", "German", "Mandarin", "Japanese", "Korean", "Hindi", "Arabic", "Portuguese", "Russian", "Italian"]}
             onChange={setLanguage}
           />
           <SettingItem
             icon={<DollarSign className="h-4 w-4 text-cyan-400" />}
-            title="Base Reporting Currency"
+            title={t("Base Reporting Currency")}
             value={currency}
             options={["USD", "EUR", "GBP", "JPY", "ETH", "BTC", "USDC", "USDT", "AUD", "CAD", "CHF", "CNY", "INR"]}
             onChange={setCurrency}
           />
           <SettingItem
             icon={<Shield className="h-4 w-4 text-cyan-400" />}
-            title="Identity Visibility"
+            title={t("Identity Visibility")}
             value={visibility}
             options={["Public", "Private", "Institutional Verified Only"]}
             onChange={setVisibility}
@@ -152,17 +159,17 @@ function Settings() {
         </SettingCard>
 
         {/* Network & Wallet Settings */}
-        <SettingCard title="Subnet & Multi-Sig Rails">
+        <SettingCard title={t("Subnet & Multi-Sig Rails")}>
           <SettingItem
             icon={<Wallet className="h-4 w-4 text-cyan-400" />}
-            title="Primary Subnet Network"
+            title={t("Primary Subnet Network")}
             value={network}
             options={["Ethereum Mainnet", "Polygon", "Arbitrum", "Optimism", "Solana", "Binance Smart Chain"]}
             onChange={setNetwork}
           />
           <SettingItem
             icon={<CheckCircle2 className="h-4 w-4 text-cyan-400" />}
-            title="Signer Handshake Mode"
+            title={t("Signer Handshake Mode")}
             value={walletConnection}
             options={["Auto Connect ON", "Auto Connect OFF", "Manual Proxy"]}
             onChange={setWalletConnection}
@@ -170,53 +177,53 @@ function Settings() {
         </SettingCard>
 
         {/* Alert Channels (Interactive Toggles) */}
-        <SettingCard title="Alert Channels">
+        <SettingCard title={t("Alert Channels")}>
           <InteractiveToggleItem
             icon={<Bell className="h-4 w-4 text-cyan-400" />}
-            title="On-Chain Settlement Broadcasts"
+            title={t("On-Chain Settlement Broadcasts")}
             status={settlementAlerts}
             onToggle={() => setSettlementAlerts(prev => prev === "ON" ? "OFF" : "ON")}
           />
           <InteractiveToggleItem
             icon={<Shield className="h-4 w-4 text-cyan-400" />}
-            title="Vault Threat & Risk Advisories"
+            title={t("Vault Threat & Risk Advisories")}
             status={threatAdvisories}
             onToggle={() => setThreatAdvisories(prev => prev === "ON" ? "OFF" : "ON")}
           />
           <InteractiveToggleItem
             icon={<Bell className="h-4 w-4 text-cyan-400" />}
-            title="Liquidity Yield Updates"
+            title={t("Liquidity Yield Updates")}
             status={yieldUpdates}
             onToggle={() => setYieldUpdates(prev => prev === "ON" ? "OFF" : "ON")}
           />
         </SettingCard>
 
         {/* Security Credentials & Options */}
-        <SettingCard title="Security Credentials & Policy Options">
+        <SettingCard title={t("Security Credentials & Policy Options")}>
           <SettingItem
             icon={<Lock className="h-4 w-4 text-cyan-400" />}
-            title="Hardware Multi-Factor Auth"
+            title={t("Hardware Multi-Factor Auth")}
             value={hardwareMfa}
             options={["Enabled", "Disabled", "Hardware Key Required", "Require PIN"]}
             onChange={setHardwareMfa}
           />
           <SettingItem
             icon={<Smartphone className="h-4 w-4 text-cyan-400" />}
-            title="Passkey Biometric Login"
+            title={t("Passkey Biometric Login")}
             value={passkeyBiometrics}
             options={["Enabled", "Disabled", "Touch ID / Face ID", "Strict Prompt"]}
             onChange={setPasskeyBiometrics}
           />
           <SettingItem
             icon={<Clock className="h-4 w-4 text-cyan-400" />}
-            title="Session Timeout"
+            title={t("Session Timeout")}
             value={sessionTimeout}
             options={["15 Minutes", "30 Minutes", "1 Hour", "4 Hours", "Never"]}
             onChange={setSessionTimeout}
           />
           <SettingItem
             icon={<SlidersHorizontal className="h-4 w-4 text-cyan-400" />}
-            title="2FA Transaction Threshold"
+            title={t("2FA Transaction Threshold")}
             value={txThreshold}
             options={["Always Require", "$1,000 Threshold", "$10,000 Threshold", "Disabled"]}
             onChange={setTxThreshold}
@@ -231,15 +238,20 @@ function Settings() {
         transition={{ duration: 0.5 }}
         className="glass-card rounded-3xl p-6 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
       >
-        <button
+        <button 
           onClick={handleSave}
           disabled={isSaving}
-          className="btn-primary font-bold text-sm px-8 py-3.5 rounded-xl disabled:opacity-50 flex items-center justify-center gap-2 w-full sm:w-auto shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+          className="btn-primary px-6 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 w-full sm:w-auto shadow-[0_0_15px_rgba(34,211,238,0.3)]"
         >
           {isSaving ? (
-            <span className="animate-spin border-2 border-t-transparent border-white rounded-full w-4 h-4" />
-          ) : <Save className="h-4 w-4" />}
-          <span>{isSaving ? "Saving Configuration..." : "Save Preferences"}</span>
+            <span className="animate-pulse">{t("Saving...")}</span>
+          ) : saveStatus === "Success" ? (
+            <><Check className="h-4 w-4" /> {t("Saved!")}</>
+          ) : saveStatus === "Session Expired" ? (
+            <span>{t("Session Expired")}</span>
+          ) : (
+            <><Save className="h-4 w-4" /> {t("Save Changes")}</>
+          )}
         </button>
 
         {saveStatus === "Success" && (

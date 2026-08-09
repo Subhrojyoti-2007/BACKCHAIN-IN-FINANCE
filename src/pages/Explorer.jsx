@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { AnimatedCounter } from "../components/ui/animated-counter";
 import { fetchGlobalStats } from "../services/api";
+import { useSettings } from '../context/SettingsContext';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -32,6 +33,7 @@ const itemVariants = {
 };
 
 function BlockchainExplorer() {
+  const { t, formatCurrency, getExchangeRate, getCurrencySymbol } = useSettings();
   const [chainData, setChainData] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -102,12 +104,13 @@ function BlockchainExplorer() {
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">Subnet Ledger</span>
+          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">{t("Network Stats")}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Blockchain <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">Explorer</span>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <Blocks className="h-8 w-8 text-cyan-400" />
+          <span>{t("Explorer")}</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">Monitor on-chain blocks, verifications, and global crypto metric consensus.</p>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">{t("Monitor on-chain blocks, verifications, and global crypto metric consensus.")}</p>
       </motion.div>
 
       {/* Search Input */}
@@ -141,19 +144,19 @@ function BlockchainExplorer() {
       >
         <InfoCard 
           icon={<Blocks className="h-5 w-5 text-cyan-400" />} 
-          title="Local Block Height" 
+          title={t("Local Block Height")} 
           value={chainData.length > 0 ? chainData[0].index : 0} 
           isNumeric={true} 
         />
         <InfoCard 
           icon={<Globe className="h-5 w-5 text-blue-400" />} 
-          title="Global Market Cap" 
-          value={globalStats ? `$${(globalStats.total_market_cap.usd / 1e12).toFixed(2)}T` : "$3.42T"} 
+          title={t("Global Market Cap")} 
+          value={globalStats ? `${getCurrencySymbol()}${((globalStats.total_market_cap.usd * getExchangeRate()) / 1e12).toFixed(2)}T` : `${getCurrencySymbol()}3.42T`} 
         />
         <InfoCard 
           icon={<BarChart2 className="h-5 w-5 text-indigo-400" />} 
-          title="24h Global Volume" 
-          value={globalStats ? `$${(globalStats.total_volume.usd / 1e9).toFixed(1)}B` : "$148.5B"} 
+          title={t("24h Global Volume")} 
+          value={globalStats ? `${getCurrencySymbol()}${((globalStats.total_volume.usd * getExchangeRate()) / 1e9).toFixed(1)}B` : `${getCurrencySymbol()}148.5B`} 
         />
         <InfoCard 
           icon={<PieChart className="h-5 w-5 text-emerald-400" />} 
@@ -179,8 +182,8 @@ function BlockchainExplorer() {
             <Database className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Latest Subnet Transactions</h2>
-            <p className="text-xs text-slate-400">Real-time ledger events confirmed by validators</p>
+            <h2 className="text-xl font-bold text-white">{t("Latest Subnet Transactions")}</h2>
+            <p className="text-xs text-slate-400">{t("Real-time ledger events confirmed by validators")}</p>
           </div>
         </div>
         
@@ -193,12 +196,12 @@ function BlockchainExplorer() {
             <table className="w-full text-left text-xs sm:text-sm font-mono">
               <thead>
                 <tr className="text-slate-400 border-b border-white/10 uppercase tracking-wider text-[11px]">
-                  <th className="pb-3 pr-4 font-semibold">Block Hash</th>
-                  <th className="pb-3 pr-4 font-semibold">From</th>
-                  <th className="pb-3 pr-4 font-semibold">To</th>
-                  <th className="pb-3 pr-4 font-semibold">Amount</th>
-                  <th className="pb-3 pr-4 font-semibold">Status</th>
-                  <th className="pb-3 font-semibold text-right">Time</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("Block Hash")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("From")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("To")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("Amount")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("Status")}</th>
+                  <th className="pb-3 font-semibold text-right">{t("Time")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -236,7 +239,7 @@ function BlockchainExplorer() {
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
 >>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
-        <h2 className="text-xl font-bold text-white mb-6">Recent Validated Blocks</h2>
+        <h2 className="text-xl font-bold text-white mb-6">{t("Recent Validated Blocks")}</h2>
         
         {loading ? (
           <p className="text-sm font-mono text-slate-400">Loading blocks...</p>

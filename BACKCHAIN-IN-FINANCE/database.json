@@ -1,0 +1,77 @@
+{
+    "users": {
+        "0x82AF91EF": {
+            "username": "Alice_Corp",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$rmlOZh7Lf6KZXnwF$571ac8bc28961bd1d8e582e73fc3a6261fc44b02c749c957501a53370da7cf8f3101b42c8d8c750be42cafafc7fa7eed50a2ca163e9627419b3e2b97c889934a",
+            "balance": 150000.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
+        },
+        "0x91AF72BC": {
+            "username": "Bob_LLC",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$lB7C3FqSPlgPe7FJ$0ef73a54d981f74be0f7a9012902535a4c4eb14918e729c24e0e2a54acb6e51260c09dbacb02bace48abb7d4345312ccce2f9ea4c5f61311fb05983054dab120",
+            "balance": 200000.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
+        },
+        "0x72BC88EF": {
+            "username": "Charlie_Anon",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$NOtoamWGzj7yCz1B$396903c60dc7ab9930facd22c7e94183944324af5a64a4d3dfb86c3de5fe44fb524b269b006c68b83d2ca4e0f2e01d6c6801c37b7fc09b22c039bc2468002827",
+            "balance": 50000.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
+        }
+    },
+    "blockchain": {
+        "chain": [
+            {
+                "index": 0,
+                "timestamp": 1786183991.3821642,
+                "transactions": [
+                    "Genesis Block"
+                ],
+                "previous_hash": "0",
+                "hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908"
+            }
+        ]
+    }
+}

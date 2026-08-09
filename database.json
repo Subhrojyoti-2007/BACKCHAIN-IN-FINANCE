@@ -4,7 +4,7 @@
             "username": "Alice_Corp",
             "is_kyc_verified": true,
             "password_hash": "scrypt:32768:8:1$rmlOZh7Lf6KZXnwF$571ac8bc28961bd1d8e582e73fc3a6261fc44b02c749c957501a53370da7cf8f3101b42c8d8c750be42cafafc7fa7eed50a2ca163e9627419b3e2b97c889934a",
-            "balance": 150000.0,
+            "balance": 150225.0,
             "language": "English",
             "currency": "USD",
             "profile_visibility": "Public",
@@ -12,6 +12,7 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -32,6 +33,7 @@
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
             "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -94,6 +96,49 @@
             "kyc_timestamp": null
 =======
             "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
+        },
+        "0x0C2D0DD9": {
+            "username": "CAT_1234",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$haqYp3fD3SW2ewLx$a329a9e2381fc886b40c2cd853d365d64ba0fb10dac425e7c82366a59bb7f312f3ea29ae2c3cb04ee97be6e3b7b177e9bdee567214d6415b11a6edbce6f95a6e",
+            "balance": 125.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": "kyc_ref_76dd41269c93888f3e6ce175",
+            "kyc_timestamp": 1786246666,
+            "kyc_aadhaar_hash": null,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
+        },
+        "0x617235C3": {
+            "username": "SUBHRO",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$8QUmv4z4NGqDqJAV$585fe06bc41ec1e21a19e48445e05b6ec4b28ce5eb806f5c643beadb371c60f9251d5df647f8e1432df570e9632bf8ef1ff0fb2d8e0e90e19488bbb82ccb678b",
+            "balance": 1250087.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": "ref_283339bd1c6c5767",
+            "kyc_timestamp": 1786270857.0019252,
+            "kyc_aadhaar_hash": "26564c4d2e3857f08ec08c6386ff4a26c84133a0a32a83f54e2795ee0067475f",
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -114,7 +159,117 @@
                 ],
                 "previous_hash": "0",
                 "hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908"
+            },
+            {
+                "index": 1,
+                "timestamp": 1786251679.8545659,
+                "transactions": [
+                    {
+                        "sender": "0x0C2D0DD9",
+                        "receiver": "0x82AF91EF",
+                        "amount": 1.0,
+                        "asset": "ETH",
+                        "time": 1786251679.8525753
+                    }
+                ],
+                "previous_hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908",
+                "hash": "3ac0bd9db0af04fa9ab6710528060504023492b1d1335f980d0a24f032413596"
+            },
+            {
+                "index": 2,
+                "timestamp": 1786270922.453582,
+                "transactions": [
+                    {
+                        "sender": "0x617235C3",
+                        "receiver": "0x0C2D0DD9",
+                        "amount": 12.0,
+                        "asset": "BTC",
+                        "time": 1786270922.453582
+                    }
+                ],
+                "previous_hash": "3ac0bd9db0af04fa9ab6710528060504023492b1d1335f980d0a24f032413596",
+                "hash": "3e9da3dc4673d5c89629ad529809587fe01341c2592446467ea1eee143b58a52"
+            },
+            {
+                "index": 3,
+                "timestamp": 1786271555.4816587,
+                "transactions": [
+                    {
+                        "sender": "0x617235C3",
+                        "receiver": "0x82AF91EF",
+                        "amount": 1.0,
+                        "asset": "ETH",
+                        "time": 1786271555.4816587
+                    }
+                ],
+                "previous_hash": "3e9da3dc4673d5c89629ad529809587fe01341c2592446467ea1eee143b58a52",
+                "hash": "b52dc663646c5ac460a449b827540c3ef1697c4ac0dec14aac00b080499e840a"
+            },
+            {
+                "index": 4,
+                "timestamp": 1786271978.3160133,
+                "transactions": [
+                    {
+                        "sender": "0x617235C3",
+                        "receiver": "0x91AF72BC",
+                        "amount": 12.0,
+                        "asset": "ETH",
+                        "time": 1786271978.3160133
+                    }
+                ],
+                "previous_hash": "b52dc663646c5ac460a449b827540c3ef1697c4ac0dec14aac00b080499e840a",
+                "hash": "bbd3a3e7f82f177fbf3e37164840ef52515849d0494923c9548be397257411ab"
+            },
+            {
+                "index": 5,
+                "timestamp": 1786272028.463611,
+                "transactions": [
+                    {
+                        "sender": "0x617235C3",
+                        "receiver": "0x82AF91EF",
+                        "amount": 125.0,
+                        "asset": "ETH",
+                        "time": 1786272028.463611
+                    }
+                ],
+                "previous_hash": "bbd3a3e7f82f177fbf3e37164840ef52515849d0494923c9548be397257411ab",
+                "hash": "c9ffafff5a3b1e2369f3072d18e4755953ea5cebcc78653283d7da3e364394c0"
+            },
+            {
+                "index": 6,
+                "timestamp": 1786272825.565744,
+                "transactions": [
+                    {
+                        "sender": "0x617235C3",
+                        "receiver": "0x82AF91EF",
+                        "amount": 125.0,
+                        "asset": "ETH",
+                        "time": 1786272825.5652354
+                    }
+                ],
+                "previous_hash": "c9ffafff5a3b1e2369f3072d18e4755953ea5cebcc78653283d7da3e364394c0",
+                "hash": "e590aec1fbcee0aa5a04170a2be5fafbda736889afd7e737b526df936c2b6623"
             }
         ]
-    }
+    },
+    "audit_logs": [
+        {
+            "id": "log_da8ee8e96a86cf68",
+            "timestamp": 1786285519.832483,
+            "user": "Alice_Corp",
+            "action": "ADMIN_ACTION",
+            "details": "Cleared all system audit logs",
+            "status": "SUCCESS",
+            "ip_address": "127.0.0.1"
+        },
+        {
+            "id": "log_d0ad9b7f1902bddb",
+            "timestamp": 1786285519.838855,
+            "user": "Alice_Corp",
+            "action": "ADMIN_ACTION",
+            "details": "Accessed system audit logs",
+            "status": "SUCCESS",
+            "ip_address": "127.0.0.1"
+        }
+    ]
 }

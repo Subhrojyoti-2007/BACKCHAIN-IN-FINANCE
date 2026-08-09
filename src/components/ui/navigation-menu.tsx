@@ -19,11 +19,13 @@ import {
   TerminalSquare,
   LogOut,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  History
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useSettings } from "../../context/SettingsContext";
 import {
   Sheet,
   SheetContent,
@@ -43,6 +45,7 @@ const allNavItems = [
   { name: "Terminal", href: "/terminal", dashboardOnly: true, icon: TerminalSquare },
   { name: "Profile", href: "/profile", dashboardOnly: true, icon: User },
   { name: "Settings", href: "/settings", dashboardOnly: true, icon: Settings },
+  { name: "Audit Logs", href: "/audit-logs", dashboardOnly: true, icon: History },
   { name: "Login", href: "/login", unAuthOnly: true, icon: User },
   { name: "Register", href: "/register", unAuthOnly: true, icon: Sparkles },
 ];
@@ -113,14 +116,19 @@ export function AnimatedNavFramer() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { t } = useSettings();
   
   const isLandingPage = location.pathname === '/';
+
+  const isKycVerified = user?.is_kyc_verified || user?.kyc_verified;
 
   const navItems = allNavItems.filter(item => {
     if (item.unAuthOnly) return false; // Login & Register are rendered as action buttons on the right
     if (user && item.unAuthOnly) return false;
     if (!user && item.authOnly) return false;
     if (isLandingPage && item.dashboardOnly) return false;
+    // Hide dashboard links if user is not KYC verified
+    if (user && !isKycVerified && item.dashboardOnly) return false;
     return true;
   });
   
@@ -128,6 +136,7 @@ export function AnimatedNavFramer() {
     if (user && item.unAuthOnly) return false;
     if (!user && item.authOnly) return false;
     if (!user && item.dashboardOnly) return false;
+    if (user && !isKycVerified && item.dashboardOnly) return false;
     return true;
   });
 
@@ -224,7 +233,7 @@ export function AnimatedNavFramer() {
                         >
                           <div className="flex items-center gap-3">
                             <ItemIcon className={cn("h-4 w-4", isActive ? "text-cyan-400" : "text-slate-400 group-hover:text-slate-200")} />
-                            <span>{item.name}</span>
+                            <span>{t(item.name)}</span>
                           </div>
                           <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400" />
                         </Link>
@@ -242,7 +251,7 @@ export function AnimatedNavFramer() {
                         {user.username ? user.username.charAt(0).toUpperCase() : "U"}
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-xs text-slate-400">Authenticated User</p>
+                        <p className="text-xs text-slate-400">{t("Authenticated User")}</p>
                         <p className="font-semibold text-cyan-400 text-sm truncate">{user.username}</p>
                       </div>
                     </div>
@@ -251,7 +260,7 @@ export function AnimatedNavFramer() {
                       className="w-full px-4 py-3 rounded-xl font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-all flex items-center justify-center gap-2"
                     >
                       <LogOut className="h-4 w-4" />
-                      <span>Log Out</span>
+                      <span>{t("Log Out")}</span>
                     </button>
                   </div>
                 ) : (
@@ -261,7 +270,7 @@ export function AnimatedNavFramer() {
                         to="/login"
                         className="w-full btn-secondary text-center py-2.5 rounded-xl font-semibold text-sm block"
                       >
-                        Sign In
+                        {t("Sign In")}
                       </Link>
                     </SheetClose>
                     <SheetClose asChild>
@@ -269,7 +278,7 @@ export function AnimatedNavFramer() {
                         to="/register"
                         className="w-full btn-primary text-center py-2.5 rounded-xl font-semibold text-sm block"
                       >
-                        Get Started
+                        {t("Get Started")}
                       </Link>
                     </SheetClose>
                   </div>
@@ -311,7 +320,7 @@ export function AnimatedNavFramer() {
                       : "text-slate-300 hover:text-white hover:bg-white/10"
                   )}
                 >
-                  <span>{item.name}</span>
+                  <span>{t(item.name)}</span>
                 </Link>
               </motion.div>
             );
@@ -351,13 +360,13 @@ export function AnimatedNavFramer() {
                 to="/login"
                 className="text-xs font-semibold px-3 py-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition-colors hidden sm:block"
               >
-                Log In
+                {t("Log In")}
               </Link>
               <Link 
                 to="/register"
                 className="btn-primary text-xs font-semibold px-4 py-1.5 rounded-xl flex items-center gap-1.5"
               >
-                <span>Get Started</span>
+                <span>{t("Get Started")}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>

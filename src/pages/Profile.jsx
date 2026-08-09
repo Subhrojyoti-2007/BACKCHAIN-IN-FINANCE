@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -32,6 +33,7 @@ const slideUpItem = {
 
 function Profile() {
   const { user, token } = useAuth();
+  const { t, formatCurrency } = useSettings();
   
   const [txCount, setTxCount] = useState(0);
   const [rank, setRank] = useState('-');
@@ -46,14 +48,31 @@ function Profile() {
     }
   };
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handleAddFunds = async () => {
-    const amountStr = prompt("Enter amount to add to your treasury balance ($):");
+    const amountStr = prompt(t("Enter amount to add to your treasury balance ($):"));
     if (!amountStr) return;
     const amount = parseFloat(amountStr);
-    if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
+    if (isNaN(amount) || amount <= 0) return alert(t("Invalid amount"));
     
     try {
-      const res = await fetch('/api/add-balance', {
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        alert(t("Failed to load Razorpay SDK. Check your connection."));
+        return;
+      }
+
+      // 1. Create Order on Backend
+      const res = await fetch('/api/create-razorpay-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,14 +80,69 @@ function Profile() {
         },
         body: JSON.stringify({ amount })
       });
-      if (res.ok) {
-        window.location.reload();
-      } else {
-        alert("Failed to add balance");
+      
+      if (!res.ok) {
+        alert(t("Failed to create order"));
+        return;
       }
+      
+      const orderData = await res.json();
+      
+      // 2. Open Razorpay Checkout
+      const options = {
+        key: orderData.razorpay_key_id, 
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: t("BLOCKCHAIN IN FINANCE"),
+        description: t("Add Funds"),
+        order_id: orderData.id,
+        handler: async function (response) {
+          // 3. Verify Payment on Backend
+          try {
+            const verifyRes = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                amount: amount,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            
+            if (verifyRes.ok) {
+              alert(t("Successfully added funds to your Treasury Balance!"));
+              window.location.reload();
+            } else {
+              alert(t("Payment verification failed."));
+            }
+          } catch (err) {
+            console.error("Verification error:", err);
+            alert(t("Payment verification error."));
+          }
+        },
+        prefill: {
+          name: user?.username || "User",
+          email: "user@example.com",
+          contact: "9999999999"
+        },
+        theme: {
+          color: "#0b5c46"
+        }
+      };
+      
+      const rzp1 = new window.Razorpay(options);
+      rzp1.on('payment.failed', function (response){
+        alert(t("Payment Failed: ") + response.error.description);
+      });
+      rzp1.open();
+
     } catch (e) {
       console.error(e);
-      alert("Error connecting to server");
+      alert(t("Error connecting to server"));
     }
   };
 
@@ -108,13 +182,7 @@ function Profile() {
           const accountsData = await accountsRes.json();
           const userAccount = accountsData.find(a => a.address === user?.address);
           if (userAccount) {
-            setBalance(
-              new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: user?.currency || 'USD',
-                maximumFractionDigits: 2
-              }).format(userAccount.balance)
-            );
+            setBalance(formatCurrency(userAccount.balance));
           }
           
           accountsData.sort((a, b) => b.balance - a.balance);
@@ -139,26 +207,26 @@ function Profile() {
 
   const stats = [
     {
-      title: "Treasury Balance",
+      title: t("Treasury Balance"),
       value: balance,
       icon: Coins,
       color: "text-cyan-400",
-      action: <button title="Deposit Capital" onClick={(e) => { e.stopPropagation(); handleAddFunds(); }} className="ml-2 text-cyan-400 hover:text-cyan-300 transition-colors"><PlusCircle size={20} /></button>
+      action: <button title={t("Deposit Capital")} onClick={(e) => { e.stopPropagation(); handleAddFunds(); }} className="ml-2 text-cyan-400 hover:text-cyan-300 transition-colors"><PlusCircle size={20} /></button>
     },
     {
-      title: "Ledger Transactions",
+      title: t("Ledger Transactions"),
       value: txCount.toString(),
       icon: Activity,
       color: "text-blue-400"
     },
     {
-      title: "Identity Status",
-      value: user?.is_kyc_verified ? "ERC-3643 Verified" : "Unverified",
+      title: t("Identity Status"),
+      value: user?.is_kyc_verified ? t("ERC-3643 Verified") : t("Unverified"),
       icon: Wallet,
       color: "text-emerald-400"
     },
     {
-      title: "Portfolio Rank",
+      title: t("Portfolio Rank"),
       value: rank,
       icon: Award,
       color: "text-indigo-400"
@@ -167,19 +235,19 @@ function Profile() {
 
   const wallets = [
     {
-      name: "Primary Institutional Vault",
+      name: t("Primary Institutional Vault"),
       address: displayAddress,
-      status: "Connected & Active",
+      status: t("Connected & Active"),
     },
     {
-      name: "Hardware Signer (Ledger)",
+      name: t("Hardware Signer (Ledger)"),
       address: "0x71BC...44DA",
-      status: "Verified",
+      status: t("Verified"),
     },
     {
-      name: "Coinbase Prime Custody",
+      name: t("Coinbase Prime Custody"),
       address: "0x92CD...18FA",
-      status: "Connected",
+      status: t("Connected"),
     },
   ];
 
@@ -194,12 +262,13 @@ function Profile() {
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">Account Identity</span>
+          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">{t("Account Identity")}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          User <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">Profile</span>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <User className="h-8 w-8 text-cyan-400" />
+          <span>{t("Profile")}</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">Manage institutional credentials, multi-sig signers, and notification settings.</p>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">{t("Manage institutional credentials, multi-sig signers, and notification settings.")}</p>
       </motion.div>
 
       {/* Profile Identity Card */}
@@ -239,7 +308,7 @@ function Profile() {
                 className="btn-primary px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 self-center sm:self-auto"
               >
                 <PlusCircle className="h-4 w-4" />
-                <span>Deposit Capital</span>
+                <span>{t("Deposit Capital")}</span>
               </button>
             </div>
 
@@ -329,8 +398,8 @@ function Profile() {
             <LinkIcon className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">Authorized Multi-Sig Signers</h2>
-            <p className="text-xs text-slate-400">Connected hardware wallets & prime custody addresses</p>
+            <h2 className="text-xl font-bold text-white">{t("Authorized Multi-Sig Signers")}</h2>
+            <p className="text-xs text-slate-400">{t("Connected hardware wallets & prime custody addresses")}</p>
           </div>
         </div>
 
@@ -379,24 +448,24 @@ function Profile() {
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
 >>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
-        <h2 className="text-xl font-bold text-white mb-6">Account Preferences</h2>
+        <h2 className="text-xl font-bold text-white mb-6">{t("Account Preferences")}</h2>
 
         <div className="space-y-3">
           <Preference 
             icon={<Mail className="h-4 w-4 text-cyan-400" />} 
-            title="Institutional Email Alerts" 
+            title={t("Institutional Email Alerts")} 
             value={preferences.email ? "ON" : "OFF"} 
             onClick={() => togglePreference('email')}
           />
           <Preference 
             icon={<Bell className="h-4 w-4 text-cyan-400" />} 
-            title="Real-Time Security Advisories" 
+            title={t("Real-Time Security Advisories")} 
             value={preferences.security ? "ON" : "OFF"} 
             onClick={() => togglePreference('security')}
           />
           <Preference 
             icon={<Moon className="h-4 w-4 text-cyan-400" />} 
-            title="Dark Mode UI Aesthetic" 
+            title={t("Dark Mode UI Aesthetic")} 
             value={preferences.theme ? "ON" : "OFF"} 
             onClick={() => togglePreference('theme')}
           />

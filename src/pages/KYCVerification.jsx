@@ -1,26 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Fingerprint, ShieldCheck, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldCheck, Fingerprint, RefreshCw, LogOut, ArrowLeft, CheckCircle2, Clock, Lock } from 'lucide-react';
 
 export default function KYCVerification() {
-  const [aadhaar, setAadhaar] = useState('');
-  const [otp, setOtp] = useState('');
-  const [step, setStep] = useState(1); // 1: Aadhaar Input, 2: OTP Input, 3: Success
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [txnId, setTxnId] = useState('');
-  
-  const { token, setUser, logout } = useAuth();
+  const { token, user, setUser, setToken, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleSendOTP = async (e) => {
-    e.preventDefault();
+  // eKYC states: 'aadhaar' | 'otp' | 'success'
+  const [step, setStep] = useState('aadhaar');
+  const [aadhaar, setAadhaar] = useState('');
+  const [otp, setOtp] = useState('');
+  const [transactionId, setTransactionId] = useState('');
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  // Timer for OTP resend
+  const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  // Format Aadhaar: XXXX XXXX XXXX
+  const formatAadhaar = (val) => {
+    const numeric = val.replace(/\D/g, '').slice(0, 12);
+    const matches = numeric.match(/.{1,4}/g);
+    return matches ? matches.join(' ') : numeric;
+  };
+
+  const handleAadhaarChange = (e) => {
+    setAadhaar(formatAadhaar(e.target.value));
+  };
+
+  const handleOtpChange = (e) => {
+    const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setOtp(val);
+  };
+
+  // Step 1: Send OTP
+  const handleSendOtp = async (e) => {
+    if (e) e.preventDefault();
     setError('');
+    const rawAadhaar = aadhaar.replace(/\s/g, '');
     
-    if (aadhaar.length !== 12 || !/^\d+$/.test(aadhaar)) {
-      setError('Please enter a valid 12-digit Aadhaar number.');
+    if (rawAadhaar.length !== 12) {
+      setError('Aadhaar number must be exactly 12 digits');
       return;
     }
 
@@ -32,34 +65,31 @@ export default function KYCVerification() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ aadhaar_number: aadhaar })
+        body: JSON.stringify({ aadhaar: rawAadhaar })
       });
-      
       const data = await res.json();
+      
       if (res.ok) {
-        setTxnId(data.transaction_id);
-        setStep(2);
+        setTransactionId(data.transaction_id);
+        setStep('otp');
+        setTimer(30); // 30s resend cooldown
       } else {
-        if (res.status === 401) {
-          logout();
-          navigate('/login');
-          return;
-        }
-        setError(data.error || data.msg || 'Failed to send OTP.');
+        setError(data.error || 'Failed to send OTP. Please try again.');
       }
     } catch (err) {
-      setError('Network error. Could not connect to API.');
+      setError('Network error. Could not contact the server.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerifyOTP = async (e) => {
+  // Step 2: Verify OTP
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setError('');
     
-    if (otp.length !== 6 || !/^\d+$/.test(otp)) {
-      setError('Please enter a valid 6-digit OTP.');
+    if (otp.length !== 6) {
+      setError('OTP must be exactly 6 digits');
       return;
     }
 
@@ -71,140 +101,268 @@ export default function KYCVerification() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ otp, transaction_id: txnId })
+        body: JSON.stringify({
+          otp,
+          transaction_id: transactionId
+        })
       });
-      
       const data = await res.json();
+      
       if (res.ok) {
+        // Update user state and session JWT token securely
+        setToken(data.access_token);
         setUser(data.user);
-        setStep(3);
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true });
-        }, 2000);
+        
+        // Show success screen
+        setStep('success');
       } else {
-        setError(data.error || data.msg || 'Invalid OTP.');
+        setError(data.error || 'Invalid OTP. Please check and try again.');
       }
     } catch (err) {
-      setError('Network error. Could not verify OTP.');
+      setError('Network error. Could not contact the server.');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const handleBackToAadhaar = () => {
+    setError('');
+    setOtp('');
+    setStep('aadhaar');
+  };
+
+  // Card slide/fade animations
+  const variants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative z-20">
-      <div className="absolute inset-0 bg-[#0f1321]/80 backdrop-blur-md -z-10" />
-      
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl overflow-hidden relative"
-      >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600" />
+    <div className="min-h-screen bg-transparent flex flex-col items-center justify-center p-4 relative overflow-hidden font-body-md selection:bg-primary selection:text-on-primary text-white">
+      {/* Floating stars or light effects */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div className="relative z-10 w-full max-w-lg mt-8">
         
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-cyan-500/10 text-cyan-400 rounded-full flex items-center justify-center mb-4 border border-cyan-500/20">
-            {step === 3 ? <CheckCircle2 size={32} /> : <ShieldCheck size={32} />}
+        {/* Verification Shield Header */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-full mb-3 text-cyan-400 animate-pulse">
+            <Fingerprint className="h-10 w-10" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Identity Verification
-          </h2>
-          <p className="text-slate-400 text-sm">
-            {step === 1 && "ERC-3643 mandates mandatory KYC. Please verify your identity using Aadhaar to access the platform."}
-            {step === 2 && "Enter the 6-digit OTP sent to your Aadhaar-linked mobile number."}
-            {step === 3 && "Verification complete. Redirecting to dashboard..."}
-          </p>
-        </div>
-        
-        <div className="absolute top-4 right-4">
-          <button 
-            onClick={() => {
-              logout();
-              navigate('/login');
-            }}
-            className="text-xs text-slate-400 hover:text-rose-400 transition-colors px-2 py-1 border border-slate-700/50 rounded-md bg-slate-900/30"
-          >
-            Logout
-          </button>
+          <h1 className="font-display-lg text-2xl font-bold text-center text-on-surface">Identity Verification</h1>
+          <p className="text-sm text-on-surface-variant text-center mt-1">ERC-3643 Compliant Tokenization Protocol Gate</p>
         </div>
 
-        {error && (
-          <div className="mb-6 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center gap-2">
-            <span>{error}</span>
-          </div>
-        )}
-
-        {step === 1 && (
-          <form onSubmit={handleSendOTP} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Aadhaar Number</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  maxLength={12}
-                  value={aadhaar}
-                  onChange={(e) => setAadhaar(e.target.value)}
-                  placeholder="0000 0000 0000"
-                  className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 pl-11 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all"
-                  required
-                />
-                <Fingerprint className="absolute left-4 top-3.5 text-slate-400" size={18} />
-              </div>
+        {/* Form Container */}
+        <div className="glass-panel rounded-2xl shadow-2xl p-8 relative overflow-hidden">
+          {error && (
+            <div className="bg-error/15 border border-error/40 text-error px-4 py-3 rounded-xl mb-6 text-sm font-medium flex items-start gap-2">
+              <span className="mt-0.5">•</span>
+              <span>{error}</span>
             </div>
-            
-            <button
-              type="submit"
-              disabled={loading || aadhaar.length !== 12}
-              className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading ? <Loader2 className="animate-spin" size={18} /> : (
-                <>Get OTP <ArrowRight size={18} /></>
-              )}
-            </button>
-          </form>
-        )}
+          )}
 
-        {step === 2 && (
-          <form onSubmit={handleVerifyOTP} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">One-Time Password (OTP)</label>
-              <input
-                type="text"
-                maxLength={6}
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="000000"
-                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-center tracking-[0.5em] text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all"
-                required
-              />
-            </div>
-            
-            <button
-              type="submit"
-              disabled={loading || otp.length !== 6}
-              className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading ? <Loader2 className="animate-spin" size={18} /> : 'Verify Identity'}
-            </button>
-            <div className="text-center">
-              <button 
-                type="button" 
-                onClick={() => setStep(1)}
-                className="text-xs text-slate-400 hover:text-cyan-400 transition-colors"
+          <AnimatePresence mode="wait">
+            {step === 'aadhaar' && (
+              <motion.div
+                key="aadhaar"
+                variants={variants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
               >
-                Change Aadhaar Number
-              </button>
-            </div>
-          </form>
-        )}
+                <div className="mb-6">
+                  <h2 className="font-headline-sm text-lg text-slate-100 mb-2">Aadhaar Number Input</h2>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                    Please provide your 12-digit Aadhaar identity number to authorize the smart contract whitelist transaction.
+                  </p>
+                </div>
 
-        {step === 3 && (
-          <div className="py-8 flex flex-col items-center justify-center">
-            <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-cyan-400 font-medium animate-pulse">Whitelisting on-chain...</p>
-          </div>
-        )}
-      </motion.div>
+                <form onSubmit={handleSendOtp} className="space-y-6">
+                  <div>
+                    <label className="block text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2">
+                      Aadhaar Number
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        required
+                        value={aadhaar}
+                        onChange={handleAadhaarChange}
+                        className="w-full px-4 py-3.5 bg-surface-container-lowest/80 border border-outline-variant/60 rounded-xl focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-on-surface text-lg font-mono tracking-widest placeholder-outline-variant transition-all text-center"
+                        placeholder="0000 0000 0000"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full btn-primary font-headline-sm text-base py-3.5 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-bold cursor-pointer"
+                  >
+                    {loading ? (
+                      <>
+                        <RefreshCw className="h-5 w-5 animate-spin" />
+                        Generating UIDAI Session...
+                      </>
+                    ) : (
+                      <>
+                        Request OTP
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center text-sm">
+                  <span className="text-on-surface-variant flex items-center gap-1.5">
+                    <Lock className="h-4 w-4 text-cyan-500" /> Secure UIDAI connection
+                  </span>
+                  <button 
+                    onClick={handleLogout}
+                    className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 font-medium cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" /> Cancel Sign In
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {step === 'otp' && (
+              <motion.div
+                key="otp"
+                variants={variants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 text-cyan-400 mb-2">
+                    <button 
+                      onClick={handleBackToAadhaar}
+                      className="p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </button>
+                    <h2 className="font-headline-sm text-lg text-slate-100">Enter One-Time Password</h2>
+                  </div>
+                  <p className="text-sm text-on-surface-variant leading-relaxed pl-7">
+                    An OTP has been sent to the mobile number registered with your Aadhaar card.
+                  </p>
+                </div>
+
+                <form onSubmit={handleVerifyOtp} className="space-y-6">
+                  <div>
+                    <label className="block text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2 pl-7">
+                      6-Digit Security OTP
+                    </label>
+                    <div className="relative pl-7">
+                      <input
+                        type="text"
+                        required
+                        value={otp}
+                        onChange={handleOtpChange}
+                        className="w-full px-4 py-3.5 bg-surface-container-lowest/80 border border-outline-variant/60 rounded-xl focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-on-surface text-xl font-mono tracking-widest placeholder-outline-variant transition-all text-center"
+                        placeholder="••••••"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pl-7 text-sm">
+                    <span className="text-on-surface-variant flex items-center gap-1.5">
+                      <Clock className="h-4 w-4 text-cyan-500" /> Code expires in 5 min
+                    </span>
+                    <button
+                      type="button"
+                      disabled={timer > 0 || loading}
+                      onClick={handleSendOtp}
+                      className="text-cyan-400 hover:text-cyan-300 disabled:text-slate-500 font-semibold transition-colors flex items-center gap-1.5 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      {timer > 0 ? `Resend OTP (${timer}s)` : 'Resend OTP'}
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full btn-primary font-headline-sm text-base py-3.5 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-bold cursor-pointer ml-7 w-[calc(100%-28px)]"
+                  >
+                    {loading ? (
+                      <>
+                        <RefreshCw className="h-5 w-5 animate-spin" />
+                        Verifying eKYC...
+                      </>
+                    ) : (
+                      <>
+                        Verify and Whitelist
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+
+            {step === 'success' && (
+              <motion.div
+                key="success"
+                variants={variants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="text-center"
+              >
+                <div className="flex justify-center mb-6">
+                  <motion.div 
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1, transition: { type: 'spring', damping: 10, stiffness: 100 } }}
+                    className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400"
+                  >
+                    <CheckCircle2 className="h-16 w-16" />
+                  </motion.div>
+                </div>
+
+                <h2 className="font-headline-md text-2xl font-bold text-slate-100 mb-2">Verification Successful</h2>
+                <p className="text-sm text-on-surface-variant mb-6 leading-relaxed max-w-md mx-auto">
+                  Your identity has been verified through UIDAI. The on-chain Identity Registry has whitelisted your wallet address.
+                </p>
+
+                {/* Whitelist Certificate Details */}
+                <div className="bg-surface-container-lowest/80 border border-outline-variant/30 rounded-xl p-4 mb-8 text-left space-y-2 font-mono text-xs">
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-slate-400">Account:</span>
+                    <span className="text-cyan-400 font-bold">{user?.address}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-slate-400">Identity Registry Status:</span>
+                    <span className="text-emerald-400 font-bold font-semibold">WHITELISTED (ERC-3643)</span>
+                  </div>
+                  <div className="flex justify-between border-b border-white/5 pb-2">
+                    <span className="text-slate-400">Timestamp:</span>
+                    <span className="text-slate-200">{new Date().toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Reference ID:</span>
+                    <span className="text-slate-200 text-[10px]">{user?.kyc_reference_id || 'ref_f4e82b7c'}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 text-white font-headline-sm text-base py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold cursor-pointer"
+                >
+                  Enter Platform Dashboard
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
