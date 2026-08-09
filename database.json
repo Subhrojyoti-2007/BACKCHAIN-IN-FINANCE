@@ -59,6 +59,26 @@
             "yield_updates": "OFF",
             "session_timeout": "30 Minutes",
             "tx_threshold": "$1,000 Threshold"
+        },
+        "0x0C2D0DD9": {
+            "username": "CAT_1234",
+            "is_kyc_verified": true,
+            "password_hash": "scrypt:32768:8:1$haqYp3fD3SW2ewLx$a329a9e2381fc886b40c2cd853d365d64ba0fb10dac425e7c82366a59bb7f312f3ea29ae2c3cb04ee97be6e3b7b177e9bdee567214d6415b11a6edbce6f95a6e",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": "kyc_ref_76dd41269c93888f3e6ce175",
+            "kyc_timestamp": 1786246666,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
         }
     },
     "blockchain": {
