@@ -25,6 +25,7 @@ import {
 import { AnimatedCounter } from '../components/ui/animated-counter';
 import DotField from '../components/ui/DotField';
 import { fetchCryptoPrices, fetchHistoricalData } from '../services/api';
+import { useSettings } from '../context/SettingsContext';
 
 const allocationData = [
   { name: 'Bitcoin', value: 42 },
@@ -67,6 +68,7 @@ const itemVariants = {
 };
 
 export default function Dashboard() {
+  const { t, formatCurrency, getExchangeRate, getCurrencySymbol } = useSettings();
   const [prices, setPrices] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -159,9 +161,10 @@ export default function Dashboard() {
             <motion.div variants={itemVariants} className="glass-card glass-card-hover rounded-3xl p-6 border border-white/10">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Est. Portfolio Value</p>
-                  <div className="mt-3 text-3xl sm:text-4xl font-extrabold text-white font-mono">
-                    {loading ? "..." : <AnimatedCounter value={totalValue} prefix="$" />}
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t("Portfolio Value")}</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-sm sm:text-lg text-slate-400 font-semibold">{getCurrencySymbol()}</span>
+                    {loading ? "..." : <AnimatedCounter value={totalValue * getExchangeRate()} prefix="" />}
                   </div>
                 </div>
                 <span className="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
@@ -176,8 +179,9 @@ export default function Dashboard() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Bitcoin (BTC)</p>
-                  <div className="mt-3 text-3xl sm:text-4xl font-extrabold text-white font-mono">
-                    {loading ? "..." : <AnimatedCounter value={prices?.bitcoin?.usd || 95200} prefix="$" />}
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-sm sm:text-lg text-slate-400 font-semibold">{getCurrencySymbol()}</span>
+                    {loading ? "..." : <AnimatedCounter value={(prices?.bitcoin?.usd || 95200) * getExchangeRate()} prefix="" />}
                   </div>
                 </div>
                 <span className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
@@ -200,8 +204,9 @@ export default function Dashboard() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Ethereum (ETH)</p>
-                  <div className="mt-3 text-3xl sm:text-4xl font-extrabold text-white font-mono">
-                    {loading ? "..." : <AnimatedCounter value={prices?.ethereum?.usd || 3350} prefix="$" />}
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-sm sm:text-lg text-slate-400 font-semibold">{getCurrencySymbol()}</span>
+                    {loading ? "..." : <AnimatedCounter value={(prices?.ethereum?.usd || 3350) * getExchangeRate()} prefix="" />}
                   </div>
                 </div>
                 <span className="p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-400">
@@ -304,11 +309,11 @@ export default function Dashboard() {
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-extrabold text-white">Recent Transactions</h2>
-                <p className="text-xs text-slate-400">Verifiable on-chain execution ledger</p>
+                <h2 className="text-xl font-extrabold text-white">{t("Recent Transactions")}</h2>
+                <p className="text-xs text-slate-400">{t("Verifiable on-chain execution ledger")}</p>
               </div>
               <button className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                View Ledger →
+                {t("View Ledger")} →
               </button>
             </div>
             <div className="overflow-x-auto">

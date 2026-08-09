@@ -1,7 +1,13 @@
 import os
+import requests
+from dotenv import load_dotenv
+load_dotenv()
+from datetime import timedelta
 import secrets
 import uuid
 import hashlib
+import hmac
+import razorpay
 from collections import defaultdict
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -20,6 +26,15 @@ CORS(app)
 
 # Configure JWT
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "super-secret-dev-key")
+
+# Configure Razorpay
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "rzp_test_dummykey123")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "rzp_test_dummysecret456")
+try:
+    razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+except Exception as e:
+    razorpay_client = None
+    print(f"Failed to initialize Razorpay: {e}")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
 jwt = JWTManager(app)
 
@@ -105,7 +120,19 @@ def login():
     if not address or not check_password_hash(users[address].password_hash, password):
         return jsonify({'error': 'Invalid username or password'}), 401
 
-    access_token = create_access_token(identity=address)
+    timeout_str = users[address].session_timeout
+    if timeout_str == "15 Minutes":
+        expires_delta = timedelta(minutes=15)
+    elif timeout_str == "30 Minutes":
+        expires_delta = timedelta(minutes=30)
+    elif timeout_str == "1 Hour":
+        expires_delta = timedelta(hours=1)
+    elif timeout_str == "4 Hours":
+        expires_delta = timedelta(hours=4)
+    else:
+        expires_delta = False
+
+    access_token = create_access_token(identity=address, expires_delta=expires_delta)
     
     return jsonify({
         'access_token': access_token,
@@ -122,106 +149,34 @@ def login():
         }
     }), 200
 
-# Mock stores for KYC
-mock_otp_store = {}
-otp_rate_limit = {}
-
-@app.route('/api/kyc/send-otp', methods=['POST'])
-@jwt_required()
-def send_otp():
-    """Mock API to send Aadhaar OTP."""
-    current_user_addr = get_jwt_identity()
-    values = request.get_json()
-    
-    if not values or 'aadhaar_number' not in values:
-        return jsonify({'error': 'Missing aadhaar_number'}), 400
-        
-    aadhaar = str(values['aadhaar_number']).strip()
-    if len(aadhaar) != 12 or not aadhaar.isdigit():
-        return jsonify({'error': 'Invalid Aadhaar number format. Must be 12 digits.'}), 400
-
-    # Rate limiting (1 request per 30 seconds)
-    current_time = time()
-    if current_user_addr in otp_rate_limit:
-        if current_time - otp_rate_limit[current_user_addr] < 30:
-            return jsonify({'error': 'Too many requests. Please wait 30 seconds.'}), 429
-            
-    otp_rate_limit[current_user_addr] = current_time
-
-    # Generate random OTP (User asked for random OTP)
-    import random
-    otp = str(random.randint(100000, 999999))
-    
-    transaction_id = "txn_" + secrets.token_hex(8)
-    
-    # Store in mock memory
-    mock_otp_store[transaction_id] = {
-        'otp': otp,
-        'user_addr': current_user_addr,
-        'expires': current_time + 300 # 5 minutes expiry
-    }
-    
-    print(f"[MOCK KYC API] Sent OTP {otp} to Aadhaar {aadhaar} for user {current_user_addr}. Txn ID: {transaction_id}")
-    
-    return jsonify({
-        'message': 'OTP sent successfully',
-        'transaction_id': transaction_id
-    }), 200
-
-@app.route('/api/kyc/verify-otp', methods=['POST'])
-@jwt_required()
-def verify_otp():
-    """Mock API to verify Aadhaar OTP."""
-    current_user_addr = get_jwt_identity()
-    values = request.get_json()
-    
-    if not values or 'otp' not in values or 'transaction_id' not in values:
-        return jsonify({'error': 'Missing otp or transaction_id'}), 400
-        
-    otp = str(values['otp']).strip()
-    transaction_id = values['transaction_id']
-    
-    if transaction_id not in mock_otp_store:
-        return jsonify({'error': 'Invalid or expired transaction.'}), 400
-        
-    store_data = mock_otp_store[transaction_id]
-    
-    if store_data['user_addr'] != current_user_addr:
-        return jsonify({'error': 'Unauthorized transaction.'}), 403
-        
-    if time() > store_data['expires']:
-        del mock_otp_store[transaction_id]
-        return jsonify({'error': 'OTP expired.'}), 400
-        
-    if store_data['otp'] != otp:
-        return jsonify({'error': 'Invalid OTP.'}), 400
-        
-    # Success! Update user Profile
-    del mock_otp_store[transaction_id]
-    
-    if current_user_addr in users:
-        users[current_user_addr].is_kyc_verified = True
-        users[current_user_addr].kyc_reference_id = "kyc_ref_" + secrets.token_hex(12)
-        users[current_user_addr].kyc_timestamp = int(time())
-        db.save_db(users, blockchain)
-        
-        return jsonify({
-            'message': 'KYC Verification Successful',
-            'user': users[current_user_addr].to_dict()
-        }), 200
-        
-    return jsonify({'error': 'User not found.'}), 404
-
 
 @app.route('/api/blocks', methods=['GET'])
 def get_blocks():
     """Return the entire blockchain."""
     chain_data = []
     for block in blockchain.chain:
+        # Mask transactions based on privacy settings
+        masked_txs = []
+        for tx in block.transactions:
+            if isinstance(tx, str):
+                masked_txs.append(tx)
+                continue
+                
+            sender_mask = users.get(tx['sender'])
+            receiver_mask = users.get(tx['receiver'])
+            
+            masked_tx = dict(tx)
+            if sender_mask and sender_mask.profile_visibility == "Private":
+                masked_tx['sender'] = "Private Wallet"
+            if receiver_mask and receiver_mask.profile_visibility == "Private":
+                masked_tx['receiver'] = "Private Wallet"
+                
+            masked_txs.append(masked_tx)
+            
         chain_data.append({
             'index': block.index,
             'timestamp': block.timestamp,
-            'transactions': block.transactions,
+            'transactions': masked_txs,
             'previous_hash': block.previous_hash,
             'hash': block.hash
         })
@@ -307,6 +262,80 @@ def add_balance():
     }), 200
 
 
+@app.route('/api/create-razorpay-order', methods=['POST'])
+@jwt_required()
+def create_razorpay_order():
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+        
+    values = request.get_json()
+    amount = float(values.get('amount', 0))
+    if amount <= 0:
+        return jsonify({'error': 'Invalid amount'}), 400
+        
+    if not razorpay_client:
+        return jsonify({'error': 'Razorpay is not configured on the backend.'}), 500
+
+    # Razorpay amount is in paise (INR). Assuming 1 USD = 80 INR roughly for the demo.
+    amount_in_paise = int(amount * 80 * 100) 
+    
+    data = {
+        "amount": amount_in_paise,
+        "currency": "INR",
+        "receipt": f"receipt_{current_user_addr[-6:]}_{int(time())}",
+        "notes": {
+            "address": current_user_addr,
+            "usd_amount": amount
+        }
+    }
+    
+    try:
+        order = razorpay_client.order.create(data=data)
+        order['razorpay_key_id'] = RAZORPAY_KEY_ID
+        return jsonify(order), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/verify-payment', methods=['POST'])
+@jwt_required()
+def verify_payment():
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+        
+    values = request.get_json()
+    razorpay_payment_id = values.get('razorpay_payment_id')
+    razorpay_order_id = values.get('razorpay_order_id')
+    razorpay_signature = values.get('razorpay_signature')
+    usd_amount = float(values.get('amount', 0))
+    
+    if not all([razorpay_payment_id, razorpay_order_id, razorpay_signature]):
+        return jsonify({'error': 'Missing payment verification details'}), 400
+        
+    try:
+        # Verify signature
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+        
+        # This will raise an exception if the signature is invalid
+        razorpay_client.utility.verify_payment_signature(params_dict)
+        
+        # Payment is valid, add balance
+        users[current_user_addr].balance += usd_amount
+        db.save_db(users, blockchain)
+        
+        return jsonify({
+            'message': f'Successfully verified payment and added {usd_amount}',
+            'balance': users[current_user_addr].balance
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Payment verification failed: {str(e)}'}), 400
+
+
 
 # Rate limiting storage: { user_address: [timestamp1, timestamp2, ...] }
 otp_rate_limits = defaultdict(list)
@@ -315,36 +344,66 @@ otp_rate_limits = defaultdict(list)
 # transaction_id -> { "otp": str, "aadhaar_hash": str, "timestamp": float }
 pending_kyc_transactions = {}
 
-class MockKYCApiProvider:
+class RealKYCApiProvider:
     """
-    Simulates a licensed third-party KYC API provider (Setu/Sandbox/Karza) that handles UIDAI communication.
+    Connects to a licensed third-party KYC API provider (Setu/Sandbox/Karza) that handles UIDAI communication.
+    Falls back to mock simulation if API keys are not provided.
     """
     @staticmethod
     def send_otp(aadhaar_number: str):
-        # Generate standard UUID for transaction
+        client_id = os.getenv("KYC_CLIENT_ID")
+        client_secret = os.getenv("KYC_CLIENT_SECRET")
+        api_url = os.getenv("KYC_API_URL")
+
+        # Generate a tracking transaction ID in both cases
         transaction_id = "tx_" + str(uuid.uuid4())[:18]
-        
-        # Generate random 6-digit OTP
-        import random
-        otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
-        
-        # Log to the terminal/console for testing
-        print(f"\n==================================================")
-        print(f"[KYC API Provider] Sending OTP for Aadhaar: XXXX-XXXX-{aadhaar_number[-4:]}")
-        print(f"[KYC API Provider] Generated OTP: {otp}")
-        print(f"[KYC API Provider] Transaction ID: {transaction_id}")
-        print(f"==================================================\n")
-        
-        # Secure Hash of Aadhaar (privacy requirement)
         aadhaar_hash = hashlib.sha256(aadhaar_number.encode()).hexdigest()
-        
-        pending_kyc_transactions[transaction_id] = {
-            "otp": otp,
-            "aadhaar_hash": aadhaar_hash,
-            "timestamp": time()
-        }
-        
-        return transaction_id
+
+        # Fallback to Mock if Keys are missing or set to default
+        if not client_id or client_id == "YOUR_CLIENT_ID_HERE":
+            print(f"\n[WARNING] Real API Keys not found in .env. Falling back to Mock Simulation.")
+            import random
+            otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
+            print(f"==================================================")
+            print(f"[MOCK KYC] Sending OTP for Aadhaar: XXXX-XXXX-{aadhaar_number[-4:]}")
+            print(f"[MOCK KYC] Generated OTP: {otp}")
+            print(f"==================================================\n")
+            
+            pending_kyc_transactions[transaction_id] = {
+                "otp": otp,
+                "aadhaar_hash": aadhaar_hash,
+                "timestamp": time()
+            }
+            return transaction_id
+
+        # Real API Integration
+        try:
+            headers = {
+                "x-client-id": client_id,
+                "x-client-secret": client_secret,
+                "Content-Type": "application/json"
+            }
+            payload = { "aadhaarNumber": aadhaar_number }
+            
+            # Example API call (adapt 'okyc/otp' to your exact provider's endpoint)
+            response = requests.post(f"{api_url}/otp", json=payload, headers=headers)
+            response.raise_for_status()
+            
+            data = response.json()
+            # Store transaction tracking info (adapt to provider's returned ID field)
+            provider_txn_id = data.get("id") or transaction_id
+            
+            pending_kyc_transactions[provider_txn_id] = {
+                "otp": None, # We don't know the real OTP! The user gets it on their phone.
+                "aadhaar_hash": aadhaar_hash,
+                "timestamp": time(),
+                "is_real": True
+            }
+            return provider_txn_id
+            
+        except Exception as e:
+            print(f"[Real KYC Error] {e}")
+            raise Exception("Failed to contact the real UIDAI gateway. Check API Keys.")
 
     @staticmethod
     def verify_otp(transaction_id: str, otp: str):
@@ -353,12 +412,38 @@ class MockKYCApiProvider:
             
         tx_data = pending_kyc_transactions[transaction_id]
         
-        # Allow either the generated OTP or standard debug OTP '123456'
+        # Real API Verification
+        if tx_data.get("is_real"):
+            client_id = os.getenv("KYC_CLIENT_ID")
+            client_secret = os.getenv("KYC_CLIENT_SECRET")
+            api_url = os.getenv("KYC_API_URL")
+            
+            headers = {
+                "x-client-id": client_id,
+                "x-client-secret": client_secret,
+                "Content-Type": "application/json"
+            }
+            payload = { "id": transaction_id, "otp": otp }
+            
+            try:
+                response = requests.post(f"{api_url}/verify", json=payload, headers=headers)
+                if response.status_code == 200:
+                    reference_id = "ref_" + secrets.token_hex(8)
+                    aadhaar_hash = tx_data["aadhaar_hash"]
+                    pending_kyc_transactions.pop(transaction_id)
+                    return True, {
+                        "reference_id": reference_id,
+                        "aadhaar_hash": aadhaar_hash
+                    }
+                else:
+                    return False, "Incorrect OTP from UIDAI provider."
+            except Exception as e:
+                return False, f"API Error: {str(e)}"
+        
+        # Mock Verification
         if otp == tx_data["otp"] or otp == "123456":
-            # Generate a mock verification reference ID
             reference_id = "ref_" + secrets.token_hex(8)
             aadhaar_hash = tx_data["aadhaar_hash"]
-            # Clear pending transaction
             pending_kyc_transactions.pop(transaction_id)
             return True, {
                 "reference_id": reference_id,
@@ -396,7 +481,7 @@ def kyc_send_otp():
         return jsonify({'error': 'Aadhaar must be a 12-digit numeric value'}), 400
 
     try:
-        transaction_id = MockKYCApiProvider.send_otp(aadhaar)
+        transaction_id = RealKYCApiProvider.send_otp(aadhaar)
         return jsonify({
             'message': 'OTP sent successfully to Aadhaar-linked mobile number.',
             'transaction_id': transaction_id
@@ -425,7 +510,7 @@ def kyc_verify_otp():
         return jsonify({'error': 'OTP must be a 6-digit numeric value'}), 400
 
     try:
-        success, result = MockKYCApiProvider.verify_otp(transaction_id, otp)
+        success, result = RealKYCApiProvider.verify_otp(transaction_id, otp)
         if not success:
             return jsonify({'error': result}), 400
 
@@ -544,8 +629,8 @@ def get_accounts_api():
     accounts_data = []
     for address, user in users.items():
         accounts_data.append({
-            'address': address,
-            'username': user.username,
+            'address': address if user.profile_visibility != "Private" else "Private Wallet",
+            'username': user.username if user.profile_visibility != "Private" else "Anonymous",
             'balance': user.balance,
             'is_kyc_verified': user.is_kyc_verified,
             'network': user.network

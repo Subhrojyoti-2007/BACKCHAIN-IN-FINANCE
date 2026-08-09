@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useSettings } from '../context/SettingsContext';
 import {
   Send,
   Wallet,
@@ -39,6 +40,7 @@ const assetItem = {
 
 function Payments() {
   const { token, user } = useAuth();
+  const { t, formatCurrency, getExchangeRate, getCurrencySymbol } = useSettings();
   const [users, setUsers] = useState([]);
   const [receiver, setReceiver] = useState("");
   const [amount, setAmount] = useState("");
@@ -111,12 +113,13 @@ function Payments() {
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">Institutional Settlement</span>
+          <span className="text-xs font-mono text-cyan-300 uppercase tracking-widest font-semibold">{t("Cross-Border Settlement")}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Cross-Border <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">Payments</span>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <Send className="h-8 w-8 text-cyan-400" />
+          <span>{t("Payments")}</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">Execute instant on-chain transfers with ERC-3643 identity verification.</p>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">{t("Execute secure B2B transfers with instant finality.")}</p>
       </motion.div>
 
       {/* Main Payment & Security Section */}
@@ -133,8 +136,8 @@ function Payments() {
               <Send className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Execute Transfer</h2>
-              <p className="text-xs text-slate-400">Zero-slippage on-chain transaction</p>
+              <h2 className="text-xl font-bold text-white">{t("Execute Transfer")}</h2>
+              <p className="text-xs text-slate-400">{t("Zero-slippage on-chain transaction")}</p>
             </div>
           </div>
 
@@ -146,20 +149,20 @@ function Payments() {
           )}
 
           <div className="mb-5 p-4 rounded-2xl bg-slate-900/90 border border-white/10">
-            <label className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider block mb-1">Source Treasury Wallet</label>
+            <label className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider block mb-1">{t("Source Treasury Wallet")}</label>
             <p className="font-mono text-sm font-semibold text-cyan-300">{user?.username} ({user?.address})</p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-mono font-semibold text-slate-300 uppercase tracking-wider block mb-2">Recipient Verified Address</label>
+              <label className="text-xs font-mono font-semibold text-slate-300 uppercase tracking-wider block mb-2">{t("Recipient Verified Address")}</label>
               <select
                 value={receiver}
                 onChange={(e) => setReceiver(e.target.value)}
                 className="w-full p-3.5 rounded-xl bg-slate-900/90 border border-white/15 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono cursor-pointer"
               >
                 {users.length === 0 ? (
-                  <option value="" className="bg-slate-950 text-white">Loading verified network participants...</option>
+                  <option value="" className="bg-slate-950 text-white">{t("Loading verified network participants...")}</option>
                 ) : (
                   users.map(u => (
                     <option key={`receiver-${u.address}`} value={u.address} className="bg-slate-950 text-white">
@@ -172,7 +175,7 @@ function Payments() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-mono font-semibold text-slate-300 uppercase tracking-wider block mb-2">Asset Rail</label>
+                <label className="text-xs font-mono font-semibold text-slate-300 uppercase tracking-wider block mb-2">{t("Asset Rail")}</label>
                 <select
                   value={asset}
                   onChange={(e) => setAsset(e.target.value)}
@@ -186,7 +189,7 @@ function Payments() {
               </div>
 
               <div>
-                <label className="text-xs font-mono font-semibold text-slate-300 uppercase tracking-wider block mb-2">Transfer Amount</label>
+                <label className="text-xs font-mono font-semibold text-slate-300 uppercase tracking-wider block mb-2">{t("Transfer Amount")}</label>
                 <input
                   type="number"
                   value={amount}
@@ -202,7 +205,7 @@ function Payments() {
               disabled={isSubmitting || !amount}
               className="w-full btn-primary font-bold text-sm py-3.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed mt-2 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,99,235,0.4)]"
             >
-              <span>{isSubmitting ? "Processing Settlement..." : "Confirm & Broadcast Payment"}</span>
+              <span>{isSubmitting ? t("Processing Settlement...") : t("Confirm & Broadcast Payment")}</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -221,23 +224,23 @@ function Payments() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Security & Audit Rails</h2>
-                <p className="text-xs text-slate-400">Enforced by smart contract consensus</p>
+                <h2 className="text-xl font-bold text-white">{t("Security & Audit Rails")}</h2>
+                <p className="text-xs text-slate-400">{t("Enforced by smart contract consensus")}</p>
               </div>
             </div>
             
             <div className="space-y-3">
-              <SecurityItem text="Address validated against backend compliance protocol"/>
-              <SecurityItem text="ERC-3643 Institutional Identity Verified"/>
-              <SecurityItem text="Algorithmic Gas Fee Optimization Enabled"/>
-              <SecurityItem text="Smart Contract Re-entrancy Guard Verified"/>
-              <SecurityItem text="Instant Settlement Finality Guaranteed"/>
+              <SecurityItem text={t("Address validated against backend compliance protocol")}/>
+              <SecurityItem text={t("ERC-3643 Institutional Identity Verified")}/>
+              <SecurityItem text={t("Algorithmic Gas Fee Optimization Enabled")}/>
+              <SecurityItem text={t("Smart Contract Re-entrancy Guard Verified")}/>
+              <SecurityItem text={t("Instant Settlement Finality Guaranteed")}/>
             </div>
           </div>
 
           <div className="mt-8 p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-xs font-mono text-cyan-300 flex items-center gap-3">
             <Lock className="h-5 w-5 text-cyan-400 flex-shrink-0" />
-            <span>All outgoing transactions require MPC multi-sig authorization before block commit.</span>
+            <span>{t("All outgoing transactions require MPC multi-sig authorization before block commit.")}</span>
           </div>
         </motion.div>
       </div>
@@ -249,7 +252,7 @@ function Payments() {
         transition={{ duration: 0.5, delay: 0.3 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
       >
-        <h2 className="text-xl font-bold text-white mb-6">Supported Settlement Assets</h2>
+        <h2 className="text-xl font-bold text-white mb-6">{t("Supported Settlement Assets")}</h2>
         <motion.div 
           variants={assetsContainer}
           initial="hidden"

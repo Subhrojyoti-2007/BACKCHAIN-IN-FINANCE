@@ -113,7 +113,13 @@ class TransactionManager:
             
         print("KYC verification passed for both parties.")
         
-        # Proceed with the trade (simulated)
+        if sender.balance < amount:
+            raise ValueError("Insufficient treasury balance to complete the transaction.")
+            
+        sender.balance -= amount
+        receiver.balance += amount
+        
+        # Proceed with the trade
         print(f"Transaction successful: {amount} transferred from {sender.username} to {receiver.username}")
         return True
 

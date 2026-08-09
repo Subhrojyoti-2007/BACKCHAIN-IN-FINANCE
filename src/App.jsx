@@ -15,6 +15,7 @@ import BrandLogo from './components/BrandLogo'
 import AdminTerminal from './pages/AdminTerminal'
 import KYCVerification from './pages/KYCVerification'
 import { AuthProvider } from './context/AuthContext'
+import { SettingsProvider } from './context/SettingsContext'
 import { GlobalBackground } from './components/ui/background-snippets'
 import Chatbot from './components/Chatbot/Chatbot';
 function AppContent() {
@@ -26,29 +27,31 @@ function AppContent() {
       <GlobalBackground />
       <div className={!isLandingPage ? "min-h-screen w-full relative z-10" : "min-h-screen w-full relative z-10"}>
         <AuthProvider>
-          <BrandLogo />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+          <SettingsProvider>
+            <BrandLogo />
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
-            {/* Protected Dashboard Layout wrapper for all internal pages */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<Layout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/explorer" element={<Explorer />} />
-                <Route path="/payments" element={<Payments />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/security" element={<Security />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
+              {/* Protected Dashboard Layout wrapper for all internal pages */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<Layout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/explorer" element={<Explorer />} />
+                  <Route path="/payments" element={<Payments />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/security" element={<Security />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Route>
+                {/* Terminal is full-screen, so outside Layout but still Protected */}
+                <Route path="/terminal" element={<AdminTerminal />} />
+                <Route path="/kyc-verification" element={<KYCVerification />} />
               </Route>
-              {/* Terminal is full-screen, so outside Layout but still Protected */}
-              <Route path="/terminal" element={<AdminTerminal />} />
-              <Route path="/kyc-verification" element={<KYCVerification />} />
-            </Route>
-          </Routes>
-          <Chatbot />
+            </Routes>
+            <Chatbot />
+          </SettingsProvider>
         </AuthProvider>
       </div>
     </div>
