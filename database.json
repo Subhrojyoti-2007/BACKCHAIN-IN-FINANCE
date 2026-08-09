@@ -208,5 +208,25 @@
                 "hash": "e590aec1fbcee0aa5a04170a2be5fafbda736889afd7e737b526df936c2b6623"
             }
         ]
-    }
+    },
+    "audit_logs": [
+        {
+            "id": "log_da8ee8e96a86cf68",
+            "timestamp": 1786285519.832483,
+            "user": "Alice_Corp",
+            "action": "ADMIN_ACTION",
+            "details": "Cleared all system audit logs",
+            "status": "SUCCESS",
+            "ip_address": "127.0.0.1"
+        },
+        {
+            "id": "log_d0ad9b7f1902bddb",
+            "timestamp": 1786285519.838855,
+            "user": "Alice_Corp",
+            "action": "ADMIN_ACTION",
+            "details": "Accessed system audit logs",
+            "status": "SUCCESS",
+            "ip_address": "127.0.0.1"
+        }
+    ]
 }

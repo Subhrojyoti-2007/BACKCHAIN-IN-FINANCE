@@ -10,17 +10,17 @@ TEMP_DB_PATH = os.path.join(BASE_DIR, "temp_db.json")
 def load_db():
     """
     Loads the structured document DB. 
-    Returns (users_dict, blockchain_object).
-    Returns (None, None) if the DB doesn't exist.
+    Returns (users_dict, blockchain_object, audit_logs_list).
+    Returns (None, None, None) if the DB doesn't exist.
     """
     if not os.path.exists(DB_PATH):
-        return None, None
+        return None, None, None
         
     with open(DB_PATH, "r") as f:
         try:
             data = json.load(f)
         except json.JSONDecodeError:
-            return None, None
+            return None, None, None
             
     # Deserialize users
     users_data = data.get("users", {})
@@ -34,10 +34,13 @@ def load_db():
         blockchain = Blockchain.from_dict(blockchain_data)
     else:
         blockchain = Blockchain()
-        
-    return users, blockchain
 
-def save_db(users, blockchain):
+    # Deserialize audit logs
+    audit_logs = data.get("audit_logs", [])
+        
+    return users, blockchain, audit_logs
+
+def save_db(users, blockchain, audit_logs=None):
     """
     Performs an Atomic Commit to save the document DB.
     """
@@ -47,10 +50,23 @@ def save_db(users, blockchain):
     # Serialize blockchain
     blockchain_data = blockchain.to_dict()
     
+    # Preserve existing audit logs from database.json if audit_logs is None
+    if audit_logs is None:
+        if os.path.exists(DB_PATH):
+            try:
+                with open(DB_PATH, "r") as f:
+                    old_data = json.load(f)
+                    audit_logs = old_data.get("audit_logs", [])
+            except Exception:
+                audit_logs = []
+        else:
+            audit_logs = []
+            
     # Relational Schema Design
     data = {
         "users": users_data,
-        "blockchain": blockchain_data
+        "blockchain": blockchain_data,
+        "audit_logs": audit_logs
     }
     
     # 1. Save to a temporary file

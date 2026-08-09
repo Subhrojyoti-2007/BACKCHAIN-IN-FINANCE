@@ -50,14 +50,14 @@ def serve(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 # Load state from database
-loaded_users, loaded_chain = db.load_db()
+loaded_data = db.load_db()
 
-if loaded_users is not None and loaded_chain is not None:
-    users = loaded_users
-    blockchain = loaded_chain
+if loaded_data and loaded_data[0] is not None:
+    users, blockchain, audit_logs = loaded_data
 else:
     # Initialize the blockchain
     blockchain = Blockchain()
+    audit_logs = []
 
     # Initialize users (in-memory for demo)
     users = {
@@ -65,7 +65,35 @@ else:
         "0x91AF72BC": UserAccount("Bob_LLC", is_kyc_verified=True, password_hash=generate_password_hash("password123"), balance=200000.0),
         "0x72BC88EF": UserAccount("Charlie_Anon", is_kyc_verified=False, password_hash=generate_password_hash("password123"), balance=50000.0)
     }
-    db.save_db(users, blockchain)
+    db.save_db(users, blockchain, audit_logs)
+
+def log_audit_event(user, action, details, status, ip_address=None):
+    """
+    Log an event into audit_logs and save database.
+    """
+    from flask import has_request_context, request
+    if not ip_address:
+        if has_request_context():
+            ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+            if ip_address and "," in ip_address:
+                ip_address = ip_address.split(",")[0].strip()
+        else:
+            ip_address = "127.0.0.1"
+
+    log_entry = {
+        "id": "log_" + secrets.token_hex(8),
+        "timestamp": time(),
+        "user": user,
+        "action": action,
+        "details": details,
+        "status": status,
+        "ip_address": ip_address
+    }
+    audit_logs.append(log_entry)
+    try:
+        db.save_db(users, blockchain, audit_logs)
+    except Exception as e:
+        print(f"Error saving database inside log_audit_event: {e}")
 
 # Add a way to map usernames to addresses for login
 def get_address_by_username(username):
@@ -79,12 +107,14 @@ def register():
     """Register a new user."""
     values = request.get_json()
     if not values or not all(k in values for k in ('username', 'password')):
+        log_audit_event("Anonymous", "REGISTER", "Registration failed: missing username or password", "FAILED")
         return jsonify({'error': 'Missing username or password'}), 400
 
     username = values['username']
     password = values['password']
 
     if get_address_by_username(username):
+        log_audit_event(username, "REGISTER", f"Registration failed: username '{username}' already exists", "FAILED")
         return jsonify({'error': 'Username already exists'}), 409
 
     # Generate a random mock wallet address
@@ -97,7 +127,7 @@ def register():
         password_hash=generate_password_hash(password)
     )
 
-    db.save_db(users, blockchain)
+    log_audit_event(username, "REGISTER", f"User registered successfully with wallet address {new_address}", "SUCCESS")
 
     return jsonify({
         'message': 'User registered successfully',
@@ -111,6 +141,7 @@ def login():
     """Authenticate a user and return a JWT."""
     values = request.get_json()
     if not values or not all(k in values for k in ('username', 'password')):
+        log_audit_event("Anonymous", "FAILED_LOGIN", "Login failed: missing username or password", "FAILED")
         return jsonify({'error': 'Missing username or password'}), 400
 
     username = values['username']
@@ -118,6 +149,7 @@ def login():
     address = get_address_by_username(username)
 
     if not address or not check_password_hash(users[address].password_hash, password):
+        log_audit_event(username if username else "Anonymous", "FAILED_LOGIN", f"Invalid credentials for user '{username}'", "FAILED")
         return jsonify({'error': 'Invalid username or password'}), 401
 
     timeout_str = users[address].session_timeout
@@ -134,6 +166,8 @@ def login():
 
     access_token = create_access_token(identity=address, expires_delta=expires_delta)
     
+    log_audit_event(users[address].username, "LOGIN", f"User '{users[address].username}' logged in successfully", "SUCCESS")
+    
     return jsonify({
         'access_token': access_token,
         'user': {
@@ -149,6 +183,23 @@ def login():
         }
     }), 200
 
+<<<<<<< HEAD
+=======
+@app.route('/api/logout', methods=['POST'])
+@jwt_required(optional=True)
+def logout_api():
+    """Log out the current user and log the action."""
+    current_user_addr = get_jwt_identity()
+    if current_user_addr and current_user_addr in users:
+        username = users[current_user_addr].username
+        log_audit_event(username, "LOGOUT", f"User '{username}' logged out successfully", "SUCCESS")
+    else:
+        log_audit_event("Anonymous", "LOGOUT", "Logout called without valid session", "SUCCESS")
+    return jsonify({'message': 'Logged out successfully'}), 200
+
+
+
+>>>>>>> 0a4a6735e4cbd8eac5287fbdc9f4ced6d34bec0d
 
 @app.route('/api/blocks', methods=['GET'])
 def get_blocks():
@@ -203,6 +254,7 @@ def update_settings():
     """Update user settings like language, currency, and visibility."""
     current_user_addr = get_jwt_identity()
     if current_user_addr not in users:
+        log_audit_event("Anonymous", "SETTINGS_UPDATE", "Failed to update settings: user not found", "FAILED")
         return jsonify({'error': 'User not found'}), 404
         
     values = request.get_json()
@@ -233,7 +285,8 @@ def update_settings():
     if 'tx_threshold' in values:
         user.tx_threshold = values['tx_threshold']
         
-    db.save_db(users, blockchain)
+    details = f"Updated settings: {', '.join(values.keys())}" if values else "No settings changes requested"
+    log_audit_event(user.username, "SETTINGS_UPDATE", details, "SUCCESS")
         
     return jsonify({
         'message': 'Settings updated successfully',
@@ -246,15 +299,17 @@ def add_balance():
     """Add balance to user wallet (mock functionality)"""
     current_user_addr = get_jwt_identity()
     if current_user_addr not in users:
+        log_audit_event("Anonymous", "ADD_BALANCE", "Deposit failed: user not found", "FAILED")
         return jsonify({'error': 'User not found'}), 404
         
     values = request.get_json()
     amount = float(values.get('amount', 0))
     if amount <= 0:
+        log_audit_event(users[current_user_addr].username, "ADD_BALANCE", f"Deposit failed: invalid amount {amount}", "FAILED")
         return jsonify({'error': 'Invalid amount'}), 400
         
     users[current_user_addr].balance += amount
-    db.save_db(users, blockchain)
+    log_audit_event(users[current_user_addr].username, "ADD_BALANCE", f"Successfully deposited {amount} USD to wallet balance", "SUCCESS")
     
     return jsonify({
         'message': f'Successfully added {amount}',
@@ -459,34 +514,46 @@ def kyc_send_otp():
     """Accepts Aadhaar number and sends simulated OTP."""
     current_user_addr = get_jwt_identity()
     if current_user_addr not in users:
+        log_audit_event("Anonymous", "KYC_VERIFICATION", "KYC OTP request failed: user not found", "FAILED")
         return jsonify({'error': 'User not found'}), 404
         
+    username = users[current_user_addr].username
+
     # Rate Limiting: 3 OTP requests per 60 seconds
     now = time()
     user_requests = otp_rate_limits[current_user_addr]
     # Filter requests older than 60 seconds
     user_requests = [t for t in user_requests if now - t < 60]
     if len(user_requests) >= 3:
+        log_audit_event(username, "KYC_VERIFICATION", "KYC OTP request failed: rate limit exceeded", "FAILED")
         return jsonify({'error': 'Too many OTP requests. Please wait 1 minute.'}), 429
     user_requests.append(now)
     otp_rate_limits[current_user_addr] = user_requests
 
     values = request.get_json()
     if not values or 'aadhaar' not in values:
+        log_audit_event(username, "KYC_VERIFICATION", "KYC OTP request failed: missing Aadhaar number", "FAILED")
         return jsonify({'error': 'Missing Aadhaar number'}), 400
 
     aadhaar = str(values['aadhaar']).strip()
     # Validate Aadhaar: 12-digit numeric
     if not aadhaar.isdigit() or len(aadhaar) != 12:
+        log_audit_event(username, "KYC_VERIFICATION", f"KYC OTP request failed: invalid Aadhaar format '{aadhaar}'", "FAILED")
         return jsonify({'error': 'Aadhaar must be a 12-digit numeric value'}), 400
 
     try:
+<<<<<<< HEAD
         transaction_id = RealKYCApiProvider.send_otp(aadhaar)
+=======
+        transaction_id = MockKYCApiProvider.send_otp(aadhaar)
+        log_audit_event(username, "KYC_VERIFICATION", f"KYC OTP code successfully sent to Aadhaar linked mobile (ending in {aadhaar[-4:]})", "SUCCESS")
+>>>>>>> 0a4a6735e4cbd8eac5287fbdc9f4ced6d34bec0d
         return jsonify({
             'message': 'OTP sent successfully to Aadhaar-linked mobile number.',
             'transaction_id': transaction_id
         }), 200
     except Exception as e:
+        log_audit_event(username, "KYC_VERIFICATION", f"KYC OTP request failed with error: {str(e)}", "FAILED")
         return jsonify({'error': str(e)}), 500
 
 
@@ -496,10 +563,14 @@ def kyc_verify_otp():
     """Accepts OTP and transaction_id, validates them, whitelists, and updates state."""
     current_user_addr = get_jwt_identity()
     if current_user_addr not in users:
+        log_audit_event("Anonymous", "KYC_VERIFICATION", "KYC verification failed: user not found", "FAILED")
         return jsonify({'error': 'User not found'}), 404
+
+    username = users[current_user_addr].username
 
     values = request.get_json()
     if not values or not all(k in values for k in ('otp', 'transaction_id')):
+        log_audit_event(username, "KYC_VERIFICATION", "KYC verification failed: missing OTP or transaction ID", "FAILED")
         return jsonify({'error': 'Missing OTP or Transaction ID'}), 400
 
     otp = str(values['otp']).strip()
@@ -507,11 +578,13 @@ def kyc_verify_otp():
 
     # Validate OTP format: 6-digit numeric
     if not otp.isdigit() or len(otp) != 6:
+        log_audit_event(username, "KYC_VERIFICATION", "KYC verification failed: OTP must be a 6-digit number", "FAILED")
         return jsonify({'error': 'OTP must be a 6-digit numeric value'}), 400
 
     try:
         success, result = RealKYCApiProvider.verify_otp(transaction_id, otp)
         if not success:
+            log_audit_event(username, "KYC_VERIFICATION", f"KYC verification failed: {result}", "FAILED")
             return jsonify({'error': result}), 400
 
         # Successful validation
@@ -526,7 +599,7 @@ def kyc_verify_otp():
         # 2. Trigger simulated blockchain transaction to whitelist wallet address in IdentityRegistry
         IdentityRegistry.whitelist_address(current_user_addr)
         
-        db.save_db(users, blockchain)
+        log_audit_event(username, "KYC_VERIFICATION", "Aadhaar KYC identity verification completed and address whitelisted on-chain", "SUCCESS")
 
         # 3. Generate updated JWT Token reflecting the new KYC status
         new_access_token = create_access_token(identity=current_user_addr)
@@ -546,6 +619,7 @@ def kyc_verify_otp():
             }
         }), 200
     except Exception as e:
+        log_audit_event(username, "KYC_VERIFICATION", f"KYC verification encountered exception: {str(e)}", "FAILED")
         return jsonify({'error': str(e)}), 500
 
 
@@ -558,6 +632,7 @@ def new_transaction():
 
     required = ['receiver', 'amount', 'asset']
     if not all(k in values for k in required):
+        log_audit_event(users[current_user_addr].username if current_user_addr in users else "Anonymous", "TRANSACTION", "Transaction failed: missing required receiver, amount or asset fields", "FAILED")
         return jsonify({'error': 'Missing values'}), 400
 
     receiver_addr = values['receiver']
@@ -568,6 +643,7 @@ def new_transaction():
     sender_addr = current_user_addr
 
     if sender_addr not in users or receiver_addr not in users:
+        log_audit_event(users[current_user_addr].username if current_user_addr in users else "Anonymous", "TRANSACTION", f"Transaction failed: invalid sender or receiver address '{receiver_addr}'", "FAILED")
         return jsonify({'error': 'Invalid sender or receiver address. User not found.'}), 404
 
     sender_account = users[sender_addr]
@@ -588,7 +664,7 @@ def new_transaction():
         
         blockchain.add_block(transaction_data)
         
-        db.save_db(users, blockchain)
+        log_audit_event(sender_account.username, "TRANSACTION", f"Transferred {amount} {asset} to {receiver_account.username} ({receiver_addr})", "SUCCESS")
         
         response = {
             'message': f'Transaction will be added to Block {blockchain.get_latest_block().index}',
@@ -597,12 +673,14 @@ def new_transaction():
         return jsonify(response), 201
         
     except KYCVerificationError as e:
+        log_audit_event(sender_account.username, "TRANSACTION", f"Transaction of {amount} {asset} to {receiver_account.username} failed: {str(e)}", "FAILED")
         response = {
             'error': str(e),
             'status': 'Failed'
         }
         return jsonify(response), 403
     except Exception as e:
+        log_audit_event(sender_account.username if 'sender_account' in locals() else "Anonymous", "TRANSACTION", f"Transaction failed with error: {str(e)}", "FAILED")
         return jsonify({'error': str(e), 'status': 'Failed'}), 500
 
 TREASURY_BALANCE = 500000.0
@@ -612,8 +690,15 @@ TREASURY_BALANCE = 500000.0
 def proof_of_reserves():
     """Verify bank solvency using Zero-Knowledge conceptually.
     Sums up balances using a list comprehension and compares to Treasury."""
+    current_user_addr = get_jwt_identity()
+    username = users[current_user_addr].username if current_user_addr in users else "Anonymous"
+    
     total_liabilities = sum([user.balance for user in users.values()])
     is_solvent = TREASURY_BALANCE >= total_liabilities
+    
+    details = f"Executed Proof of Reserves verification. Solvent: {is_solvent} (Liabilities: {total_liabilities} USD, Treasury: {TREASURY_BALANCE} USD)"
+    log_audit_event(username, "ADMIN_ACTION", details, "SUCCESS")
+    
     return jsonify({
         "solvent": is_solvent
     }), 200
@@ -636,6 +721,55 @@ def get_accounts_api():
             'network': user.network
         })
     return jsonify(accounts_data), 200
+
+@app.route('/api/audit-logs', methods=['GET'])
+@jwt_required()
+def get_audit_logs():
+    """Return the system audit logs, optionally filtered by search query, action or status."""
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+    admin_user = users[current_user_addr].username
+    
+    # Log access to the audit trail
+    log_audit_event(admin_user, "ADMIN_ACTION", "Accessed system audit logs", "SUCCESS")
+    
+    # Extract query params
+    search_query = request.args.get('search', '').strip().lower()
+    action_filter = request.args.get('action', '').strip()
+    status_filter = request.args.get('status', '').strip()
+    
+    filtered_logs = []
+    for entry in audit_logs:
+        if action_filter and entry.get('action') != action_filter:
+            continue
+        if status_filter and entry.get('status') != status_filter:
+            continue
+        if search_query:
+            u_match = search_query in str(entry.get('user', '')).lower()
+            a_match = search_query in str(entry.get('action', '')).lower()
+            d_match = search_query in str(entry.get('details', '')).lower()
+            ip_match = search_query in str(entry.get('ip_address', '')).lower()
+            if not (u_match or a_match or d_match or ip_match):
+                continue
+        filtered_logs.append(entry)
+        
+    # Sort descending by timestamp (newest first)
+    filtered_logs.sort(key=lambda x: x.get('timestamp', 0), reverse=True)
+    return jsonify(filtered_logs), 200
+
+@app.route('/api/audit-logs/clear', methods=['POST'])
+@jwt_required()
+def clear_audit_logs():
+    """Clear all audit logs."""
+    current_user_addr = get_jwt_identity()
+    if current_user_addr not in users:
+        return jsonify({'error': 'User not found'}), 404
+    admin_user = users[current_user_addr].username
+    
+    audit_logs.clear()
+    log_audit_event(admin_user, "ADMIN_ACTION", "Cleared all system audit logs", "SUCCESS")
+    return jsonify({'message': 'Audit logs cleared successfully'}), 200
 
 @app.route('/api/amm-ticker', methods=['GET'])
 def get_amm_ticker():
