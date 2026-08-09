@@ -16,8 +16,10 @@ import {
   Network
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function AuditLogs() {
+  const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [auditLogs, setAuditLogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +43,11 @@ export default function AuditLogs() {
       if (actionFilter) queryParams.append('action', actionFilter);
       if (statusFilter) queryParams.append('status', statusFilter);
       
-      const res = await fetch(`/api/audit-logs?${queryParams.toString()}`);
+      const res = await fetch(`/api/audit-logs?${queryParams.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         setAuditLogs(data || []);
@@ -78,7 +84,12 @@ export default function AuditLogs() {
   const handleClearLogs = async () => {
     if (window.confirm("Are you sure you want to clear all system audit logs?")) {
       try {
-        const res = await fetch('/api/audit-logs/clear', { method: 'POST' });
+        const res = await fetch('/api/audit-logs/clear', { 
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         if (res.ok) {
           fetchAuditLogs();
         }

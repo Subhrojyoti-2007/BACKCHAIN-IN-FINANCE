@@ -8,7 +8,7 @@ class KYCVerificationError(Exception):
 
 class UserAccount:
     """Represents a user in the system with KYC status and balance."""
-    def __init__(self, username, is_kyc_verified=False, password_hash=None, balance=0.0, language="English", currency="USD", profile_visibility="Public", network="Ethereum Mainnet", wallet_connection="Auto Connect ON", kyc_reference_id=None, kyc_timestamp=None, hardware_mfa="Enabled", passkey_biometrics="Enabled", settlement_alerts="ON", threat_advisories="ON", yield_updates="OFF", session_timeout="30 Minutes", tx_threshold="$1,000 Threshold"):
+    def __init__(self, username, is_kyc_verified=False, password_hash=None, balance=0.0, language="English", currency="USD", profile_visibility="Public", network="Ethereum Mainnet", wallet_connection="Auto Connect ON", kyc_reference_id=None, kyc_timestamp=None, hardware_mfa="Enabled", passkey_biometrics="Enabled", settlement_alerts="ON", threat_advisories="ON", yield_updates="OFF", session_timeout="30 Minutes", tx_threshold="$1,000 Threshold", kyc_aadhaar_hash=None):
         self.username = username
         self.is_kyc_verified = is_kyc_verified
         self.password_hash = password_hash

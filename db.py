@@ -50,11 +50,23 @@ def save_db(users, blockchain, audit_logs=None):
     # Serialize blockchain
     blockchain_data = blockchain.to_dict()
     
+    # Preserve existing audit logs from database.json if audit_logs is None
+    if audit_logs is None:
+        if os.path.exists(DB_PATH):
+            try:
+                with open(DB_PATH, "r") as f:
+                    old_data = json.load(f)
+                    audit_logs = old_data.get("audit_logs", [])
+            except Exception:
+                audit_logs = []
+        else:
+            audit_logs = []
+            
     # Relational Schema Design
     data = {
         "users": users_data,
         "blockchain": blockchain_data,
-        "audit_logs": audit_logs if audit_logs is not None else []
+        "audit_logs": audit_logs
     }
     
     # 1. Save to a temporary file
