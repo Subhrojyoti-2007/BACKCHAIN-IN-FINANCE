@@ -142,7 +142,10 @@ export default function Dashboard() {
                   <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
                   <span className="hidden sm:inline">Refresh</span>
                 </button>
-                <button className="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2">
+                <button 
+                  className="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2"
+                  onClick={() => alert("System Status: All services are running optimally. No new alerts.")}
+                >
                   <Bell className="h-4 w-4" />
                   <span>Alerts</span>
                 </button>
