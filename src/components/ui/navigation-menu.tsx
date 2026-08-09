@@ -19,7 +19,8 @@ import {
   TerminalSquare,
   LogOut,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  History
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -43,6 +44,7 @@ const allNavItems = [
   { name: "Terminal", href: "/terminal", dashboardOnly: true, icon: TerminalSquare },
   { name: "Profile", href: "/profile", dashboardOnly: true, icon: User },
   { name: "Settings", href: "/settings", dashboardOnly: true, icon: Settings },
+  { name: "Audit Logs", href: "/audit-logs", dashboardOnly: true, icon: History },
   { name: "Login", href: "/login", unAuthOnly: true, icon: User },
   { name: "Register", href: "/register", unAuthOnly: true, icon: Sparkles },
 ];
