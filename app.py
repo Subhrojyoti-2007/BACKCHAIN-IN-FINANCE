@@ -21,7 +21,7 @@ import db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'dist')
-app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='')
+app = Flask(__name__, static_folder=STATIC_DIR)
 CORS(app)
 
 # Configure JWT
@@ -182,11 +182,6 @@ def logout_api():
     else:
         log_audit_event("Anonymous", "LOGOUT", "Logout called without valid session", "SUCCESS")
     return jsonify({'message': 'Logged out successfully'}), 200
-
-
-
->>>>>>> 0a4a6735e4cbd8eac5287fbdc9f4ced6d34bec0d
-
 @app.route('/api/blocks', methods=['GET'])
 def get_blocks():
     """Return the entire blockchain."""
@@ -528,12 +523,8 @@ def kyc_send_otp():
         return jsonify({'error': 'Aadhaar must be a 12-digit numeric value'}), 400
 
     try:
-<<<<<<< HEAD
         transaction_id = RealKYCApiProvider.send_otp(aadhaar)
-=======
-        transaction_id = MockKYCApiProvider.send_otp(aadhaar)
         log_audit_event(username, "KYC_VERIFICATION", f"KYC OTP code successfully sent to Aadhaar linked mobile (ending in {aadhaar[-4:]})", "SUCCESS")
->>>>>>> 0a4a6735e4cbd8eac5287fbdc9f4ced6d34bec0d
         return jsonify({
             'message': 'OTP sent successfully to Aadhaar-linked mobile number.',
             'transaction_id': transaction_id

@@ -82,7 +82,12 @@ function Profile() {
       });
       
       if (!res.ok) {
-        alert(t("Failed to create order"));
+        const errorData = await res.json().catch(() => ({}));
+        alert(t("Failed to create order: ") + (errorData.error || res.statusText));
+        if (res.status === 404 || res.status === 401) {
+          // If user not found or token expired, log them out
+          alert("Session expired or user not found. Please log in again.");
+        }
         return;
       }
       
@@ -273,18 +278,10 @@ function Profile() {
 
       {/* Profile Identity Card */}
       <motion.div
-<<<<<<< HEAD
-        initial={{opacity:0, y:-20}}
-        animate={{opacity:1, y:0}}
-        transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
-        whileHover={{scale:1.01}}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-8 mb-8"
-=======
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/30 to-blue-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300 font-extrabold text-2xl shadow-lg">
@@ -328,30 +325,6 @@ function Profile() {
         </div>
       </motion.div>
 
-<<<<<<< HEAD
-      {/* Statistics */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {stats.map((item,index)=>(
-          <motion.div
-            key={index}
-            initial={item.initial}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 + (index * 0.1), type: "spring", stiffness: 80 }}
-            whileHover={{scale:1.05}}
-            className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 cursor-pointer transition-colors hover:bg-white/15"
-          >
-            <div className="text-cyan-400">
-              {item.icon}
-            </div>
-            <p className="text-gray-400 mt-4">
-              {item.title}
-            </p>
-            <h3 className="text-2xl font-bold mt-2">
-              {item.value}
-            </h3>
-          </motion.div>
-        ))}
-=======
       {/* Stats Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((item, index) => {
@@ -376,22 +349,14 @@ function Profile() {
             </motion.div>
           );
         })}
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       </div>
 
       {/* Connected Signers / Wallets */}
       <motion.div
-<<<<<<< HEAD
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.8 }}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 mb-8"
-=======
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400">
@@ -412,15 +377,9 @@ function Profile() {
           {wallets.map((wallet, index) => (
             <motion.div
               key={index}
-<<<<<<< HEAD
-              variants={fadeDownItem}
-              whileHover={{scale:1.01, backgroundColor: "rgba(255,255,255,0.1)"}}
-              className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 flex justify-between items-center transition-colors cursor-pointer"
-=======
               variants={slideUpItem}
               whileHover={{ x: 4, backgroundColor: "rgba(255,255,255,0.03)" }}
               className="bg-white/5 border border-white/10 rounded-2xl p-4 flex justify-between items-center transition-all font-mono text-xs sm:text-sm"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
             >
               <div>
                 <h3 className="font-bold text-white">{wallet.name}</h3>
@@ -436,17 +395,10 @@ function Profile() {
 
       {/* Preferences Section */}
       <motion.div
-<<<<<<< HEAD
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1.2 }}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
-=======
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <h2 className="text-xl font-bold text-white mb-6">{t("Account Preferences")}</h2>
 
@@ -479,12 +431,8 @@ function Preference({ icon, title, value, onClick }) {
   return (
     <motion.div
       onClick={onClick}
-<<<<<<< HEAD
-      className="flex justify-between items-center rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 transition-colors hover:bg-white/15 cursor-pointer"
-=======
       whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
       className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 transition-all cursor-pointer text-xs sm:text-sm font-semibold"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
     >
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-xl bg-white/5 border border-white/10">

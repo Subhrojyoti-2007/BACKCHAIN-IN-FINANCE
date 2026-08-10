@@ -74,7 +74,7 @@ export default function KYCVerification() {
         setStep('otp');
         setTimer(30); // 30s resend cooldown
       } else {
-        setError(data.error || 'Failed to send OTP. Please try again.');
+        setError(data.error || data.msg || 'Failed to send OTP. Please try again.');
       }
     } catch (err) {
       setError('Network error. Could not contact the server.');

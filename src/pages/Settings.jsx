@@ -271,16 +271,8 @@ function Settings() {
 function SettingCard({ title, children }) {
   return (
     <motion.div
-<<<<<<< HEAD
-      initial={initial}
-      animate={animate}
-      transition={transition}
-      whileHover={{scale:1.02}}
-      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
-=======
       whileHover={{ borderColor: 'rgba(56,189,248,0.25)' }}
       className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 transition-all"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
     >
       <h2 className="text-xl font-bold text-white mb-6">
         {title}
@@ -294,13 +286,7 @@ function SettingCard({ title, children }) {
 
 function SettingItem({ icon, title, value, options, onChange }) {
   return (
-<<<<<<< HEAD
-    <div
-      className="flex justify-between items-center rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 transition-colors"
-    >
-=======
     <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 transition-all text-xs sm:text-sm">
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-xl bg-white/5 border border-white/10">
           {icon}
@@ -329,15 +315,9 @@ function SettingItem({ icon, title, value, options, onChange }) {
 function InteractiveToggleItem({ icon, title, status, onToggle }) {
   const isOn = status === "ON";
   return (
-<<<<<<< HEAD
-    <motion.div
-      whileHover={{ scale: 1.01, backgroundColor: "rgba(255,255,255,0.1)" }}
-      className="flex justify-between items-center rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 transition-colors cursor-pointer"
-=======
     <div 
       onClick={onToggle}
       className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4 transition-all text-xs sm:text-sm cursor-pointer hover:bg-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
     >
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-xl bg-white/5 border border-white/10">

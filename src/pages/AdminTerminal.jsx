@@ -1,15 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const AdminTerminal = () => {
-  const [screen, setScreen] = useState('MAIN_MENU');
-  const [input, setInput] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [blocks, setBlocks] = useState([]);
-  const [users, setUsers] = useState([]);
-  const inputRef = useRef(null);
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 

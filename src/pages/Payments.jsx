@@ -126,17 +126,10 @@ function Payments() {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Send Payment Card */}
         <motion.div 
-<<<<<<< HEAD
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6, type: "spring", stiffness: 80, damping: 20 }}
-          className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
-=======
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400">
@@ -223,11 +216,7 @@ function Payments() {
           variants={securityContainer}
           initial="hidden"
           animate="visible"
-<<<<<<< HEAD
-          className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
-=======
           className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 flex flex-col justify-between"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
         >
           <div>
             <div className="flex items-center gap-3 mb-6">
@@ -260,13 +249,8 @@ function Payments() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-<<<<<<< HEAD
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 mb-8"
-=======
         transition={{ duration: 0.5, delay: 0.3 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <h2 className="text-xl font-bold text-white mb-6">{t("Supported Settlement Assets")}</h2>
         <motion.div 
@@ -289,12 +273,7 @@ function SecurityItem({ text }) {
   return (
     <motion.div 
       variants={securityItem}
-<<<<<<< HEAD
-      whileHover={{ scale: 1.02, x: 5 }}
-      className="flex items-center gap-3 rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 mb-3 border border-white/5 cursor-default transition-colors hover:bg-black/40"
-=======
       className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-4 text-xs font-semibold text-slate-200"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
     >
       <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0" />
       <span>{text}</span>
@@ -306,13 +285,8 @@ function AssetCard({ name, symbol, balance, color }) {
   return (
     <motion.div 
       variants={assetItem}
-<<<<<<< HEAD
-      whileHover={{scale:1.05, boxShadow: "0px 10px 30px rgba(34,211,238,0.15)", y: -5}} 
-      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 border border-white/5 cursor-pointer transition-colors hover:bg-black/40"
-=======
       whileHover={{ y: -3, borderColor: 'rgba(56,189,248,0.3)' }} 
       className="glass-card rounded-2xl p-5 border border-white/10 group transition-all"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
     >
       <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 w-fit mb-3">
         <Wallet className={`h-5 w-5 ${color}`} />

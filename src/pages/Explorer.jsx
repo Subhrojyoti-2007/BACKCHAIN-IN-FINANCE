@@ -115,18 +115,10 @@ function BlockchainExplorer() {
 
       {/* Search Input */}
       <motion.div
-<<<<<<< HEAD
-        initial={{opacity:0, scale: 0.95}}
-        animate={{opacity:1, scale: 1}}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        whileHover={{scale:1.01}}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-4 flex items-center gap-3 mb-8"
-=======
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
         className="glass-card rounded-2xl p-3 sm:p-4 flex items-center gap-3 border border-white/10 focus-within:border-cyan-500/50 shadow-lg"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <Search className="text-cyan-400 h-5 w-5 ml-2" />
         <input
@@ -169,13 +161,8 @@ function BlockchainExplorer() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-<<<<<<< HEAD
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6 mb-8"
-=======
         transition={{ duration: 0.6, delay: 0.2 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400">
@@ -227,57 +214,16 @@ function BlockchainExplorer() {
 
       {/* Latest Blocks Grid */}
       <motion.div 
-<<<<<<< HEAD
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-6"
-=======
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
       >
         <h2 className="text-xl font-bold text-white mb-6">{t("Recent Validated Blocks")}</h2>
         
         {loading ? (
           <p className="text-sm font-mono text-slate-400">Loading blocks...</p>
         ) : (
-<<<<<<< HEAD
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid md:grid-cols-3 gap-5"
-          >
-          {chainData.map((block, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{
-                scale: 1.03, 
-                boxShadow: "0px 10px 30px rgba(34,211,238,0.15)",
-                y: -5
-              }}
-              className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 border border-white/5 cursor-pointer transition-colors"
-            >
-              <div className="flex justify-between">
-                <Blocks className="text-cyan-400"/>
-                <ArrowUpRight className="text-gray-400"/>
-              </div>
-              <h3 className="text-xl font-bold mt-4">Block #{block.index}</h3>
-              <p className="text-gray-400 mt-2 truncate">Hash: {block.hash}</p>
-              <p className="text-gray-400 mt-1">Tx Count: {Array.isArray(block.transactions) ? block.transactions.length : 1}</p>
-              
-              <div className="flex items-center gap-2 mt-3 text-sm text-gray-400">
-                <Clock size={15}/>
-                {new Date(block.timestamp * 1000).toLocaleTimeString()}
-              </div>
-            </motion.div>
-          ))}
-          </motion.div>
-=======
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {chainData.map((block, index) => (
               <motion.div
@@ -304,7 +250,6 @@ function BlockchainExplorer() {
               </motion.div>
             ))}
           </div>
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
         )}
       </motion.div>
     </div>
@@ -315,12 +260,7 @@ function InfoCard({ icon, title, value, isNumeric = false }) {
   return (
     <motion.div
       variants={itemVariants}
-<<<<<<< HEAD
-      whileHover={{ scale:1.05, y: -5, boxShadow: "0 10px 30px rgba(0,0,0,0.5)" }}
-      className="rounded-[2rem] border border-white/10 bg-slate-950/80 shadow-[0_25px_70px_-40px_rgba(15,23,42,0.75)] backdrop-blur-2xl p-5 flex items-center gap-4 cursor-pointer"
-=======
       className="glass-card glass-card-hover rounded-2xl p-6 border border-white/10 flex items-center gap-4"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
     >
       <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
         {icon}

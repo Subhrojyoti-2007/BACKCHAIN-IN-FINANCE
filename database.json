@@ -3,8 +3,8 @@
         "0x82AF91EF": {
             "username": "Alice_Corp",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$rmlOZh7Lf6KZXnwF$571ac8bc28961bd1d8e582e73fc3a6261fc44b02c749c957501a53370da7cf8f3101b42c8d8c750be42cafafc7fa7eed50a2ca163e9627419b3e2b97c889934a",
-            "balance": 150225.0,
+            "password_hash": "scrypt:32768:8:1$SgY0CSU4S6HXM5vY$8f964f7cf73e9adfe4fd820bdd6a05ad16f5219f8bc4f491b7250ab26a48686ed9426f3f0bed16a481486c65b7650d1b47c5f31a531cfda4df510afe33275b07",
+            "balance": 150010.0,
             "language": "English",
             "currency": "USD",
             "profile_visibility": "Public",
@@ -24,7 +24,7 @@
         "0x91AF72BC": {
             "username": "Bob_LLC",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$lB7C3FqSPlgPe7FJ$0ef73a54d981f74be0f7a9012902535a4c4eb14918e729c24e0e2a54acb6e51260c09dbacb02bace48abb7d4345312ccce2f9ea4c5f61311fb05983054dab120",
+            "password_hash": "scrypt:32768:8:1$PNidbRCPzBPsER1t$7c3eea196488d5778074c05f444718120b6c3f3d46aabc77d9b6ea1f851a589509611d4206d49411a7eff044e476c076c8151af8e731883aab7c98a1a57089f9",
             "balance": 200000.0,
             "language": "English",
             "currency": "USD",
@@ -45,7 +45,7 @@
         "0x72BC88EF": {
             "username": "Charlie_Anon",
             "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$NOtoamWGzj7yCz1B$396903c60dc7ab9930facd22c7e94183944324af5a64a4d3dfb86c3de5fe44fb524b269b006c68b83d2ca4e0f2e01d6c6801c37b7fc09b22c039bc2468002827",
+            "password_hash": "scrypt:32768:8:1$d3TBFYTQ5wDeGt9V$d119c4f29bc589235c0f0baed54d758cafdc848172eacf85d0340f76552175790e39b024d615256572621cddad5bff82a3f20e4577ad2a28d1f5253bd5518c05",
             "balance": 50000.0,
             "language": "English",
             "currency": "USD",
@@ -53,48 +53,6 @@
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON",
             "kyc_reference_id": null,
-<<<<<<< HEAD
-            "kyc_timestamp": null
-        },
-        "0x3B00AEEF": {
-            "username": "Sohini",
-            "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$oV3mOi140rimJZuz$f33a49a0d7fa41ce1f5103bbf2ccb5d5e5702e2ec4243119d9b37164c2b0dbd1861c85a0fffea9a2c1eaa6366991be1cd4cff965c58ba1d005e093dc74e63277",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null
-        },
-        "0x83573093": {
-            "username": "sohini ball",
-            "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$V79sAO64xan4SJ3C$c235bf38aab48de84a0ff39a8f1e12d678f8ad4cfc530ea0376b840ffdaf31f3d532f2e1206189fd15033f41e0588c8e8d9258442ce07675d104a15e04433b1a",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null
-        },
-        "0x4935EC18": {
-            "username": "mili",
-            "is_kyc_verified": false,
-            "password_hash": "scrypt:32768:8:1$XLXsZwD0aoSrHPr1$c26081262875830be04a9be354791748a11fdbabd8e1cfccbe1b119bc5e2db3af2452f8618b3a19fb902a57a46d84f85f33a2796cb07aa473aa6ffd5bedfa5fd",
-            "balance": 0.0,
-            "language": "English",
-            "currency": "USD",
-            "profile_visibility": "Public",
-            "network": "Ethereum Mainnet",
-            "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": null,
-            "kyc_timestamp": null
-=======
             "kyc_timestamp": null,
             "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
@@ -105,18 +63,18 @@
             "session_timeout": "30 Minutes",
             "tx_threshold": "$1,000 Threshold"
         },
-        "0x0C2D0DD9": {
-            "username": "CAT_1234",
-            "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$haqYp3fD3SW2ewLx$a329a9e2381fc886b40c2cd853d365d64ba0fb10dac425e7c82366a59bb7f312f3ea29ae2c3cb04ee97be6e3b7b177e9bdee567214d6415b11a6edbce6f95a6e",
-            "balance": 125.0,
+        "test": {
+            "username": "test",
+            "is_kyc_verified": false,
+            "password_hash": "hash",
+            "balance": 0.0,
             "language": "English",
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": "kyc_ref_76dd41269c93888f3e6ce175",
-            "kyc_timestamp": 1786246666,
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
             "kyc_aadhaar_hash": null,
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
@@ -126,19 +84,19 @@
             "session_timeout": "30 Minutes",
             "tx_threshold": "$1,000 Threshold"
         },
-        "0x617235C3": {
-            "username": "SUBHRO",
+        "0x10FBB838": {
+            "username": "subhrojyoti",
             "is_kyc_verified": true,
-            "password_hash": "scrypt:32768:8:1$8QUmv4z4NGqDqJAV$585fe06bc41ec1e21a19e48445e05b6ec4b28ce5eb806f5c643beadb371c60f9251d5df647f8e1432df570e9632bf8ef1ff0fb2d8e0e90e19488bbb82ccb678b",
-            "balance": 1250087.0,
+            "password_hash": "scrypt:32768:8:1$3ACoe4oT0eNkozhM$22988ad23fa61acec6075863b9493885e4e2770264977a74e2ba6a0032fd25a942d9a0ef64be4a8287ba26aaaaca24495b4545a793c3ed3f1110a9b313e09174",
+            "balance": 100.0,
             "language": "English",
             "currency": "USD",
             "profile_visibility": "Public",
             "network": "Ethereum Mainnet",
             "wallet_connection": "Auto Connect ON",
-            "kyc_reference_id": "ref_283339bd1c6c5767",
-            "kyc_timestamp": 1786270857.0019252,
-            "kyc_aadhaar_hash": "26564c4d2e3857f08ec08c6386ff4a26c84133a0a32a83f54e2795ee0067475f",
+            "kyc_reference_id": "ref_8330e139d270a439",
+            "kyc_timestamp": 1786355390.087043,
+            "kyc_aadhaar_hash": "04ccc674455fe803531217624cb6716a45aa48fc6106cd37d4341b87e6572ec8",
             "hardware_mfa": "Enabled",
             "passkey_biometrics": "Enabled",
             "settlement_alerts": "ON",
@@ -146,130 +104,300 @@
             "yield_updates": "OFF",
             "session_timeout": "30 Minutes",
             "tx_threshold": "$1,000 Threshold"
->>>>>>> 793a4810ad7946105cd3970d194e197c481172a9
+        },
+        "0x5BBBDFE4": {
+            "username": "CAT1234",
+            "is_kyc_verified": false,
+            "password_hash": "scrypt:32768:8:1$QPY9KG7Kz1CfgTcL$8f0e7b3cd383d7d0a5c23886c61c09bff2a2d683f09533c35f6f607c1fe3056ff7a0d849f513e83ee301ba3c7d37f692fef8f744fdd8190bfdc6887f62eba0f2",
+            "balance": 0.0,
+            "language": "English",
+            "currency": "USD",
+            "profile_visibility": "Public",
+            "network": "Ethereum Mainnet",
+            "wallet_connection": "Auto Connect ON",
+            "kyc_reference_id": null,
+            "kyc_timestamp": null,
+            "kyc_aadhaar_hash": null,
+            "hardware_mfa": "Enabled",
+            "passkey_biometrics": "Enabled",
+            "settlement_alerts": "ON",
+            "threat_advisories": "ON",
+            "yield_updates": "OFF",
+            "session_timeout": "30 Minutes",
+            "tx_threshold": "$1,000 Threshold"
         }
     },
     "blockchain": {
         "chain": [
             {
                 "index": 0,
-                "timestamp": 1786183991.3821642,
+                "timestamp": 1786342768.9370332,
                 "transactions": [
                     "Genesis Block"
                 ],
                 "previous_hash": "0",
-                "hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908"
+                "hash": "5b1acf960000caf91ffd6616d4e032221f93b1eb8c8c3146bf99b4f124bc5513"
             },
             {
                 "index": 1,
-                "timestamp": 1786251679.8545659,
+                "timestamp": 1786356436.2223747,
                 "transactions": [
                     {
-                        "sender": "0x0C2D0DD9",
+                        "sender": "0x10FBB838",
                         "receiver": "0x82AF91EF",
-                        "amount": 1.0,
+                        "amount": 10.0,
                         "asset": "ETH",
-                        "time": 1786251679.8525753
+                        "time": 1786356436.2213883
                     }
                 ],
-                "previous_hash": "05503fdf8ec479ce69e188166a10ea6110cf975e3e12210247cf8bb88854f908",
-                "hash": "3ac0bd9db0af04fa9ab6710528060504023492b1d1335f980d0a24f032413596"
-            },
-            {
-                "index": 2,
-                "timestamp": 1786270922.453582,
-                "transactions": [
-                    {
-                        "sender": "0x617235C3",
-                        "receiver": "0x0C2D0DD9",
-                        "amount": 12.0,
-                        "asset": "BTC",
-                        "time": 1786270922.453582
-                    }
-                ],
-                "previous_hash": "3ac0bd9db0af04fa9ab6710528060504023492b1d1335f980d0a24f032413596",
-                "hash": "3e9da3dc4673d5c89629ad529809587fe01341c2592446467ea1eee143b58a52"
-            },
-            {
-                "index": 3,
-                "timestamp": 1786271555.4816587,
-                "transactions": [
-                    {
-                        "sender": "0x617235C3",
-                        "receiver": "0x82AF91EF",
-                        "amount": 1.0,
-                        "asset": "ETH",
-                        "time": 1786271555.4816587
-                    }
-                ],
-                "previous_hash": "3e9da3dc4673d5c89629ad529809587fe01341c2592446467ea1eee143b58a52",
-                "hash": "b52dc663646c5ac460a449b827540c3ef1697c4ac0dec14aac00b080499e840a"
-            },
-            {
-                "index": 4,
-                "timestamp": 1786271978.3160133,
-                "transactions": [
-                    {
-                        "sender": "0x617235C3",
-                        "receiver": "0x91AF72BC",
-                        "amount": 12.0,
-                        "asset": "ETH",
-                        "time": 1786271978.3160133
-                    }
-                ],
-                "previous_hash": "b52dc663646c5ac460a449b827540c3ef1697c4ac0dec14aac00b080499e840a",
-                "hash": "bbd3a3e7f82f177fbf3e37164840ef52515849d0494923c9548be397257411ab"
-            },
-            {
-                "index": 5,
-                "timestamp": 1786272028.463611,
-                "transactions": [
-                    {
-                        "sender": "0x617235C3",
-                        "receiver": "0x82AF91EF",
-                        "amount": 125.0,
-                        "asset": "ETH",
-                        "time": 1786272028.463611
-                    }
-                ],
-                "previous_hash": "bbd3a3e7f82f177fbf3e37164840ef52515849d0494923c9548be397257411ab",
-                "hash": "c9ffafff5a3b1e2369f3072d18e4755953ea5cebcc78653283d7da3e364394c0"
-            },
-            {
-                "index": 6,
-                "timestamp": 1786272825.565744,
-                "transactions": [
-                    {
-                        "sender": "0x617235C3",
-                        "receiver": "0x82AF91EF",
-                        "amount": 125.0,
-                        "asset": "ETH",
-                        "time": 1786272825.5652354
-                    }
-                ],
-                "previous_hash": "c9ffafff5a3b1e2369f3072d18e4755953ea5cebcc78653283d7da3e364394c0",
-                "hash": "e590aec1fbcee0aa5a04170a2be5fafbda736889afd7e737b526df936c2b6623"
+                "previous_hash": "5b1acf960000caf91ffd6616d4e032221f93b1eb8c8c3146bf99b4f124bc5513",
+                "hash": "d3f448868d7ccdb99d98936ebf7af31d84d90cc322c38a52284b668262d8279f"
             }
         ]
     },
     "audit_logs": [
         {
-            "id": "log_da8ee8e96a86cf68",
-            "timestamp": 1786285519.832483,
+            "id": "log_54bdbae3a147c71a",
+            "timestamp": 1786343707.4541159,
+            "user": "Anonymous",
+            "action": "SETTINGS_UPDATE",
+            "details": "Failed to update settings: user not found",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_731419e2fb0854af",
+            "timestamp": 1786344310.8088865,
             "user": "Alice_Corp",
-            "action": "ADMIN_ACTION",
-            "details": "Cleared all system audit logs",
+            "action": "LOGIN",
+            "details": "User 'Alice_Corp' logged in successfully",
             "status": "SUCCESS",
             "ip_address": "127.0.0.1"
         },
         {
-            "id": "log_d0ad9b7f1902bddb",
-            "timestamp": 1786285519.838855,
+            "id": "log_2dfaffec6a6f1389",
+            "timestamp": 1786344414.0816882,
             "user": "Alice_Corp",
-            "action": "ADMIN_ACTION",
-            "details": "Accessed system audit logs",
+            "action": "LOGIN",
+            "details": "User 'Alice_Corp' logged in successfully",
             "status": "SUCCESS",
             "ip_address": "127.0.0.1"
+        },
+        {
+            "id": "log_0709fc7e12684313",
+            "timestamp": 1786344999.4772582,
+            "user": "Anonymous",
+            "action": "LOGOUT",
+            "details": "Logout called without valid session",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_3fd31128153fe563",
+            "timestamp": 1786345297.8385503,
+            "user": "subhrojyoti",
+            "action": "REGISTER",
+            "details": "User registered successfully with wallet address 0x10FBB838",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_ec81efd602a53993",
+            "timestamp": 1786345298.4567213,
+            "user": "subhrojyoti",
+            "action": "LOGIN",
+            "details": "User 'subhrojyoti' logged in successfully",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_635c40bb03776113",
+            "timestamp": 1786345319.5865493,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP request failed with error: name 'MockKYCApiProvider' is not defined",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_e873f77c2811620c",
+            "timestamp": 1786345334.036715,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP request failed with error: name 'MockKYCApiProvider' is not defined",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_36339a235038ec43",
+            "timestamp": 1786345594.1682756,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP request failed with error: name 'MockKYCApiProvider' is not defined",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_5b3aabd42196f970",
+            "timestamp": 1786345606.880603,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP request failed with error: name 'MockKYCApiProvider' is not defined",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_fe38bdb47f50884d",
+            "timestamp": 1786345790.1017325,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP request failed with error: Failed to contact the real UIDAI gateway. Check API Keys.",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_2a219684f322dc9e",
+            "timestamp": 1786347837.536217,
+            "user": "subhrojyoti07",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'subhrojyoti07'",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_361ccf533d48d76f",
+            "timestamp": 1786347846.481545,
+            "user": "subhrojyoti",
+            "action": "REGISTER",
+            "details": "Registration failed: username 'subhrojyoti' already exists",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_ad8cb2d700c7a91c",
+            "timestamp": 1786347853.7135677,
+            "user": "subhrojyoti",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'subhrojyoti'",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_795167f62452b934",
+            "timestamp": 1786347867.912432,
+            "user": "CAT1234",
+            "action": "REGISTER",
+            "details": "User registered successfully with wallet address 0x5BBBDFE4",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_82258dd4a402ad4c",
+            "timestamp": 1786347868.2595003,
+            "user": "CAT1234",
+            "action": "LOGIN",
+            "details": "User 'CAT1234' logged in successfully",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_82134e5ba5c69385",
+            "timestamp": 1786347887.0491855,
+            "user": "CAT1234",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP request failed with error: Failed to contact the real UIDAI gateway. Check API Keys.",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_fb6eee20b2f7f7c9",
+            "timestamp": 1786347939.5666606,
+            "user": "CAT1234",
+            "action": "LOGOUT",
+            "details": "User 'CAT1234' logged out successfully",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_e03b0a9f59bd5116",
+            "timestamp": 1786347991.5379179,
+            "user": "Alice_Corp",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'Alice_Corp'",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_56c3ec90ef628f09",
+            "timestamp": 1786348001.3824782,
+            "user": "subhrojyoti",
+            "action": "REGISTER",
+            "details": "Registration failed: username 'subhrojyoti' already exists",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_a2fb3e0961b5fa63",
+            "timestamp": 1786348033.7016706,
+            "user": "subhrojyoti",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'subhrojyoti'",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_67e6c20b0f4df95f",
+            "timestamp": 1786348043.9682114,
+            "user": "subhrojyoti",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'subhrojyoti'",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_b825d1298bb48739",
+            "timestamp": 1786348118.5149734,
+            "user": "subhrojyoti",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'subhrojyoti'",
+            "status": "FAILED",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_a31677e21494140a",
+            "timestamp": 1786355346.354788,
+            "user": "subhrojyoti",
+            "action": "LOGIN",
+            "details": "User 'subhrojyoti' logged in successfully",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_43fb48600fd8c0fe",
+            "timestamp": 1786355367.1482108,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "KYC OTP code successfully sent to Aadhaar linked mobile (ending in 9101)",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_293ac97878be6043",
+            "timestamp": 1786355390.0879836,
+            "user": "subhrojyoti",
+            "action": "KYC_VERIFICATION",
+            "details": "Aadhaar KYC identity verification completed and address whitelisted on-chain",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_64379731c46cb2a4",
+            "timestamp": 1786356436.242507,
+            "user": "subhrojyoti",
+            "action": "TRANSACTION",
+            "details": "Transferred 10.0 ETH to Alice_Corp (0x82AF91EF)",
+            "status": "SUCCESS",
+            "ip_address": "192.168.87.218"
         }
     ]
 }
