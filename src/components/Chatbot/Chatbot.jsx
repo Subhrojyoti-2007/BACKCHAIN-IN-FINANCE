@@ -1,51 +1,37 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Bot } from "lucide-react";
 import "./Chatbot.css";
 
 /*
-  BLOCKCHAIN-IN-FINANCE HELP CHATBOT
+  FINNY - BLOCKCHAIN-IN-FINANCE HELP CHATBOT
 
   This chatbot:
-  ✓ Answers questions about the existing application
-  ✓ Provides navigation help
-  ✓ Provides KYC, wallet, transaction, payment, security,
-    account, profile, settings, blockchain, finance and error help
-  ✓ Auto-scrolls messages
-  ✓ Has floating open button
-  ✓ Has close button
-  ✓ Has quick-help buttons
-
-  It DOES NOT:
-  ✗ Modify user data
-  ✗ Modify database
-  ✗ Execute transactions
-  ✗ Sign transactions
-  ✗ Change settings
-  ✗ Make payments
-  ✗ Provide investment advice
-  ✗ Call external AI APIs
+  ✓ Answers questions about the application (KYC, Audit Logs, Logins, etc.)
+  ✓ Replaces floating button with animated robot face SVG
+  ✓ Adheres to Glassmorphism layout & theme colors
+  ✓ Strictly filters out and declines personal/private questions
+  ✓ Never prompts the user for personal information
 */
 
 const QUICK_ACTIONS = [
-  ["KYC Help", "kyc"],
-  ["Wallet Help", "wallet"],
-  ["Transactions", "transaction"],
-  ["Security", "security"],
+  ["KYC & AML", "kyc"],
+  ["Audit Logs", "audit"],
+  ["Blockchain", "blockchain"],
+  ["DeFi & Staking", "defi"],
+  ["Risks & Rules", "rules"],
   ["Payments", "payment"],
-  ["General Help", "general"],
 ];
 
 function getQuickQuestion(topic) {
   const questions = {
-    kyc: "How does KYC work?",
-    wallet: "How does the wallet section work?",
-    transaction: "What can I do with transactions?",
-    security: "What security features are available?",
-    payment: "How does payments work?",
-    general: "What can you help me with?",
+    kyc: "Explain KYC and AML compliance process.",
+    audit: "How do audit logs and compliance work?",
+    blockchain: "Explain blockchain basics and smart contracts.",
+    defi: "What is DeFi and how does staking work?",
+    rules: "What are the financial risks and regulations?",
+    payment: "How does payments and banking work on-chain?",
   };
 
-  return questions[topic] || questions.general;
+  return questions[topic] || "What can you help me with?";
 }
 
 
@@ -60,215 +46,193 @@ function getBotReply(message) {
     return "Please type a question or choose one of the help options.";
   }
 
-  /* ---------- KYC ---------- */
-
-  if (
-    /\b(kyc|aadhaar|verification|verify|verified)\b/.test(q)
-  ) {
+  /* ---------- PERSONAL & PRIVATE QUESTIONS GUARD (MANDATORY) ---------- */
+  const personalRegex = /\b(my name|who am i|my password|my address|my phone|my email|my private key|where do i live|are you human|your age|your creator|who made you|your gender|where are you from|personal|private)\b/i;
+  if (personalRegex.test(q)) {
     return (
-      "KYC Help:\n\n" +
-      "The KYC Verification section is used for identity verification. " +
-      "I can explain the KYC process and help you find the relevant page.\n\n" +
-      "I cannot verify your identity, modify KYC information, or submit verification for you."
+      "I am Finny, your secure virtual assistant. To protect your privacy and security, " +
+      "I cannot ask for, discuss, or answer questions containing personal or private information " +
+      "(such as real names, passwords, contact details, or locations).\n\n" +
+      "I am here to help you understand platform features like KYC, audit logs, and authentication processes. " +
+      "Please make sure not to share any sensitive credentials!"
     );
   }
 
-
-  /* ---------- WALLET ---------- */
-
+  /* ---------- BLOCKCHAIN BASICS ---------- */
   if (
-    /\b(wallet|wallets|wallet address|connect wallet|wallet connection)\b/.test(q)
+    /\b(blockchain basics|what is blockchain|how blockchain works|decentralized ledger|dlt|genesis block|peer-to-peer|consensus mechanism|proof of work|proof of stake)\b/.test(q)
   ) {
     return (
-      "Wallet Help:\n\n" +
-      "I can explain wallet connection, wallet status, wallet addresses, " +
-      "and the wallet-related features available in this application.\n\n" +
-      "I cannot connect, disconnect, modify, or control a wallet."
+      "Blockchain Basics:\n\n" +
+      "A blockchain is a decentralized, distributed ledger that securely records transactions across a peer-to-peer network. Key concepts include:\n\n" +
+      "• Blocks & Hashes: Transactions are bundled into blocks. Each block has a cryptographic hash (digital fingerprint) and the hash of the previous block, chaining them together immutably.\n" +
+      "• Consensus Mechanisms: Networks use algorithms like Proof of Stake (PoS) or Proof of Work (PoW) to validate entries without needing central authority trust.\n" +
+      "• Distributed Ledger Technology (DLT): Data is replicated across multiple nodes worldwide, preventing a single point of failure."
     );
   }
 
-
-  /* ---------- TRANSACTIONS ---------- */
-
+  /* ---------- BLOCKCHAIN IN FINANCE ---------- */
   if (
-    /\b(transaction|transactions|transfer|transfers|send money|receive money|tx)\b/.test(q)
+    /\b(blockchain in finance|financial blockchain|institutional defi|tokenization|tokenized assets|fractional ownership)\b/.test(q)
   ) {
     return (
-      "Transaction Help:\n\n" +
-      "I can explain transaction screens, transaction status, " +
-      "and blockchain transaction concepts.\n\n" +
-      "I cannot create, approve, sign, send, cancel, or execute transactions."
+      "Blockchain in Financial Systems:\n\n" +
+      "Applying blockchain to modern finance introduces radical efficiencies:\n\n" +
+      "• Asset Tokenization: Converting physical or traditional assets (e.g., real estate, equities, bonds) into digital tokens on a ledger.\n" +
+      "• Instant Settlement: Bypassing traditional clearing houses (like T+2 settlement windows) for sub-second, atomic settlement of transfers.\n" +
+      "• Fractional Ownership: Lowering entry barriers by allowing investors to buy fractions of high-value tokenized securities (e.g., ERC-3643 assets)."
     );
   }
 
-
-  /* ---------- PAYMENTS ---------- */
-
+  /* ---------- CRYPTOCURRENCY & DIGITAL ASSETS ---------- */
   if (
-    /\b(payment|payments|pay|billing)\b/.test(q)
+    /\b(cryptocurrency|crypto|token|tokens|stablecoin|stablecoins|digital asset|digital assets|eth|btc|sol|bitcoin|ethereum|utility token|security token)\b/.test(q)
   ) {
     return (
-      "Payment Help:\n\n" +
-      "I can explain the Payments section and how its interface works.\n\n" +
-      "I cannot make payments, authorize payments, or change payment information."
+      "Cryptocurrency & Digital Assets:\n\n" +
+      "Digital assets represent value stored cryptographically on-chain:\n\n" +
+      "• Cryptocurrencies: Native network tokens like Bitcoin (BTC) or Ethereum (ETH) used to store value or pay transaction gas fees.\n" +
+      "• Stablecoins: Digital assets pegged to a fiat currency (e.g., USDC, USDT) to minimize market volatility.\n" +
+      "• Digital Securities: Tokens representing equity or yield rights, bound by automated compliance standards (like ERC-3643 used on our platform)."
     );
   }
 
-
-  /* ---------- SECURITY ---------- */
-
+  /* ---------- SMART CONTRACTS ---------- */
   if (
-    /\b(security|secure|password|mfa|2fa|authentication|threat|protection)\b/.test(q)
+    /\b(smart contract|smart contracts|self-executing code|solidity|evm|compilation|deployment)\b/.test(q)
   ) {
     return (
-      "Security Help:\n\n" +
-      "I can explain the security features available in the Blockchain-in-Finance application, " +
-      "including authentication and security-related concepts.\n\n" +
-      "I cannot change passwords, MFA settings, authentication data, or permissions."
+      "Smart Contracts:\n\n" +
+      "Smart contracts are self-executing software programs deployed directly on a blockchain. They automatically perform actions when predefined conditions are met:\n\n" +
+      "• Automation: Enforces terms immediately without intermediaries (e.g., automatically whitelisting user accounts or processing bank reserves checks).\n" +
+      "• Code is Law: Once compiled and written to the ledger, the execution rules are tamper-proof and public.\n" +
+      "• Compliance Control: They act as automated compliance gatekeepers (such as enforcing KYC status before whitelisting a transaction)."
     );
   }
 
-
-  /* ---------- ACCOUNT ---------- */
-
+  /* ---------- DECENTRALIZED FINANCE (DEFI) & STAKING ---------- */
   if (
-    /\b(account|login|logout|sign in|signin|register|registration)\b/.test(q)
+    /\b(decentralized finance|defi|staking|stake|yield|liquidity pool|liquidity pools|amm|yield farming|impermanent loss)\b/.test(q)
   ) {
     return (
-      "Account Help:\n\n" +
-      "I can explain login, registration, authentication, logout, " +
-      "and other account-related screens.\n\n" +
-      "I cannot create accounts, change credentials, or access private account information."
+      "Decentralized Finance (DeFi) & Staking:\n\n" +
+      "DeFi rebuilds traditional financial instruments on top of public smart contracts:\n\n" +
+      "• DeFi Ecosystem: Peer-to-peer trading, lending, and borrowing without intermediary banks or brokers.\n" +
+      "• Staking: Locking up digital assets to support a blockchain network's operations. In return, stakers receive rewards or yields on their locked assets.\n" +
+      "• Liquidity Pools & AMMs: Automated Market Makers allow users to trade assets using algorithm-priced smart contract pools rather than traditional order books."
     );
   }
 
-
-  /* ---------- PROFILE ---------- */
-
+  /* ---------- BANKING, PAYMENTS & TRANSACTIONS ---------- */
   if (
-    /\b(profile|username|personal details|user details)\b/.test(q)
+    /\b(banking|payment|payments|transfer|transfers|transaction|transactions|send money|receive money|remittance|remittances|tx|gas fee|mints)\b/.test(q)
   ) {
     return (
-      "Profile Help:\n\n" +
-      "I can explain the Profile section and the information displayed there.\n\n" +
-      "I cannot edit, delete, reveal, or modify your personal information."
+      "Banking, Payments & Transactions:\n\n" +
+      "• Remittances: Blockchain payments allow instant, global, 24/7 cross-border transfers bypassing clearing houses.\n" +
+      "• Gas Fees: Transactions require small network fees (gas) paid to validators to incentivize ledger maintenance.\n" +
+      "• On-Chain Transactions: Signed securely by a user's private key, transactions represent state changes written into blocks on the block explorer."
     );
   }
 
-
-  /* ---------- SETTINGS ---------- */
-
+  /* ---------- SECURITY & CRYPTOGRAPHY ---------- */
   if (
-    /\b(setting|settings|preference|preferences|language|currency)\b/.test(q)
+    /\b(security|secure|mfa|2fa|authentication|threat|protection|biometric|passkey|passkeys|mpc|cryptography|hash|private key|public key|multi-party computation|encryption)\b/.test(q)
   ) {
     return (
-      "Settings Help:\n\n" +
-      "I can explain the Settings page and its available options.\n\n" +
-      "I will not change your application settings or user preferences."
+      "Platform Security & Cryptography:\n\n" +
+      "DeFi security is built on deep cryptographic standards:\n\n" +
+      "• Asymmetric Cryptography: Public keys act as wallet addresses, while private keys provide the signature to authorize transactions.\n" +
+      "• Multi-Party Computation (MPC): Splitting private keys into multiple shards distributed across nodes so that no single node holds the complete key, mitigating exploit risks.\n" +
+      "• Biometrics & MFA: Adding hardware key authenticators and passkeys (managed in Settings) to secure ledger entry."
     );
   }
 
-
-  /* ---------- BLOCKCHAIN ---------- */
-
+  /* ---------- KYC & AML COMPLIANCE ---------- */
   if (
-    /\b(blockchain|block chain|ethereum|network|mainnet|smart contract|smart contracts)\b/.test(q)
+    /\b(kyc|aadhaar|verification|verify|verified|whitelist|identity|aml|anti-money laundering|anti money laundering|compliance|terrorist financing|fatf|blacklist|travel rule)\b/.test(q)
   ) {
     return (
-      "Blockchain Help:\n\n" +
-      "I can explain blockchain concepts used by this application, " +
-      "including networks, addresses, transactions and smart contracts.\n\n" +
-      "I cannot execute blockchain operations."
+      "KYC & AML Compliance:\n\n" +
+      "Regulatory compliance is automated through smart contract filters:\n\n" +
+      "• KYC (Know Your Customer): Process verifying a user's identity (such as our 12-digit Aadhaar input and OTP validation) before they can trade.\n" +
+      "• AML (Anti-Money Laundering): Rules designed to prevent illegal money movement. The system checks whitelist statuses, tracks large transactions, and restricts non-compliant or blacklisted wallets.\n" +
+      "• ERC-3643 Protocol: Exposes an on-chain identity registry to verify token ownership compliance automatically."
     );
   }
 
-
-  /* ---------- FINANCE ---------- */
-
+  /* ---------- AUDIT LOGS ---------- */
   if (
-    /\b(finance|financial|investment|invest|trading|trade|stocks|crypto price)\b/.test(q)
+    /\b(audit|log|logs|trail|history|event|events|record|records)\b/.test(q)
   ) {
     return (
-      "Finance Help:\n\n" +
-      "I can explain finance-related concepts and features that belong to this application.\n\n" +
-      "I cannot provide investment or trading advice, predict prices, " +
-      "or make financial decisions for you."
+      "Audit Logs & Traceability:\n\n" +
+      "To ensure total transparency, all platform actions are logged in real-time:\n\n" +
+      "• Event Capture: Logins, KYC attempts, transfer transactions, and settings updates are recorded.\n" +
+      "• Traceability Data: Captures the unique Log ID, timestamp, actor, action details, IP address, and SUCCESS/FAILED status.\n" +
+      "• Administrative Access: Audit logs page displays warnings for failed log-ins or rate limits, giving admins clean tools to verify security and generate reports."
     );
   }
 
-
-  /* ---------- ERRORS ---------- */
-
+  /* ---------- RISKS & REGULATIONS ---------- */
   if (
-    /\b(error|errors|bug|bugs|problem|problems|not working|issue|issues|failed|failure)\b/.test(q)
+    /\b(risk|risks|regulation|regulations|sec|fatf|compliance laws|volatility|vulnerabilities|smart contract bug|regulatory|hack|hacks|losses)\b/.test(q)
   ) {
     return (
-      "Error Assistance:\n\n" +
-      "Tell me the exact error message and the page where it appeared.\n\n" +
-      "I can help explain the likely problem and suggest safe troubleshooting steps.\n\n" +
-      "I will not modify project files or user data."
+      "Risks & Regulations:\n\n" +
+      "• Market Risks: Digital assets are subject to high price volatility and liquidity risks.\n" +
+      "• Technical Risks: Smart contract bugs or vulnerabilities can lead to exploits and financial loss. Rigorous security audits are crucial.\n" +
+      "• Regulatory Environment: Evolving guidelines (SEC, FATF Travel Rule, MiCA) require systems to implement rigid compliance controls like ERC-3643 identities to remain legally solvent."
     );
   }
 
-
-  /* ---------- NAVIGATION ---------- */
-
+  /* ---------- LOGIN & REGISTER ---------- */
   if (
-    /\b(navigate|navigation|where|find|page|dashboard|home|go to)\b/.test(q)
+    /\b(login|logout|sign in|signin|register|registration|sign up|signup|account|credentials|username|password)\b/.test(q)
   ) {
     return (
-      "Navigation Help:\n\n" +
-      "I can help you find pages inside the existing application, " +
-      "such as Dashboard, KYC Verification, Payments, Security, Profile and Settings.\n\n" +
-      "Tell me which page you are looking for."
+      "Account & Authentication:\n\n" +
+      "• Login: Secure login requires your username and password. On successful authentication, the server generates a JWT access token, starting a secure session.\n" +
+      "• Registration: Creating an account automatically registers you on the platform and provisions a mock Web3 wallet address (e.g., 0x82AF...).\n" +
+      "• Logout: Logging out terminates the session and securely removes the local JWT token.\n\n" +
+      "Remember: Never share your username or password. I will never ask for your credentials."
     );
   }
 
-
-  /* ---------- CONTACT SUPPORT ---------- */
-
+  /* ---------- OTHER SECTIONS ---------- */
   if (
-    /\b(contact|support|help desk|human support)\b/.test(q)
+    /\b(dashboard|explorer|payments|analytics|settings|terminal|admin|proof of reserves|reserves|solvency|treasury)\b/.test(q)
   ) {
     return (
-      "Contact Support:\n\n" +
-      "For account-specific issues, use the application's official support/contact channel if one is available.\n\n" +
-      "I cannot contact support or submit a support request for you."
+      "Application Features:\n\n" +
+      "• Dashboard: Real-time assets tracker, wallet details, and transaction interface.\n" +
+      "• Explorer: Cryptographic block examiner tracking transaction history and hashes.\n" +
+      "• Analytics: Statistical tools charting volume, liquidity, and asset distribution.\n" +
+      "• Admin Terminal: Access restricted panel featuring live Proof of Reserves solvency validation comparing liabilities to the Treasury."
     );
   }
-
 
   /* ---------- GREETING ---------- */
-
   if (
-    /\b(hello|hi|hey|help)\b/.test(q)
+    /\b(hello|hi|hey|help|finny|bot|assistant)\b/.test(q)
   ) {
     return (
-      "Hi! 👋\n\n" +
-      "I'm the Blockchain-in-Finance Help Assistant.\n\n" +
-      "You can ask me about KYC, wallets, transactions, payments, security, " +
-      "accounts, profiles, settings, blockchain, finance, navigation or errors."
+      "Hello! 👋\n\n" +
+      "I'm Finny, your Blockchain-in-Finance Assistant.\n\n" +
+      "I can explain how blockchain works, smart contracts, DeFi and staking, KYC & AML regulations, risks, banking and payments, and how audit logs operate.\n\n" +
+      "How can I help you today?"
     );
   }
 
-
   /* ---------- DEFAULT ---------- */
-
   return (
-    "I can only help with the existing Blockchain-in-Finance application.\n\n" +
-    "Try asking about:\n" +
-    "• KYC\n" +
-    "• Wallet\n" +
-    "• Transactions\n" +
-    "• Payments\n" +
-    "• Security\n" +
-    "• Account\n" +
-    "• Profile\n" +
-    "• Settings\n" +
-    "• Blockchain\n" +
-    "• Finance\n" +
-    "• Navigation\n" +
-    "• Errors"
+    "I can help you navigate and understand the Blockchain-in-Finance application.\n\n" +
+    "Try asking me about:\n" +
+    "• Blockchain Basics & Smart Contracts\n" +
+    "• DeFi & Staking yields\n" +
+    "• KYC & AML compliance process\n" +
+    "• Audit Logs & Transactions tracking\n" +
+    "• Financial Risks & Regulations (SEC, FATF)"
   );
 }
 
@@ -286,8 +250,8 @@ export default function Chatbot() {
       id: 1,
       sender: "bot",
       text:
-        "Hi! 👋 I'm the Blockchain-in-Finance Help Assistant.\n\n" +
-        "How can I help you?",
+        "Hi! 👋 I'm Finny, your Blockchain-in-Finance Help Assistant.\n\n" +
+        "Ask me about KYC, audit logs, login processes, or other platform features!",
     },
   ]);
 
@@ -372,22 +336,72 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* FLOATING BUTTON */}
+      {/* FLOATING ROBOT LOGO */}
 
       {!isOpen && (
         <button
-          className="bf-chat-fab"
+          className="bf-chat-fab-robot"
           onClick={() => setIsOpen(true)}
           aria-label="Open help chatbot"
-          title="Chat with ChainVest"
+          title="Chat with Finny"
         >
-          <span className="bf-chat-icon">
-            💬
-          </span>
-
-          <span className="bf-chat-label">
-            <Bot size={22} strokeWidth={2} />
-          </span>
+          <div className="bf-robot-container">
+            <svg
+              className="bf-robot-face-svg"
+              width="60"
+              height="60"
+              viewBox="0 0 64 64"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Antenna */}
+              <rect x="30" y="4" width="4" height="10" rx="2" fill="var(--primary, #adc6ff)" />
+              <circle className="bf-robot-antenna-tip" cx="32" cy="4" r="4" fill="var(--tertiary, #4cd7f6)" />
+              
+              {/* Ears */}
+              <rect x="4" y="24" width="6" height="16" rx="3" fill="var(--outline-variant, #424754)" />
+              <rect x="54" y="24" width="6" height="16" rx="3" fill="var(--outline-variant, #424754)" />
+              
+              {/* Head Shell */}
+              <rect
+                className="bf-robot-head-shell"
+                x="10"
+                y="14"
+                width="44"
+                height="38"
+                rx="12"
+                fill="#111827"
+                stroke="var(--primary, #adc6ff)"
+                strokeWidth="2"
+              />
+              
+              {/* Screen/Faceplate */}
+              <rect
+                x="15"
+                y="20"
+                width="34"
+                height="24"
+                rx="8"
+                fill="#050816"
+                stroke="rgba(255, 255, 255, 0.1)"
+                strokeWidth="1.5"
+              />
+              
+              {/* Eyes */}
+              <circle className="bf-robot-eye bf-robot-eye-left" cx="24" cy="30" r="3.5" fill="var(--tertiary, #4cd7f6)" />
+              <circle className="bf-robot-eye bf-robot-eye-right" cx="40" cy="30" r="3.5" fill="var(--tertiary, #4cd7f6)" />
+              
+              {/* Mouth */}
+              <path
+                className="bf-robot-mouth"
+                d="M26 38 C 28 40, 34 40, 36 38"
+                stroke="var(--tertiary, #4cd7f6)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="bf-robot-tooltip">Chat with Finny!</div>
+          </div>
         </button>
       )}
 
@@ -397,7 +411,7 @@ export default function Chatbot() {
       {isOpen && (
         <section
           className="bf-chatbot"
-          aria-label="Blockchain-in-Finance Help Assistant"
+          aria-label="Finny Help Assistant"
         >
 
           {/* HEADER */}
@@ -406,17 +420,56 @@ export default function Chatbot() {
 
             <div className="bf-chat-brand">
 
-              <div className="bf-chat-avatar">
-                AI
+              <div className="bf-chat-avatar-robot">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect x="30" y="4" width="4" height="10" rx="2" fill="var(--primary, #adc6ff)" />
+                  <circle cx="32" cy="4" r="4" fill="var(--tertiary, #4cd7f6)" />
+                  <rect x="4" y="24" width="6" height="16" rx="3" fill="var(--outline-variant, #424754)" />
+                  <rect x="54" y="24" width="6" height="16" rx="3" fill="var(--outline-variant, #424754)" />
+                  <rect
+                    x="10"
+                    y="14"
+                    width="44"
+                    height="38"
+                    rx="12"
+                    fill="#111827"
+                    stroke="var(--primary, #adc6ff)"
+                    strokeWidth="2"
+                  />
+                  <rect
+                    x="15"
+                    y="20"
+                    width="34"
+                    height="24"
+                    rx="8"
+                    fill="#050816"
+                    stroke="rgba(255, 255, 255, 0.1)"
+                    strokeWidth="1.5"
+                  />
+                  <circle cx="24" cy="30" r="3.5" fill="var(--tertiary, #4cd7f6)" />
+                  <circle cx="40" cy="30" r="3.5" fill="var(--tertiary, #4cd7f6)" />
+                  <path
+                    d="M26 38 C 28 40, 34 40, 36 38"
+                    stroke="var(--tertiary, #4cd7f6)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </div>
 
               <div>
-                <strong>
-                  Help Assistant
+                <strong className="bf-chat-title-finny">
+                  Finny
                 </strong>
 
-                <span>
-                  Blockchain-in-Finance
+                <span className="bf-chat-subtitle-finny">
+                  DeFi Compliance Guard
                 </span>
               </div>
 
@@ -448,7 +501,7 @@ export default function Chatbot() {
               </strong>
 
               <span>
-                Choose a topic or type your question.
+                Choose a topic below or ask Finny any question.
               </span>
 
             </div>
@@ -524,7 +577,7 @@ export default function Chatbot() {
                   setInput(event.target.value)
                 }
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about this application..."
+                placeholder="Ask Finny about this application..."
                 rows={1}
               />
 
@@ -544,8 +597,8 @@ export default function Chatbot() {
             </div>
 
 
-            <small>
-              Application help only • No transactions or data changes
+            <small className="bf-disclaimer-finny">
+              Finny Security Guard • KYC & Compliance Help • No Personal Data Collected
             </small>
 
           </div>
