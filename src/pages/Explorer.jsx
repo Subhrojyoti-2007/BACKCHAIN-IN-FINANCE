@@ -185,22 +185,13 @@ function BlockchainExplorer() {
             <table className="w-full text-left text-xs sm:text-sm font-mono">
               <thead>
                 <tr className="text-slate-400 border-b border-white/10 uppercase tracking-wider text-[11px]">
-<<<<<<< HEAD
                   <th className="pb-3 pr-4 font-semibold">{t("Block Hash")}</th>
                   <th className="pb-3 pr-4 font-semibold">{t("From")}</th>
                   <th className="pb-3 pr-4 font-semibold">{t("To")}</th>
                   <th className="pb-3 pr-4 font-semibold">{t("Amount")}</th>
+                  <th className="pb-3 pr-4 font-semibold">{t("Risk Rating")}</th>
                   <th className="pb-3 pr-4 font-semibold">{t("Status")}</th>
                   <th className="pb-3 font-semibold text-right">{t("Time")}</th>
-=======
-                  <th className="pb-3 pr-4 font-semibold">Block Hash</th>
-                  <th className="pb-3 pr-4 font-semibold">From</th>
-                  <th className="pb-3 pr-4 font-semibold">To</th>
-                  <th className="pb-3 pr-4 font-semibold">Amount</th>
-                  <th className="pb-3 pr-4 font-semibold">Risk Rating</th>
-                  <th className="pb-3 pr-4 font-semibold">Status</th>
-                  <th className="pb-3 font-semibold text-right">Time</th>
->>>>>>> 46dc2db6d3a5d9b9493e7361b7269e826faf31cd
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
