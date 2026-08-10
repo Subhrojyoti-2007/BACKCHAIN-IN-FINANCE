@@ -88,7 +88,7 @@
             "username": "subhrojyoti",
             "is_kyc_verified": true,
             "password_hash": "scrypt:32768:8:1$3ACoe4oT0eNkozhM$22988ad23fa61acec6075863b9493885e4e2770264977a74e2ba6a0032fd25a942d9a0ef64be4a8287ba26aaaaca24495b4545a793c3ed3f1110a9b313e09174",
-            "balance": 100.0,
+            "balance": 110.0,
             "language": "English",
             "currency": "USD",
             "profile_visibility": "Public",
