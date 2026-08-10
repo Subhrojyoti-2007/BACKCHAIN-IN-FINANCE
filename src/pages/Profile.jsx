@@ -86,7 +86,10 @@ function Profile() {
         alert(t("Failed to create order: ") + (errorData.error || res.statusText));
         if (res.status === 404 || res.status === 401) {
           // If user not found or token expired, log them out
-          alert("Session expired or user not found. Please log in again.");
+          alert(t("Session expired or user not found. Please log in again."));
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/';
         }
         return;
       }

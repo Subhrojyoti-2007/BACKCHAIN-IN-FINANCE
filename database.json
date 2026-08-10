@@ -398,6 +398,15 @@
             "details": "Transferred 10.0 ETH to Alice_Corp (0x82AF91EF)",
             "status": "SUCCESS",
             "ip_address": "192.168.87.218"
+        },
+        {
+            "id": "log_3d0f91054c5e2301",
+            "timestamp": 1786384487.4496279,
+            "user": "SUBHRO",
+            "action": "FAILED_LOGIN",
+            "details": "Invalid credentials for user 'SUBHRO'",
+            "status": "FAILED",
+            "ip_address": "10.225.108.114"
         }
     ]
 }
