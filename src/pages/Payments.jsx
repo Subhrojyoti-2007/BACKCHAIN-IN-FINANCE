@@ -46,6 +46,7 @@ function Payments() {
   const [statusMsg, setStatusMsg] = useState(null);
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [riskAssessment, setRiskAssessment] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -72,6 +73,7 @@ function Payments() {
     setIsSubmitting(true);
     setStatusMsg(null);
     setIsError(false);
+    setRiskAssessment(null);
 
     try {
       const response = await fetch('/api/transaction', {
@@ -88,6 +90,14 @@ function Payments() {
       });
 
       const result = await response.json();
+
+      if (result.risk_score !== undefined) {
+        setRiskAssessment({
+          score: result.risk_score,
+          level: result.risk_level,
+          reasons: result.reasons || []
+        });
+      }
 
       if (response.ok) {
         setStatusMsg(result.message);
@@ -143,6 +153,58 @@ function Payments() {
               {isError ? <AlertCircle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
               <p>{statusMsg}</p>
             </div>
+          )}
+
+          {riskAssessment && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-2 mb-5 p-5 rounded-2xl bg-slate-950/80 border border-white/10 relative overflow-hidden"
+            >
+              {/* Risk Level Badge & Score Meter */}
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider">Fraud Risk Assessment</h3>
+                  <p className="text-[10px] text-slate-400 font-mono">Real-time heuristics analysis</p>
+                </div>
+                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-mono font-bold border ${
+                  riskAssessment.level === 'HIGH' ? 'bg-rose-500/10 text-rose-300 border-rose-500/30' :
+                  riskAssessment.level === 'MEDIUM' ? 'bg-amber-400/10 text-amber-300 border-amber-500/30' :
+                  'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                }`}>
+                  {riskAssessment.level} RISK ({riskAssessment.score}/100)
+                </span>
+              </div>
+              
+              {/* Progress Bar Meter */}
+              <div className="w-full bg-slate-900 rounded-full h-1.5 mb-3 overflow-hidden border border-white/5">
+                <div 
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    riskAssessment.level === 'HIGH' ? 'bg-rose-500' :
+                    riskAssessment.level === 'MEDIUM' ? 'bg-amber-400' :
+                    'bg-emerald-500'
+                  }`}
+                  style={{ width: `${riskAssessment.score}%` }}
+                />
+              </div>
+
+              {/* Reasons list */}
+              {riskAssessment.reasons.length > 0 ? (
+                <div className="space-y-1.5">
+                  <p className="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-wider">Anomalies Detected:</p>
+                  <ul className="list-disc list-inside text-[11px] text-slate-300 space-y-1 pl-1">
+                    {riskAssessment.reasons.map((r, idx) => (
+                      <li key={idx} className="font-medium text-slate-300 leading-normal">{r}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Clear transaction signature.
+                </p>
+              )}
+            </motion.div>
           )}
 
           <div className="mb-5 p-4 rounded-2xl bg-slate-900/90 border border-white/10">

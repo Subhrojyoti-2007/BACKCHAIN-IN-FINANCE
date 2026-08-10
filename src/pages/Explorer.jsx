@@ -59,7 +59,9 @@ function BlockchainExplorer() {
                   to: tx.receiver,
                   amount: `${tx.amount} ${tx.asset || 'ETH'}`,
                   status: "Success",
-                  time: new Date(tx.time * 1000).toLocaleTimeString()
+                  time: new Date(tx.time * 1000).toLocaleTimeString(),
+                  riskScore: tx.risk_score !== undefined ? tx.risk_score : 10,
+                  riskLevel: tx.risk_level || "LOW"
                 });
               });
             }
@@ -184,6 +186,7 @@ function BlockchainExplorer() {
                   <th className="pb-3 pr-4 font-semibold">From</th>
                   <th className="pb-3 pr-4 font-semibold">To</th>
                   <th className="pb-3 pr-4 font-semibold">Amount</th>
+                  <th className="pb-3 pr-4 font-semibold">Risk Rating</th>
                   <th className="pb-3 pr-4 font-semibold">Status</th>
                   <th className="pb-3 font-semibold text-right">Time</th>
                 </tr>
@@ -195,6 +198,15 @@ function BlockchainExplorer() {
                     <td className="py-3.5 pr-4 text-slate-300 truncate max-w-[120px]">{tx.from}</td>
                     <td className="py-3.5 pr-4 text-slate-300 truncate max-w-[120px]">{tx.to}</td>
                     <td className="py-3.5 pr-4 font-bold text-white">{tx.amount}</td>
+                    <td className="py-3.5 pr-4">
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${
+                        tx.riskLevel === 'HIGH' ? 'bg-rose-500/10 text-rose-300 border-rose-500/30' :
+                        tx.riskLevel === 'MEDIUM' ? 'bg-amber-400/10 text-amber-300 border-amber-500/30' :
+                        'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                      }`}>
+                        {tx.riskLevel} ({tx.riskScore})
+                      </span>
+                    </td>
                     <td className="py-3.5 pr-4">
                       <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[11px] font-semibold">
                         <ShieldCheck className="h-3 w-3" /> {tx.status}
