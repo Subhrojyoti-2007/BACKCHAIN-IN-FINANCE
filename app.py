@@ -16,7 +16,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from blockchain import Blockchain
-from smart_contract import TransactionManager, UserAccount, KYCVerificationError, IdentityRegistry
+from smart_contract import TransactionManager, UserAccount, KYCVerificationError, IdentityRegistry, FraudDetector, FraudDetectionError
 import db
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -619,16 +619,39 @@ def new_transaction():
     # Security Check: Force sender to be the authenticated user
     sender_addr = current_user_addr
 
-    if sender_addr not in users or receiver_addr not in users:
-        log_audit_event(users[current_user_addr].username if current_user_addr in users else "Anonymous", "TRANSACTION", f"Transaction failed: invalid sender or receiver address '{receiver_addr}'", "FAILED")
-        return jsonify({'error': 'Invalid sender or receiver address. User not found.'}), 404
+    if sender_addr not in users:
+        log_audit_event("Anonymous", "TRANSACTION", "Transaction failed: invalid sender session", "FAILED")
+        return jsonify({'error': 'Sender account not found.'}), 404
 
     sender_account = users[sender_addr]
-    receiver_account = users[receiver_addr]
+    receiver_account = users.get(receiver_addr, None)
+
+    # 1. Run fraud check
+    score, risk_level, reasons = FraudDetector.evaluate_risk(
+        sender_addr=sender_addr,
+        sender_account=sender_account,
+        receiver_addr=receiver_addr,
+        receiver_account=receiver_account,
+        amount=amount,
+        asset=asset,
+        blockchain_chain=blockchain.chain,
+        audit_logs=audit_logs,
+        users_dict=users
+    )
 
     try:
-        # Enforce KYC via Smart Contract Protocol
-        TransactionManager.process_transaction(sender_account, receiver_account, amount)
+        # Enforce KYC and fraud verification via Smart Contract Protocol
+        TransactionManager.process_transaction(
+            sender_account, 
+            receiver_account, 
+            amount,
+            sender_addr=sender_addr,
+            receiver_addr=receiver_addr,
+            asset=asset,
+            blockchain=blockchain,
+            audit_logs=audit_logs,
+            users=users
+        )
         
         # If successful, add transaction to the block
         transaction_data = [{
@@ -636,29 +659,61 @@ def new_transaction():
             "receiver": receiver_addr,
             "amount": amount,
             "asset": asset,
-            "time": time()
+            "time": time(),
+            "risk_score": score,
+            "risk_level": risk_level,
+            "reasons": reasons
         }]
         
         blockchain.add_block(transaction_data)
         
-        log_audit_event(sender_account.username, "TRANSACTION", f"Transferred {amount} {asset} to {receiver_account.username} ({receiver_addr})", "SUCCESS")
+        details = f"Transferred {amount} {asset} to {receiver_account.username if receiver_account else 'Unknown'} ({receiver_addr}). Risk Score: {score} ({risk_level})"
+        log_audit_event(sender_account.username, "TRANSACTION", details, "SUCCESS")
         
         response = {
             'message': f'Transaction will be added to Block {blockchain.get_latest_block().index}',
-            'status': 'Success'
+            'status': 'Success',
+            'risk_score': score,
+            'risk_level': risk_level,
+            'reasons': reasons
         }
         return jsonify(response), 201
         
-    except KYCVerificationError as e:
-        log_audit_event(sender_account.username, "TRANSACTION", f"Transaction of {amount} {asset} to {receiver_account.username} failed: {str(e)}", "FAILED")
+    except FraudDetectionError as e:
+        details = f"Blocked: Transaction of {amount} {asset} to {receiver_account.username if receiver_account else 'Unknown'} ({receiver_addr}) rejected due to HIGH fraud risk (Score: {e.score}). Reasons: {', '.join(e.reasons)}"
+        log_audit_event(sender_account.username, "TRANSACTION_BLOCKED", details, "FAILED")
+        
         response = {
-            'error': str(e),
-            'status': 'Failed'
+            'error': f'Transaction blocked due to high fraud risk (Score: {e.score}).',
+            'status': 'Blocked',
+            'risk_score': e.score,
+            'risk_level': 'HIGH',
+            'reasons': e.reasons
         }
         return jsonify(response), 403
+        
+    except KYCVerificationError as e:
+        log_audit_event(sender_account.username, "TRANSACTION", f"Transaction of {amount} {asset} to {receiver_account.username if receiver_account else 'Unknown'} failed: {str(e)}", "FAILED")
+        response = {
+            'error': str(e),
+            'status': 'Failed',
+            'risk_score': score,
+            'risk_level': risk_level,
+            'reasons': reasons
+        }
+        return jsonify(response), 403
+        
     except Exception as e:
         log_audit_event(sender_account.username if 'sender_account' in locals() else "Anonymous", "TRANSACTION", f"Transaction failed with error: {str(e)}", "FAILED")
-        return jsonify({'error': str(e), 'status': 'Failed'}), 500
+        response = {
+            'error': str(e),
+            'status': 'Failed',
+            'risk_score': score,
+            'risk_level': risk_level,
+            'reasons': reasons
+        }
+        return jsonify(response), 500
+
 
 TREASURY_BALANCE = 500000.0
 
