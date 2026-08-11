@@ -1,81 +1,70 @@
-import json
 import os
+import certifi
+from pymongo import MongoClient
 from blockchain import Blockchain
 from smart_contract import UserAccount
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "database.json")
-TEMP_DB_PATH = os.path.join(BASE_DIR, "temp_db.json")
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
+db = client["blockchain_finance"]
 
 def load_db():
     """
-    Loads the structured document DB. 
+    Loads the database from MongoDB.
     Returns (users_dict, blockchain_object, audit_logs_list).
-    Returns (None, None, None) if the DB doesn't exist.
+    Returns (None, None, None) if the DB collections are empty (on first run).
     """
-    if not os.path.exists(DB_PATH):
-        return None, None, None
-        
-    with open(DB_PATH, "r") as f:
-        try:
-            data = json.load(f)
-        except json.JSONDecodeError:
+    try:
+        # Check if database has any users
+        if db.users.count_documents({}) == 0 and db.blockchain.count_documents({}) == 0:
             return None, None, None
             
-    # Deserialize users
-    users_data = data.get("users", {})
-    users = {}
-    for address, u_data in users_data.items():
-        users[address] = UserAccount.from_dict(u_data)
-        
-    # Deserialize blockchain
-    blockchain_data = data.get("blockchain", {})
-    if blockchain_data:
-        blockchain = Blockchain.from_dict(blockchain_data)
-    else:
-        blockchain = Blockchain()
+        # Deserialize users
+        users = {}
+        for u_data in db.users.find():
+            address = u_data.pop("_id") # MongoDB uses _id as primary key
+            users[address] = UserAccount.from_dict(u_data)
+            
+        # Deserialize blockchain
+        blockchain_data = db.blockchain.find_one({"_id": "main_chain"})
+        if blockchain_data:
+            blockchain = Blockchain.from_dict(blockchain_data)
+        else:
+            blockchain = Blockchain()
 
-    # Deserialize audit logs
-    audit_logs = data.get("audit_logs", [])
-        
-    return users, blockchain, audit_logs
+        # Deserialize audit logs
+        audit_logs = list(db.audit_logs.find({}, {"_id": 0}))
+            
+        return users, blockchain, audit_logs
+    except Exception as e:
+        print(f"MongoDB Load Error: {e}")
+        return None, None, None
 
 def save_db(users, blockchain, audit_logs=None):
     """
-    Performs an Atomic Commit to save the document DB.
+    Saves the application state to MongoDB.
     """
-    # Serialize users
-    users_data = {addr: user.to_dict() for addr, user in users.items()}
-    
-    # Serialize blockchain
-    blockchain_data = blockchain.to_dict()
-    
-    # Preserve existing audit logs from database.json if audit_logs is None
-    if audit_logs is None:
-        if os.path.exists(DB_PATH):
-            try:
-                with open(DB_PATH, "r") as f:
-                    old_data = json.load(f)
-                    audit_logs = old_data.get("audit_logs", [])
-            except Exception:
-                audit_logs = []
-        else:
-            audit_logs = []
+    try:
+        # Save users
+        for addr, user in users.items():
+            user_dict = user.to_dict()
+            db.users.replace_one({"_id": addr}, user_dict, upsert=True)
             
-    # Relational Schema Design
-    data = {
-        "users": users_data,
-        "blockchain": blockchain_data,
-        "audit_logs": audit_logs
-    }
-    
-    # 1. Save to a temporary file
-    with open(TEMP_DB_PATH, "w") as f:
-        json.dump(data, f, indent=4)
+        # Save blockchain
+        blockchain_data = blockchain.to_dict()
+        db.blockchain.replace_one({"_id": "main_chain"}, blockchain_data, upsert=True)
         
-    # 2. Verify the temporary file was written and is not empty
-    if os.path.exists(TEMP_DB_PATH) and os.path.getsize(TEMP_DB_PATH) > 0:
-        # 3. Swap safely using atomic os.replace
-        os.replace(TEMP_DB_PATH, DB_PATH)
-    else:
-        raise Exception("Database write failed. Temp file is empty or missing.")
+        # Save audit logs
+        if audit_logs is not None and len(audit_logs) > 0:
+            # Drop existing logs and insert new ones to match the previous JSON array behavior
+            # (In a production app, you would only insert the *new* logs)
+            db.audit_logs.delete_many({})
+            db.audit_logs.insert_many(audit_logs)
+            
+    except Exception as e:
+        print(f"MongoDB Save Error: {e}")
+        raise Exception(f"Database write failed: {e}")
+
