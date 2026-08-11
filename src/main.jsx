@@ -9,10 +9,13 @@ if (process.env.NODE_ENV === 'development') {
   initToolbar({})
 }
 
+import { SpeedInsights } from "@vercel/speed-insights/react"
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <App />
+      <SpeedInsights />
     </BrowserRouter>
   </StrictMode>,
 )
