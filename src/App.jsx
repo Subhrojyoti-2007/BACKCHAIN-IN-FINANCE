@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
 import Explorer from './pages/Explorer'
@@ -61,5 +62,10 @@ function AppContent() {
 }
 
 export default function App() {
-  return <AppContent />
+  return (
+    <>
+      <AppContent />
+      <SpeedInsights />
+    </>
+  )
 }
