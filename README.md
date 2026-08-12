@@ -218,24 +218,8 @@ END
 ```
 
 ### 4.4 System Flowchart
-```
-[ User Browser (React/Vite UI) ] 
-       | (REST API via HTTPS)
-       v
-[ Vercel API Gateway (Serverless Routing) ]
-       |
-       v
-[ Python Backend (Flask & api/index.py) ]
-       |
-       +--> [ Identity Registry & JWT Auth ]
-       |
-       +--> [ Smart Contract & Fraud Engine ]
-       |
-       +--> [ Core Blockchain & Consensus Engine ]
-       |
-       v
-[ MongoDB Atlas (Cloud NoSQL Database) ]
-```
+<img width="1600" height="1441" alt="image" src="https://github.com/user-attachments/assets/0ca50c7c-744a-43e3-b910-8d14ca8c4926" />
+
 
 ### 4.5 Expert System Inference Rules
 
