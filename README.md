@@ -274,23 +274,42 @@ To validate the proposed architectural model, the system was tested across two d
 Below are the visual results of the completed application, demonstrating the functionality of the custom blockchain and React frontend:
 
 *(Note: Ensure all image files are placed in the root directory for these to render properly on GitHub)*
-
-**1. Main Dashboard (Wallet & Balance)**
-> This interface displays the user's secure wallet balance, recent activity, and provides the main entry point to the decentralized application.
-![Main Dashboard](./screen.png)
-
-**2. Transaction Initiation Interface**
-> This interface allows users to initiate peer-to-peer transfers, which are immediately intercepted by the Smart Contract for fraud validation.
-![Transaction View](./transaction_view.png)
-
-**3. Blockchain Explorer (Ledger View)**
-> The transparent ledger explorer where all users can cryptographically verify the integrity of mined blocks and past transactions.
-![Block Explorer](./block_explorer.png)
-
-**4. Secure Authentication (JWT Login/Registration)**
+**1. Home Page**
+<img width="1896" height="911" alt="image" src="https://github.com/user-attachments/assets/8afa71ed-8bdc-4f6a-a115-4d953b28e40a" />
+**2. Secure Authentication (Login/Registration/Adhaar KYC Page)**
 > The onboarding interface where users register securely and receive their cryptographic JSON Web Tokens.
-![Login Screen](./login_screen.png)
+Login Page
+> <img width="1892" height="897" alt="image" src="https://github.com/user-attachments/assets/f0a3b8a9-8741-4c11-95e6-039fed501472" />
+Register Page
+> <img width="1897" height="911" alt="image" src="https://github.com/user-attachments/assets/354734dd-03dc-47f6-b517-758c2f8151d0" />
+Adhaar KYC Page
+>The OTP is 123456. Now it is dummy and I will update in Future Plans.
+> <img width="1910" height="908" alt="image" src="https://github.com/user-attachments/assets/318d3575-ab32-4505-8a17-e90085354af6" />
 
+**3. Main Dashboard **
+> This interface displays the user's secure wallet balance, recent activity, and provides the main entry point to the decentralized application.
+![Main Dashboard](<img width="1896" height="902" alt="image" src="https://github.com/user-attachments/assets/e5a4dc64-6979-4111-8e49-c4c966b3d977" />
+)
+**4. Blockchain Explorer Page**
+> The transparent ledger explorer where all users can cryptographically verify the integrity of mined blocks and past transactions.
+![Block Explorer](<img width="1897" height="910" alt="image" src="https://github.com/user-attachments/assets/240ce1ed-a930-40a8-aa2e-5f40df448f16" />
+)
+**5. Blockchain Analysis Page **
+> <img width="1897" height="901" alt="image" src="https://github.com/user-attachments/assets/1d0da1ba-f91a-4d35-9001-b8ab8689def5" />
+**6. Blockchain Payments Page **
+> <img width="1895" height="913" alt="image" src="https://github.com/user-attachments/assets/bc0800b9-a1d5-423b-b598-7cb3cb6ed5ed" />
+**7. Security Page **
+> <img width="1895" height="912" alt="image" src="https://github.com/user-attachments/assets/35ad4e3d-3b83-4f2c-a82b-aa33d9272476" />
+**8. Admin Terminal Dashboard **
+> <img width="1896" height="905" alt="image" src="https://github.com/user-attachments/assets/57927419-7fe2-4678-aff1-961a85dcdece" />
+**9. Profile Page **
+> <img width="1892" height="905" alt="image" src="https://github.com/user-attachments/assets/fe901b31-c6da-4cae-9486-24d83b06919e" />
+**10. Settings Page **
+> <img width="1896" height="912" alt="image" src="https://github.com/user-attachments/assets/ca68c31c-3a66-4d10-901a-7f6263331274" />
+**11. Audit Logs **
+><img width="1896" height="907" alt="image" src="https://github.com/user-attachments/assets/d1a97c65-9691-496b-a723-624d40a2af6e" />
+**12. Chatbot **
+> <img width="1892" height="903" alt="image" src="https://github.com/user-attachments/assets/2eea8b0d-4e31-4dd6-856b-bf63768e19af" />
 #### Technical Validations:
 - **Blockchain Integrity:** The system successfully instantiates the genesis block and chains subsequent user-mined blocks. Deliberately tampering with historical data in the database immediately causes the `validate_chain()` function to fail, proving the immutability of the ledger.
 - **Authentication Resilience:** JWT tokens correctly secure private API endpoints. Session timeouts and invalid tokens effectively prevent unauthorized ledger manipulation.
